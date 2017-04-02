@@ -10,7 +10,7 @@ namespace QTFK.Services
     public interface IDBIO
     {
         int Set(Func<IDbCommand, int> instruction);
-        T Get<T>(string query, IDataReader reader);
+        IEnumerable<T> Get<T>(string query, Func<IDataReader,T> build);
         DataSet Get(string query);
     }
 }
