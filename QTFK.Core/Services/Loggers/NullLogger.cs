@@ -1,4 +1,5 @@
-﻿using System;
+﻿using QTFK.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,9 +9,9 @@ namespace QTFK.Services.Loggers
 {
     public class NullLogger<T> : ILogger<T>
     {
-        private static NullLogger<T> _instance;
+        protected static NullLogger<T> _instance;
 
-        private NullLogger() { }
+        protected NullLogger() { }
 
         public static ILogger<T> Instance
         {
@@ -23,5 +24,9 @@ namespace QTFK.Services.Loggers
         }
 
         public void Log(T level, string message) { }
+    }
+
+    public class NullLogger : NullLogger<LogLevel>
+    {
     }
 }
