@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Data;
 using System.Data.SqlClient;
 using QTFK.Models;
+using QTFK.Extensions.DBCommand;
 
 namespace QTFK.Services.DBIO
 {
@@ -19,12 +20,13 @@ namespace QTFK.Services.DBIO
             _connectionString = connectionString;
         }
 
-        public DataSet Get(string query)
+        public DataSet Get(string query, IDictionary<string, object> parameters)
         {
             DataSet ds = null;
             using (SqlConnection conn = new SqlConnection(_connectionString))
             using (SqlDataAdapter da = new SqlDataAdapter(query, conn))
             {
+                da.SelectCommand.AddParameters(parameters);
                 try
                 {
                     ds = new DataSet();
@@ -44,11 +46,12 @@ Query: '{query ?? ""}'", ex);
             return ds;
         }
 
-        public IEnumerable<T> Get<T>(string query, Func<IDataReader, T> build)
+        public IEnumerable<T> Get<T>(string query, IDictionary<string, object> parameters, Func<IDataReader, T> build)
         {
             SqlConnection conn = new SqlConnection(_connectionString);
             SqlCommand command = new SqlCommand() { Connection = conn };
             conn.Open();
+            command.AddParameters(parameters);
             command.CommandText = query;
             var reader = command.ExecuteReader();
             while (reader.Read())
@@ -70,7 +73,7 @@ Current command: {command?.CommandText ?? ""}", ex);
             conn.Close();
         }
 
-        public int Set(Func<IDbCommand, int> instruction)
+        public int Set(Func<IDbCommand, int> instructions)
         {
             int affectedRows = 0;
             using (SqlConnection conn = new SqlConnection(_connectionString))
@@ -82,7 +85,7 @@ Current command: {command?.CommandText ?? ""}", ex);
                     conn.Open();
                     trans = conn.BeginTransaction();
                     command.Transaction = trans;
-                    affectedRows = instruction(command);
+                    affectedRows = instructions(command);
                     trans.Commit();
                 }
                 catch (Exception ex)

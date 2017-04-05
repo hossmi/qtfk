@@ -13,6 +13,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QTFK.Services.DBIO.SQLServe
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QTFK.Services.DBIO.SQLServer.Tests", "Tests\QTFK.Services.DBIO.SQLServer.Tests\QTFK.Services.DBIO.SQLServer.Tests.csproj", "{2298452A-51C1-4959-BC16-8564C89B3D10}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QTFK.Extensions", "QTFK.Extensions\QTFK.Extensions.csproj", "{D6DB2C2B-D86D-45CF-A756-37ED71C614D3}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -35,6 +37,10 @@ Global
 		{2298452A-51C1-4959-BC16-8564C89B3D10}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2298452A-51C1-4959-BC16-8564C89B3D10}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2298452A-51C1-4959-BC16-8564C89B3D10}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D6DB2C2B-D86D-45CF-A756-37ED71C614D3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D6DB2C2B-D86D-45CF-A756-37ED71C614D3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D6DB2C2B-D86D-45CF-A756-37ED71C614D3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D6DB2C2B-D86D-45CF-A756-37ED71C614D3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
