@@ -41,21 +41,7 @@ namespace QTFK.Extensions.DBIO
             });
         }
 
-        public static int SetIndividually(this IDBIO dbio, IEnumerable<string> queries, bool throwException = true)
-        {
-            return queries
-                .NotEmpty()
-                .Sum(q =>
-                {
-                    var res = new Result<int>(() => dbio.Set(q));
-                    if (!res.Ok && throwException)
-                        throw res.Exception;
-                    return res.Value;
-                })
-                ;
-        }
-
-        public static int SetInBlock(this IDBIO dbio, IEnumerable<string> queries, bool throwException = true)
+        public static int Set(this IDBIO dbio, IEnumerable<string> queries, bool throwOnException = true)
         {
             return dbio.Set(cmd =>
             {
@@ -66,7 +52,7 @@ namespace QTFK.Extensions.DBIO
                     var res = new Result<int>(() => cmd.ExecuteNonQuery());
                     affectedRows += res.Value;
 
-                    if (!res.Ok && throwException)
+                    if (!res.Ok && throwOnException)
                         throw res.Exception;
                 }
                 return affectedRows;

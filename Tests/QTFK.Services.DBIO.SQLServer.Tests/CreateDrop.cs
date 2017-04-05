@@ -1,6 +1,7 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using QTFK.Extensions.DBIO;
+using QTFK.Extensions.Collections.Filters;
 
 namespace QTFK.Services.DBIO.SQLServer.Tests
 {
@@ -25,14 +26,14 @@ namespace QTFK.Services.DBIO.SQLServer.Tests
         [TestCategory("DB")]
         public void SQL_Create_tables()
         {
-            _db.SetInBlock(File.ReadBlocks("create.sql", "go"));
+            _db.Set(File.ReadBlocks("create.sql", "go").NotEmpty(), true);
         }
 
         [TestMethod]
         [TestCategory("DB")]
         public void SQL_Drop_tables()
         {
-            _db.SetIndividually(File.ReadBlocks("drop.sql", "go"), false);
+            _db.Set(File.ReadBlocks("drop.sql", "go").NotEmpty(), false);
         }
     }
 }
