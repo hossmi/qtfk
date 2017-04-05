@@ -14,10 +14,18 @@ namespace QTFK.Extensions.Collections.Filters
                 .Where(i => i != null)
                 ;
         }
+
         public static IEnumerable<string> NotEmpty(this IEnumerable<string> collection)
         {
             return collection
                 .Where(i => !string.IsNullOrWhiteSpace(i))
+                ;
+        }
+
+        public static IEnumerable<string> Trim(this IEnumerable<string> collection)
+        {
+            return collection
+                .Select(i => i.Trim())
                 ;
         }
     }
