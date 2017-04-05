@@ -125,7 +125,7 @@ namespace QTFK.Core.Tests
             });
             Assert.IsInstanceOfType(res.Exception, typeof(DivideByZeroException));
 
-            res.Wrap(e => new EntryPointNotFoundException("wrapping exception with this message :)",e));
+            res = res.Wrap(e => new EntryPointNotFoundException("wrapping exception with this message :)",e));
             Assert.IsInstanceOfType(res.Exception, typeof(EntryPointNotFoundException));
             Assert.AreEqual("wrapping exception with this message :)", res.Exception.Message);
             Assert.IsInstanceOfType(res.Exception.InnerException, typeof(DivideByZeroException));

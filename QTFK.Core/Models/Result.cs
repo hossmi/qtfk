@@ -32,9 +32,10 @@ namespace QTFK.Models
             _exception = ex;
         }
 
-        public void Wrap(Func<Exception, EntryPointNotFoundException> exceptionWrapperDelegate)
+        public Result Wrap(Func<Exception, EntryPointNotFoundException> exceptionWrapperDelegate)
         {
             _exception = exceptionWrapperDelegate(_exception);
+            return this;
         }
     }
 
@@ -60,5 +61,11 @@ namespace QTFK.Models
         }
 
         public T Value { get; }
+
+        public new Result<T> Wrap(Func<Exception, EntryPointNotFoundException> exceptionWrapperDelegate)
+        {
+            return base.Wrap(exceptionWrapperDelegate) as Result<T>;
+        }
+
     }
 }
