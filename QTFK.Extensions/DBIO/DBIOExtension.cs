@@ -1,4 +1,5 @@
 ﻿
+using QTFK.Extensions.Collections.Filters;
 using QTFK.Extensions.DBCommand;
 using QTFK.Services;
 using System;
@@ -33,7 +34,7 @@ namespace QTFK.Extensions.DBIO
         public static int SetIndividually(this IDBIO dbio, IEnumerable<string> queries)
         {
             return queries
-                .Where(q => !string.IsNullOrWhiteSpace(q))
+                .NotEmpty()
                 .Sum(q => dbio.Set(q))
                 ;
         }
@@ -41,7 +42,7 @@ namespace QTFK.Extensions.DBIO
         public static int SetInBlock(this IDBIO dbio, IEnumerable<string> queries)
         {
             return dbio.Set(cmd => queries
-                .Where(q => !string.IsNullOrWhiteSpace(q))
+                .NotEmpty()
                 .Sum(q =>
                 {
                     cmd.CommandText = q;
