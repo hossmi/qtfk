@@ -28,7 +28,7 @@ namespace QTFK.Models
         public Result(Exception ex)
         {
             if (ex == null)
-                throw new ArgumentNullException(nameof(ex),"Result(Exception) constructor needs a not null exception object.");
+                throw new ArgumentNullException(nameof(ex));
             _exception = ex;
         }
 
