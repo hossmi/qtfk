@@ -14,6 +14,7 @@ namespace QTFK.Services.DBIO.SQLServer.Tests
     public class SQLServerTests
     {
         private readonly string _connectionString;
+        private readonly CreateDrop _createDrop;
         private readonly IDBIO _db;
 
         public SQLServerTests()
@@ -22,24 +23,26 @@ namespace QTFK.Services.DBIO.SQLServer.Tests
             if (string.IsNullOrWhiteSpace(_connectionString))
                 throw new ArgumentException($"Empty or invalid 'tests' connection string in app.config", "tests");
 
-            _db = new QTFK.Services.DBIO.SQLServerDBIO(_connectionString);
+            _db = new SQLServerDBIO(_connectionString);
+            _createDrop = new CreateDrop(_connectionString, _db);
         }
 
         [TestInitialize()]
         public void Create()
         {
-            Drop();
-            _db.SetInBlock(File.ReadBlocks("create.sql", "go"));
+            _createDrop.SQL_Drop_tables();
+            _createDrop.SQL_Create_tables();
         }
 
 
         [TestCleanup()]
         public void Drop()
         {
-            _db.SetIndividually(File.ReadBlocks("drop.sql", "go"), false);
+            _createDrop.SQL_Drop_tables();
         }
 
         [TestMethod]
+        [TestCategory("DB SQL Server")]
         public void TestMethod1()
         {
             _db.Set(cmd =>
@@ -56,9 +59,12 @@ namespace QTFK.Services.DBIO.SQLServer.Tests
                 });
 
                 cmd.ExecuteNonQuery();
+
+                int id = Convert.ToInt32(_db.GetLastID(cmd));
+                Assert.IsTrue(id > 0);
             });
 
-            
+            //TODO more SQL tests!!!
         }
     }
 }
