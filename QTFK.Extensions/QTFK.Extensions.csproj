@@ -43,6 +43,7 @@
     <Compile Include="Collections\Filters\EnumerableFilterExtension.cs" />
     <Compile Include="DBCommand\DBCommandExtension.cs" />
     <Compile Include="DBIO\DBIOExtension.cs" />
+    <Compile Include="File.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
