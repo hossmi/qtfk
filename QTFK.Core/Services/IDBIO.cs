@@ -12,5 +12,6 @@ namespace QTFK.Services
         int Set(Func<IDbCommand, int> instructions);
         IEnumerable<T> Get<T>(string query, IDictionary<string, object> parameters, Func<IDataReader,T> build);
         DataSet Get(string query, IDictionary<string, object> parameters);
+        object GetLastID(IDbCommand cmd);
     }
 }

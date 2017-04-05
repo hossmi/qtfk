@@ -73,6 +73,14 @@ Current command: {command?.CommandText ?? ""}", ex);
             conn.Close();
         }
 
+        public object GetLastID(IDbCommand cmd)
+        {
+            cmd.CommandText = " SELECT @@IDENTITY ";
+            return cmd
+                .ClearParameters()
+                .ExecuteScalar();
+        }
+
         public int Set(Func<IDbCommand, int> instructions)
         {
             int affectedRows = 0;
