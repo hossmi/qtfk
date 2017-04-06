@@ -41,6 +41,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Collections\Filters\EnumerableFilterExtension.cs" />
+    <Compile Include="DataReader\DataReaderExtension.cs" />
     <Compile Include="DBCommand\DBCommandExtension.cs" />
     <Compile Include="DBIO\DBIOExtension.cs" />
     <Compile Include="File.cs" />
