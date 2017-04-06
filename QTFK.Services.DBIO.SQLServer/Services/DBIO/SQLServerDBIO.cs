@@ -45,9 +45,11 @@ namespace QTFK.Services.DBIO
                 }
                 catch (Exception ex)
                 {
-                    throw new DBIOException($@"Error ocurred executing SQL instructions:
+                    string message = $@"Error ocurred executing SQL instructions:
 Exception: {ex.GetType().Name}
-Query: '{query ?? ""}'", ex);
+Query: '{query ?? ""}'";
+                    _log.Log(LogLevel.Error, message);
+                    throw new DBIOException(message, ex);
                 }
                 finally
                 {
@@ -63,6 +65,7 @@ Query: '{query ?? ""}'", ex);
             using (SqlCommand command = new SqlCommand() { Connection = conn })
             {
                 SqlTransaction trans = null;
+                IDataReader reader = null;
                 try
                 {
                     conn.Open();
@@ -72,8 +75,8 @@ Query: '{query ?? ""}'", ex);
                     command.CommandText = query;
                     command.AddParameters(parameters);
 
-                    return command
-                        .ExecuteReader()
+                    reader = command.ExecuteReader();
+                    return reader
                         .GetRecords()
                         .Select(buildDelegate)
                         .ToList()
@@ -81,12 +84,16 @@ Query: '{query ?? ""}'", ex);
                 }
                 catch (Exception ex)
                 {
-                    throw new DBIOException($@"Error ocurred executing SQL instruction:
+                    string message = $@"Error ocurred executing SQL instruction:
 Exception: {ex.GetType().Name}
-Current command: {command?.CommandText ?? ""}", ex);
+Current command: {command?.CommandText ?? ""}";
+                    _log.Log(LogLevel.Error, message);
+                    throw new DBIOException(message, ex);
                 }
                 finally
                 {
+                    if(reader != null && !reader.IsClosed)
+                        reader.Close();
                     trans?.Rollback();
                     conn?.Close();
                 }
@@ -95,10 +102,22 @@ Current command: {command?.CommandText ?? ""}", ex);
 
         public object GetLastID(IDbCommand cmd)
         {
-            cmd.CommandText = " SELECT @@IDENTITY ";
-            return cmd
-                .ClearParameters()
-                .ExecuteScalar();
+            try
+            {
+                return cmd
+                    .SetCommandText(" SELECT @@IDENTITY ")
+                    .ClearParameters()
+                    .ExecuteScalar()
+                    ;
+            }
+            catch (Exception ex)
+            {
+                string message = $@"Error ocurred getting las ID:
+Exception: {ex.GetType().Name}
+Current command: {cmd?.CommandText ?? ""}";
+                _log.Log(LogLevel.Error, message);
+                throw new DBIOException(message, ex);
+            }
         }
 
         public int Set(Func<IDbCommand, int> instructions)
@@ -120,9 +139,11 @@ Current command: {command?.CommandText ?? ""}", ex);
                 {
                     trans?.Rollback();
 
-                    throw new DBIOException($@"Error ocurred executing SQL instructions:
+                    string message = $@"Error ocurred executing SQL instructions:
 Exception: {ex.GetType().Name}
-Current command: {command?.CommandText ?? ""}", ex);
+Current command: {command?.CommandText ?? ""}";
+                    _log.Log(LogLevel.Error, message);
+                    throw new DBIOException(message, ex);
                 }
                 finally
                 {

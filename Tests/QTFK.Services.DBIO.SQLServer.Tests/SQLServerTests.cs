@@ -10,6 +10,9 @@ using QTFK.Extensions.Collections.Filters;
 using QTFK.Extensions.DBCommand;
 using QTFK.Extensions.DataReader;
 using QTFK.Services.DBIO.SQLServer.Tests.Models;
+using System.Data;
+using QTFK.Extensions.DataSets;
+using QTFK.Models;
 
 namespace QTFK.Services.DBIO.SQLServer.Tests
 {
@@ -100,7 +103,22 @@ namespace QTFK.Services.DBIO.SQLServer.Tests
 
         [TestMethod]
         [TestCategory("DB SQL Server")]
-        public void IDBIO_Get_T_test()
+        public void SQLServer_Set_error_test()
+        {
+            try
+            {
+                _db.Set(cmd =>
+                {
+                    throw new StackOverflowException("Booooom");
+                });
+                Assert.Fail("It was not expected to achieve this line!");
+            }
+            catch (DBIOException) { }
+        }
+
+        [TestMethod]
+        [TestCategory("DB SQL Server")]
+        public void SQLServer_Get_T_test()
         {
             var testPerson = new Person
             {
@@ -139,6 +157,93 @@ namespace QTFK.Services.DBIO.SQLServer.Tests
             Assert.IsNotNull(personDB);
             Assert.AreEqual(testPerson.Name, personDB.Name);
             Assert.AreEqual(testPerson.LastName, personDB.LastName);
+        }
+
+
+        [TestMethod]
+        [TestCategory("DB SQL Server")]
+        public void SQLServer_Get_T_error_test()
+        {
+            _db.Set($@"
+                USE qtfk
+                INSERT INTO persona (nombre, apellidos)
+                VALUES (@nombre,@apellidos)
+                ;", new Dictionary<string, object>
+                {
+                    { "@nombre", "Tronco" },
+                    { "@apellidos", "Sanchez López" },
+                });
+
+            try
+            {
+                var items = _db.Get("This SQl is a bullshit", builder => builder.Get<string>("none"));
+                Assert.Fail("It was not expected to achieve this line!");
+            }
+            catch (DBIOException) { }
+
+            try
+            {
+                var items = _db.Get("SELECT * FROM persona", builder => builder.Get<string>("notExistentColumn"));
+                Assert.Fail("It was not expected to achieve this line!");
+            }
+            catch (DBIOException) { }
+        }
+
+        [TestMethod]
+        [TestCategory("DB SQL Server")]
+        public void SQLServer_Get_DataSet_test()
+        {
+            var testPerson = new Person
+            {
+                Name = "pepe",
+                LastName = "De la rosa Castaños",
+            };
+
+            _db.Set($@"
+                USE qtfk
+                INSERT INTO persona (nombre, apellidos)
+                VALUES (@nombre,@apellidos)
+                ;", new Dictionary<string, object>
+                {
+                    { "@nombre", testPerson.Name },
+                    { "@apellidos", testPerson.LastName },
+                });
+
+            _db.Set($@"
+                USE qtfk
+                INSERT INTO persona (nombre, apellidos)
+                VALUES (@nombre,@apellidos)
+                ;", new Dictionary<string, object>
+                {
+                    { "@nombre", "Tronco" },
+                    { "@apellidos", "Sanchez López" },
+                });
+
+            var data = _db.Get($@" SELECT * FROM persona");
+            Assert.AreEqual(1, data.Tables.Count);
+            Assert.AreEqual(2, data.Tables[0].Rows.Count);
+            Assert.IsNotNull(data.AsTable());
+
+            var row = data
+                .AsTable()
+                .AsEnumerable()
+                .First(r => r.Get<string>("nombre") == testPerson.Name)
+                ;
+
+            Assert.AreEqual(testPerson.Name, row.Get<string>("nombre"));
+            Assert.AreEqual(testPerson.LastName, row.Get<string>(2));
+        }
+
+        [TestMethod]
+        [TestCategory("DB SQL Server")]
+        public void SQLServer_Get_DataSet_error_test()
+        {
+            try
+            {
+                _db.Get("Wrooon SQL statment");
+                Assert.Fail("It was not expected to achieve this line!");
+            }
+            catch (DBIOException) { }
         }
     }
 }
