@@ -7,6 +7,9 @@ using System.Threading.Tasks;
 using System.Data;
 using QTFK.Models;
 using QTFK.Services.Loggers;
+using System.Data.OleDb;
+using QTFK.Extensions.DBCommand;
+using QTFK.Extensions.DataReader;
 
 namespace QTFK.Services.DBIO
 {
@@ -30,22 +33,125 @@ namespace QTFK.Services.DBIO
 
         public DataSet Get(string query, IDictionary<string, object> parameters)
         {
-            throw new NotImplementedException();
+            DataSet ds = null;
+            using (OleDbConnection conn = new OleDbConnection(_connectionString))
+            using (OleDbDataAdapter da = new OleDbDataAdapter(query, conn))
+            {
+                da.SelectCommand.AddParameters(parameters);
+                try
+                {
+                    ds = new DataSet();
+                    da.Fill(ds);
+                }
+                catch (Exception ex)
+                {
+                    string message = $@"Error ocurred executing SQL instructions:
+Exception: {ex.GetType().Name}
+Query: '{query ?? ""}'";
+                    _log.Log(LogLevel.Error, message);
+                    throw new DBIOException(message, ex);
+                }
+                finally
+                {
+                    conn?.Close();
+                }
+            }
+            return ds;
         }
 
         public IEnumerable<T> Get<T>(string query, IDictionary<string, object> parameters, Func<IDataRecord, T> buildDelegate)
         {
-            throw new NotImplementedException();
+            using (OleDbConnection conn = new OleDbConnection(_connectionString))
+            using (OleDbCommand command = new OleDbCommand() { Connection = conn })
+            {
+                OleDbTransaction trans = null;
+                IDataReader reader = null;
+                try
+                {
+                    conn.Open();
+                    trans = conn.BeginTransaction();
+                    command.Transaction = trans;
+
+                    command.CommandText = query;
+                    command.AddParameters(parameters);
+
+                    reader = command.ExecuteReader();
+                    return reader
+                        .GetRecords()
+                        .Select(buildDelegate)
+                        .ToList()
+                        ;
+                }
+                catch (Exception ex)
+                {
+                    string message = $@"Error ocurred executing SQL instruction:
+Exception: {ex.GetType().Name}
+Current command: {command?.CommandText ?? ""}";
+                    _log.Log(LogLevel.Error, message);
+                    throw new DBIOException(message, ex);
+                }
+                finally
+                {
+                    if (reader != null && !reader.IsClosed)
+                        reader.Close();
+                    trans?.Rollback();
+                    conn?.Close();
+                }
+            }
         }
 
         public object GetLastID(IDbCommand cmd)
         {
-            throw new NotImplementedException();
+            try
+            {
+                return cmd
+                    .SetCommandText(" SELECT @@IDENTITY ")
+                    .ClearParameters()
+                    .ExecuteScalar()
+                    ;
+            }
+            catch (Exception ex)
+            {
+                string message = $@"Error ocurred getting las ID:
+Exception: {ex.GetType().Name}
+Current command: {cmd?.CommandText ?? ""}";
+                _log.Log(LogLevel.Error, message);
+                throw new DBIOException(message, ex);
+            }
         }
 
         public int Set(Func<IDbCommand, int> instructions)
         {
-            throw new NotImplementedException();
+            int affectedRows = 0;
+            using (OleDbConnection conn = new OleDbConnection(_connectionString))
+            using (OleDbCommand command = new OleDbCommand() { Connection = conn })
+            {
+                OleDbTransaction trans = null;
+                try
+                {
+                    conn.Open();
+                    trans = conn.BeginTransaction();
+                    command.Transaction = trans;
+                    affectedRows = instructions(command);
+                    trans.Commit();
+                }
+                catch (Exception ex)
+                {
+                    trans?.Rollback();
+
+                    string message = $@"Error ocurred executing SQL instructions:
+Exception: {ex.GetType().Name}
+Current command: {command?.CommandText ?? ""}";
+                    _log.Log(LogLevel.Error, message);
+                    throw new DBIOException(message, ex);
+                }
+                finally
+                {
+                    conn?.Close();
+                }
+
+            }
+            return affectedRows;
         }
     }
 }
