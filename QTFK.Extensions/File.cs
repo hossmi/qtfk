@@ -1,6 +1,8 @@
 ﻿using QTFK.Extensions.Collections.Filters;
+using QTFK.FileSystem;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -33,6 +35,26 @@ namespace QTFK
                     sb.AppendLine(line);
                 }
             }
+        }
+
+        public static bool TryMoveTo(string fileName, string destFileName, Action<Exception, int, int> onError = null)
+        {
+            return new FileInfo(fileName).TryMoveTo(destFileName, onError);
+        }
+
+        public static bool TryMoveTo(this string fileName, string destFileName, int attempts, Action<Exception, int, int> onError = null)
+        {
+            return new FileInfo(fileName).TryMoveTo(destFileName, attempts, onError);
+        }
+
+        public static bool TryCopyTo(this string fileName, string destFileName, bool overwrite, Action<Exception, int, int> onError = null)
+        {
+            return new FileInfo(fileName).TryCopyTo(destFileName, overwrite, onError);
+        }
+
+        public static bool TryCopyTo(this string fileName, string destFileName, bool overwrite, int attempts, Action<Exception, int, int> onError = null)
+        {
+            return new FileInfo(fileName).TryCopyTo(destFileName, overwrite, attempts, onError);
         }
     }
 }

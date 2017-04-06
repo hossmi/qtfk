@@ -41,11 +41,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Collections\Filters\EnumerableFilterExtension.cs" />
+    <Compile Include="Collections\Strings\StringExtension.cs" />
     <Compile Include="DataReader\DataReaderExtension.cs" />
     <Compile Include="DataSets\DataSetExtension.cs" />
     <Compile Include="DBCommand\DBCommandExtension.cs" />
     <Compile Include="DBIO\DBIOExtension.cs" />
     <Compile Include="File.cs" />
+    <Compile Include="FileSystem\FileExtension.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -54,6 +56,7 @@
       <Name>QTFK.Core</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
