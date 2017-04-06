@@ -47,7 +47,7 @@
     <Compile Include="Services\IDBIO.cs" />
     <Compile Include="Services\ILogger.cs" />
     <Compile Include="Services\Loggers\ConsoleLogger.cs" />
-    <Compile Include="Services\Loggers\DebugWindowsLogger.cs" />
+    <Compile Include="Services\Loggers\DebugWindowLogger.cs" />
     <Compile Include="Services\Loggers\MultiLogger.cs" />
     <Compile Include="Services\Loggers\NullLogger.cs" />
   </ItemGroup>
