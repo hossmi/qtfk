@@ -7,10 +7,10 @@ using System.Threading.Tasks;
 
 namespace QTFK.Services
 {
-    public interface IDBIO
+    public interface IDBIO : IDisposable
     {
         int Set(Func<IDbCommand, int> instructions);
-        IEnumerable<T> Get<T>(string query, IDictionary<string, object> parameters, Func<IDataReader,T> build);
+        IEnumerable<T> Get<T>(string query, IDictionary<string, object> parameters, Func<IDataRecord, T> buildDelegate);
         DataSet Get(string query, IDictionary<string, object> parameters);
         object GetLastID(IDbCommand cmd);
     }

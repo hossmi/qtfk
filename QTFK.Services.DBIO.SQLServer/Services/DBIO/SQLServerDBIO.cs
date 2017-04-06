@@ -8,16 +8,27 @@ using System.Data;
 using System.Data.SqlClient;
 using QTFK.Models;
 using QTFK.Extensions.DBCommand;
+using QTFK.Extensions.DataReader;
+using QTFK.Services.Loggers;
 
 namespace QTFK.Services.DBIO
 {
     public class SQLServerDBIO : IDBIO
     {
         private readonly string _connectionString;
+        private readonly ILogger<LogLevel> _log;
 
-        public SQLServerDBIO(string connectionString)
+        public SQLServerDBIO(
+            string connectionString
+            , ILogger<LogLevel> log = null
+            )
         {
             _connectionString = connectionString;
+            _log = log ?? NullLogger.Instance;
+        }
+
+        public void Dispose()
+        {
         }
 
         public DataSet Get(string query, IDictionary<string, object> parameters)
@@ -40,37 +51,46 @@ Query: '{query ?? ""}'", ex);
                 }
                 finally
                 {
-                    conn.Close();
+                    conn?.Close();
                 }
             }
             return ds;
         }
 
-        public IEnumerable<T> Get<T>(string query, IDictionary<string, object> parameters, Func<IDataReader, T> build)
+        public IEnumerable<T> Get<T>(string query, IDictionary<string, object> parameters, Func<IDataRecord, T> buildDelegate)
         {
-            SqlConnection conn = new SqlConnection(_connectionString);
-            SqlCommand command = new SqlCommand() { Connection = conn };
-            conn.Open();
-            command.AddParameters(parameters);
-            command.CommandText = query;
-            var reader = command.ExecuteReader();
-            while (reader.Read())
+            using (SqlConnection conn = new SqlConnection(_connectionString))
+            using (SqlCommand command = new SqlCommand() { Connection = conn })
             {
-                T item = default(T);
+                SqlTransaction trans = null;
                 try
                 {
-                    item = build(reader);
+                    conn.Open();
+                    trans = conn.BeginTransaction();
+                    command.Transaction = trans;
+
+                    command.CommandText = query;
+                    command.AddParameters(parameters);
+
+                    return command
+                        .ExecuteReader()
+                        .GetRecords()
+                        .Select(buildDelegate)
+                        .ToList()
+                        ;
                 }
                 catch (Exception ex)
                 {
-                    throw new DBIOException($@"Error ocurred building object from {nameof(IDataReader)}:
+                    throw new DBIOException($@"Error ocurred executing SQL instruction:
 Exception: {ex.GetType().Name}
-T: {typeof(T).Name}
 Current command: {command?.CommandText ?? ""}", ex);
                 }
-                yield return item;
+                finally
+                {
+                    trans?.Rollback();
+                    conn?.Close();
+                }
             }
-            conn.Close();
         }
 
         public object GetLastID(IDbCommand cmd)
@@ -106,7 +126,7 @@ Current command: {command?.CommandText ?? ""}", ex);
                 }
                 finally
                 {
-                    conn.Close();
+                    conn?.Close();
                 }
 
             }

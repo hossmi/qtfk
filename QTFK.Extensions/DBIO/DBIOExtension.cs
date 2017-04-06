@@ -1,6 +1,7 @@
 ﻿
 using QTFK.Extensions.Collections.Filters;
 using QTFK.Extensions.DBCommand;
+using QTFK.Extensions.DataReader;
 using QTFK.Models;
 using QTFK.Services;
 using System;
@@ -15,8 +16,6 @@ namespace QTFK.Extensions.DBIO
 {
     public static class DBIOExtension
     {
-        private static IDictionary<string, object> _defaultParameters = new Dictionary<string, object>();
-
         public static void Set(this IDBIO dbio, Action<IDbCommand> instructions)
         {
             dbio.Set(cmd =>
@@ -28,7 +27,7 @@ namespace QTFK.Extensions.DBIO
 
         public static int Set(this IDBIO dbio, string query)
         {
-            return Set(dbio, query, _defaultParameters);
+            return Set(dbio, query, Params(dbio));
         }
 
         public static int Set(this IDBIO dbio, string query, IDictionary<string, object> parameters)
@@ -61,12 +60,30 @@ namespace QTFK.Extensions.DBIO
 
         public static DataSet Get(this IDBIO dbio, string query)
         {
-            return dbio.Get(query, _defaultParameters);
+            return dbio.Get(query, Params(dbio));
         }
 
-        public static IEnumerable<T> Get<T>(this IDBIO dbio, string query, Func<IDataReader, T> build)
+        public static IEnumerable<T> Get<T>(this IDBIO dbio, string query, Func<IDataRecord, T> buildDelegate)
         {
-            return dbio.Get(query, _defaultParameters, build);
+            return dbio.Get(query, Params(dbio), buildDelegate);
+        }
+
+        public static IDictionary<string, object> Params(this IDBIO dbio)
+        {
+            return new Dictionary<string, object>();
+        }
+
+        public static IDictionary<string, object> Param(this IDBIO dbio, string name, object value)
+        {
+            //return dbio.Params().Set(name, value);
+            return new Dictionary<string, object> { { name, value } };
+        }
+
+        public static IDictionary<string, object> Set(this IDictionary<string, object> parameters, string name, object value)
+        {
+            //TODO test adding existing key
+            parameters[name] = value;
+            return parameters;
         }
     }
 }
