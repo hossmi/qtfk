@@ -54,6 +54,7 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
+    <Compile Include="Models\Person.cs" />
     <Compile Include="SQLServerTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="CreateDrop.cs" />

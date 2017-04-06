@@ -9,17 +9,26 @@ namespace QTFK.Extensions.DBCommand
 {
     public static class DBCommandExtension
     {
-        public static void AddParameter(this IDbCommand cmd, string name, object value)
+        public static IDbCommand SetCommandText(this IDbCommand cmd, string query)
+        {
+            cmd.CommandText = query;
+            return cmd;
+        }
+        public static IDbCommand AddParameter(this IDbCommand cmd, string name, object value)
         {
             var p = cmd.CreateParameter();
             p.ParameterName = name;
             p.Value = value ?? DBNull.Value;
             cmd.Parameters.Add(p);
+
+            return cmd;
         }
-        public static void AddParameters(this IDbCommand cmd, IDictionary<string,object> parameters)
+        public static IDbCommand AddParameters(this IDbCommand cmd, IDictionary<string,object> parameters)
         {
             foreach (var p in parameters)
                 cmd.AddParameter(p.Key, p.Value);
+
+            return cmd;
         }
 
         public static IDbCommand ClearParameters(this IDbCommand cmd)
