@@ -56,9 +56,11 @@
   </Choose>
   <ItemGroup>
     <Compile Include="MappersTests.cs" />
+    <Compile Include="Models\InheritedTestClass.cs" />
     <Compile Include="Models\SimpleTestClass.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ManipulateTests.cs" />
+    <Compile Include="CastExtensionTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\QTFK.Core\QTFK.Core.csproj">
