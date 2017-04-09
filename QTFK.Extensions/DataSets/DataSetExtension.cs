@@ -30,5 +30,27 @@ namespace QTFK.Extensions.DataSets
 
             return ds.Tables[0];
         }
+
+        public static IEnumerable<DataColumn> GetColumns(this DataRow row)
+        {
+            return row.Table.GetColumns();
+        }
+
+        public static IEnumerable<DataColumn> GetColumns(this DataTable table)
+        {
+            var e = table.Columns.GetEnumerator();
+            while (e.MoveNext())
+                yield return e.Current as DataColumn;
+        }
+
+        public static IDictionary<string,object> ToDictionary(this DataRow row)
+        {
+            return row
+                .GetColumns()
+                .Select(c => c.ColumnName)
+                //.Distinct()
+                .ToDictionary(k => k, k => row.IsNull(k) ? null : row[k] )
+                ;
+        }
     }
 }
