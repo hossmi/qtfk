@@ -3,11 +3,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{1E9C4BC3-FED7-42CA-8727-A6E5062F18EF}</ProjectGuid>
+    <ProjectGuid>{B05C6D2E-0ECC-4C0D-BBBA-AD70EC59F788}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>QTFK.Core.Tests</RootNamespace>
-    <AssemblyName>QTFK.Core.Tests</AssemblyName>
+    <RootNamespace>QTFK.Services.DBIO.OleDB.Tests</RootNamespace>
+    <AssemblyName>QTFK.Services.DBIO.OleDB.Tests</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{3AC096D0-A1C2-E12C-1390-A8335801FDAB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
@@ -36,6 +36,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Data" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Xml" />
@@ -48,23 +49,42 @@
     </When>
     <Otherwise>
       <ItemGroup>
-        <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework">
-          <Private>False</Private>
-        </Reference>
+        <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework" />
       </ItemGroup>
     </Otherwise>
   </Choose>
   <ItemGroup>
-    <Compile Include="MappersTests.cs" />
-    <Compile Include="Models\SimpleTestClass.cs" />
+    <Compile Include="CreateDrop.cs" />
+    <Compile Include="Models\Person.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="LoggerTests.cs" />
-    <Compile Include="ResultTests.cs" />
+    <Compile Include="OleDBTests.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="create.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="drop.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="tests.accdb">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\QTFK.Core\QTFK.Core.csproj">
-      <Project>{8c740adf-e4e1-444a-a9f0-2e40b174260f}</Project>
+      <Project>{8C740ADF-E4E1-444A-A9F0-2E40B174260F}</Project>
       <Name>QTFK.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\QTFK.Extensions\QTFK.Extensions.csproj">
+      <Project>{D6DB2C2B-D86D-45CF-A756-37ED71C614D3}</Project>
+      <Name>QTFK.Extensions</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\QTFK.Services.DBIO.OleDB\QTFK.Services.DBIO.OleDB.csproj">
+      <Project>{ADABC449-C565-4691-A505-E91E137B7F8C}</Project>
+      <Name>QTFK.Services.DBIO.OleDB</Name>
     </ProjectReference>
   </ItemGroup>
   <Choose>

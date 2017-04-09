@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("QTFK.Core")]
-[assembly: AssemblyDescription("Quick Tools for Funny Koding")]
+[assembly: AssemblyTitle("QTFK.Services.DBIO.OleDB")]
+[assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("QTFK.Core")]
+[assembly: AssemblyProduct("QTFK.Services.DBIO.OleDB")]
 [assembly: AssemblyCopyright("Copyright ©  2017")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("8c740adf-e4e1-444a-a9f0-2e40b174260f")]
+[assembly: Guid("adabc449-c565-4691-a505-e91e137b7f8c")]
 
 // Version information for an assembly consists of the following four values:
 //

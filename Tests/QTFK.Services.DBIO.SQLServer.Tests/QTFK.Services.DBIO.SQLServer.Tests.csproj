@@ -3,11 +3,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{1E9C4BC3-FED7-42CA-8727-A6E5062F18EF}</ProjectGuid>
+    <ProjectGuid>{2298452A-51C1-4959-BC16-8564C89B3D10}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>QTFK.Core.Tests</RootNamespace>
-    <AssemblyName>QTFK.Core.Tests</AssemblyName>
+    <RootNamespace>QTFK.Services.DBIO.SQLServer.Tests</RootNamespace>
+    <AssemblyName>QTFK.Services.DBIO.SQLServer.Tests</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{3AC096D0-A1C2-E12C-1390-A8335801FDAB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
@@ -36,9 +36,10 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
+    <Reference Include="System.configuration" />
     <Reference Include="System.Data" />
     <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="System.Xml" />
+    <Reference Include="System.XML" />
   </ItemGroup>
   <Choose>
     <When Condition="('$(VisualStudioVersion)' == '10.0' or '$(VisualStudioVersion)' == '') and '$(TargetFrameworkVersion)' == 'v3.5'">
@@ -55,17 +56,38 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
-    <Compile Include="MappersTests.cs" />
-    <Compile Include="Models\SimpleTestClass.cs" />
+    <Compile Include="Models\Person.cs" />
+    <Compile Include="SQLServerTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="LoggerTests.cs" />
-    <Compile Include="ResultTests.cs" />
+    <Compile Include="CreateDrop.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="App.ConnectionStrings.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\QTFK.Core\QTFK.Core.csproj">
-      <Project>{8c740adf-e4e1-444a-a9f0-2e40b174260f}</Project>
+      <Project>{8C740ADF-E4E1-444A-A9F0-2E40B174260F}</Project>
       <Name>QTFK.Core</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\QTFK.Extensions\QTFK.Extensions.csproj">
+      <Project>{d6db2c2b-d86d-45cf-a756-37ed71c614d3}</Project>
+      <Name>QTFK.Extensions</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\QTFK.Services.DBIO.SQLServer\QTFK.Services.DBIO.SQLServer.csproj">
+      <Project>{251058ED-EA21-439B-A495-FE43A9669B57}</Project>
+      <Name>QTFK.Services.DBIO.SQLServer</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="drop.sql">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="create.sql">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
