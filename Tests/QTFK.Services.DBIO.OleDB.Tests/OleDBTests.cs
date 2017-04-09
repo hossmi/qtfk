@@ -3,6 +3,7 @@ using QTFK.Extensions.DataReader;
 using QTFK.Extensions.DataSets;
 using QTFK.Extensions.DBCommand;
 using QTFK.Extensions.DBIO;
+using QTFK.Extensions.Mapping.AutoMapping;
 using QTFK.Models;
 using QTFK.Services.DBIO.OleDB.Tests.Models;
 using System;
@@ -234,6 +235,74 @@ namespace QTFK.Services.DBIO.OleDB.Tests
                 Assert.Fail("It was not expected to achieve this line!");
             }
             catch (DBIOException) { }
+        }
+
+        [TestMethod]
+        [TestCategory("Mapping")]
+        public void AutoMap_IDataRecord_tests()
+        {
+            _db.Set($@"
+                INSERT INTO persona (nombre, apellidos)
+                VALUES (@nombre,@apellidos)
+                ;", new Dictionary<string, object>
+                {
+                    { "@nombre", "Pepe" },
+                    { "@apellidos", "De la rosa Castaños" },
+                });
+
+            _db.Set($@"
+                INSERT INTO persona (nombre, apellidos)
+                VALUES (@nombre,@apellidos)
+                ;", new Dictionary<string, object>
+                {
+                    { "@nombre", "Tronco" },
+                    { "@apellidos", "Sanchez López" },
+                });
+
+            var data = _db
+                .Get($@" SELECT * FROM persona", r => r.AutoMap<DLPerson>())
+                .ToList()
+                ;
+
+            Assert.AreEqual(2, data.Count());
+            var testItem = data.Single(i => i.Nombre == "Tronco");
+            Assert.AreEqual("Sanchez López", testItem.Apellidos);
+            Assert.AreEqual(DateTime.MinValue, testItem.BirthDate);
+
+            _db.Set(cmd =>
+            {
+                data = cmd
+                    .SetCommandText($@" SELECT * FROM persona")
+                    .ExecuteReader()
+                    .GetRecords()
+                    .AutoMap<DLPerson>()
+                    .ToList()
+                    ;
+            });
+
+            Assert.AreEqual(2, data.Count());
+            testItem = data.Single(i => i.Nombre == "Tronco");
+            Assert.AreEqual("Sanchez López", testItem.Apellidos);
+            Assert.AreEqual(DateTime.MinValue, testItem.BirthDate);
+
+            _db.Set(cmd =>
+            {
+                data = cmd
+                    .SetCommandText($@" SELECT * FROM persona")
+                    .ExecuteReader()
+                    .GetRecords()
+                    .AutoMap<DLPerson>((r,i) =>
+                    {
+                        i.BirthDate = DateTime.Today;
+                    })
+                    .ToList()
+                    ;
+            });
+
+            Assert.AreEqual(2, data.Count());
+            testItem = data.Single(i => i.Nombre == "Tronco");
+            Assert.AreEqual("Sanchez López", testItem.Apellidos);
+            Assert.AreEqual(DateTime.Today, testItem.BirthDate);
         }
     }
 }
