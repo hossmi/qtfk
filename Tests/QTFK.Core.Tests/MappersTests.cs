@@ -20,6 +20,7 @@ namespace QTFK.Core.Tests
         const string kDecimal = "numero_decimal";
 
         [TestMethod]
+        [TestCategory("Mapping")]
         public void EntityMapper_tests()
         {
             var mapper = new DefaultEntityMapper();
@@ -66,7 +67,6 @@ namespace QTFK.Core.Tests
             table.Rows.Add(row);
 
             var items = table
-                .AsEnumerable()
                 .AsEnumerable()
                 .Select(mapper.Map<DataRow, SimpleTestClass>)
                 .ToList()
