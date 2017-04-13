@@ -73,6 +73,35 @@ Booooom!!
 
         [TestMethod]
         [TestCategory("Loggers")]
+        public void Logger_Filter_Tests()
+        {
+            var buffer = new System.IO.StringWriter();
+            Console.SetOut(buffer);
+
+            ILogger<LogLevel> log = new ConsoleLogger(new Dictionary<LogLevel, ConsoleColor>
+            {
+                { LogLevel.Error, ConsoleColor.Red },
+                { LogLevel.Fatal, ConsoleColor.Red },
+            });
+
+            log.Filter = l => LogLevel.Warning <= l && l <= LogLevel.Error;
+
+            log.Log(LogLevel.Debug, "loggin debug message");
+            log.Log(LogLevel.Info, "loggin information message");
+            log.Log(LogLevel.Warning, "loggin a warning");
+            log.Log(LogLevel.Error, "Ups! an Error!");
+            log.Log(LogLevel.Fatal, "Booooom!!");
+
+            buffer.Flush();
+            string output = buffer.ToString();
+            string expected = $@"loggin a warning
+Ups! an Error!
+";
+            Assert.AreEqual(expected, output);
+        }
+
+        [TestMethod]
+        [TestCategory("Loggers")]
         public void ConsoleLogger_extension_Tests()
         {
             var buffer = new System.IO.StringWriter();

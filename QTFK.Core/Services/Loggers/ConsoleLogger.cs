@@ -16,13 +16,18 @@ namespace QTFK.Services.Loggers
             _foreGroundColors = foreGroundColors ?? new Dictionary<T, ConsoleColor>();
         }
 
+        public LoggerFilterDelegate<T> Filter { get; set; }
+
         public void Log(T level, string message)
         {
-            Console.ResetColor();
-            if (_foreGroundColors.ContainsKey(level))
-                Console.ForegroundColor = _foreGroundColors[level];
-            Console.WriteLine(message);
-            Console.ResetColor();
+            if (Filter == null || Filter(level))
+            {
+                Console.ResetColor();
+                if (_foreGroundColors.ContainsKey(level))
+                    Console.ForegroundColor = _foreGroundColors[level];
+                Console.WriteLine(message);
+                Console.ResetColor();
+            }
         }
     }
 

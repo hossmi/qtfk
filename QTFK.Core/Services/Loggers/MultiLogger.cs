@@ -16,10 +16,13 @@ namespace QTFK.Services.Loggers
             _logs = logs;
         }
 
+        public LoggerFilterDelegate<T> Filter { get; set; }
+
         public void Log(T level, string message)
         {
-            foreach (var log in _logs)
-                log.Log(level, message);
+            if (Filter == null || Filter(level))
+                foreach (var log in _logs)
+                    log.Log(level, message);
         }
     }
 

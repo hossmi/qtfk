@@ -12,9 +12,12 @@ namespace QTFK.Services.Loggers
 
         public string Category { get; set; }
 
+        public LoggerFilterDelegate<T> Filter { get; set; }
+
         public void Log(T level, string message)
         {
-            Debug.WriteLine($"<<{level}>>: {message}", Category);
+            if(Filter == null || Filter(level))
+                Debug.WriteLine($"<<{level}>>: {message}", Category);
         }
     }
 
