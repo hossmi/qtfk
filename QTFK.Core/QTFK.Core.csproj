@@ -52,6 +52,7 @@
     <Compile Include="Services\ILogger.cs" />
     <Compile Include="Services\Loggers\ConsoleLogger.cs" />
     <Compile Include="Services\Loggers\DebugLogger.cs" />
+    <Compile Include="Services\Loggers\FileLogger.cs" />
     <Compile Include="Services\Loggers\MultiLogger.cs" />
     <Compile Include="Services\Loggers\NullLogger.cs" />
   </ItemGroup>
