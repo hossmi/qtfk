@@ -101,5 +101,28 @@ Booooom!!
 ";
             Assert.AreEqual(expected, output);
         }
+
+        [TestMethod]
+        [TestCategory("Loggers")]
+        public void FileLogger_Tests()
+        {
+            string path = "./log.txt";
+            if(System.IO.File.Exists(path))
+                System.IO.File.Delete(path);
+
+            Assert.IsFalse(System.IO.File.Exists(path), "Test couldn't be prepared. Unable to remove previous file";
+
+            var log = new FileLogger(path);
+            log.Log(LogLevel.Debug, "probando");
+            log.Log(LogLevel.Error, "Boooom!");
+
+            Assert.IsTrue(System.IO.File.Exists(path), "File was not created");
+
+            var output = System.IO.File.ReadAllLines(path);
+
+            Assert.AreEqual(2, output.Length, "Unexptected number of lines generated");
+            Assert.IsTrue(output[0].Contains("Debug | probando"));
+            Assert.IsTrue(output[1].Contains("Error | Boooom!"));
+        }
     }
 }
