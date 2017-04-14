@@ -33,7 +33,7 @@ namespace QTFK.Services.DBIO.OleDB.Tests
         [TestMethod]
         public void OleDBMigration_test_1()
         {
-            IDBMigrator migrator = new OleDBMigrator(_db);
+            IDBMigrator migrator = new OleDBMigrator(_db, GetMigrations());
 
             int version = migrator.GetCurrentVersion();
             var migrationStep = migrator.GetLastMigration();
@@ -41,8 +41,56 @@ namespace QTFK.Services.DBIO.OleDB.Tests
             Assert.AreEqual(new DateTime(0), migrationStep.MigrationDate);
             Assert.AreEqual(0, migrationStep.Version);
 
-            IEnumerable<MigrationInfo> steps = migrator.Upgrade()
+            IEnumerable<MigrationInfo> steps = migrator.Upgrade().ToList();
+
+            version = migrator.GetCurrentVersion();
+            migrationStep = migrator.GetLastMigration();
+            Assert.AreEqual(3, version);
+            Assert.AreEqual(3, migrationStep.Version);
+            Assert.AreEqual("migration 3", migrationStep.Description);
+            Assert.AreEqual(2, steps.Count());
+
+            steps = migrator.Upgrade().ToList();
+
+            version = migrator.GetCurrentVersion();
+            migrationStep = migrator.GetLastMigration();
+            Assert.AreEqual(3, version);
+            Assert.AreEqual(3, migrationStep.Version);
+            Assert.AreEqual("migration 3", migrationStep.Description);
+            Assert.IsFalse(steps.Any());
         }
 
+        private IEnumerable<IMigrationStep> GetMigrations()
+        {
+            yield return new MigrationStep
+            {
+                ForVersion = 0,
+                Description = "Initial migration",
+
+                UpgradeFunction = db =>
+                {
+                    return 1;
+                },
+                DowngradeFunction = db =>
+                {
+                    return 0;
+                },
+            };
+
+            yield return new MigrationStep
+            {
+                ForVersion = 1,
+                Description = "migration 3",
+
+                UpgradeFunction = db =>
+                {
+                    return 3;
+                },
+                DowngradeFunction = db =>
+                {
+                    return 1;
+                },
+            };
+        }
     }
 }

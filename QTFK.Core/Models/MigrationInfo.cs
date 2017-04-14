@@ -6,6 +6,6 @@ namespace QTFK.Models
     {
         public int Version { get; set; }
         public DateTime MigrationDate { get; set; }
-        public string Description { get; set; }
+        public string Description { get; set; } = string.Empty;
     }
 }

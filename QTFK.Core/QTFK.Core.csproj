@@ -42,6 +42,7 @@
   <ItemGroup>
     <Compile Include="Extensions\DBIOMigrationExtensions\DBMigrationExtension.cs" />
     <Compile Include="Models\DBIOException.cs" />
+    <Compile Include="Models\MigrationStep.cs" />
     <Compile Include="Models\LogLevel.cs" />
     <Compile Include="Models\MigrationInfo.cs" />
     <Compile Include="Models\Result.cs" />
@@ -52,6 +53,7 @@
     <Compile Include="Services\IDBMigrator.cs" />
     <Compile Include="Services\IEntityMapper.cs" />
     <Compile Include="Services\ILogger.cs" />
+    <Compile Include="Services\IMigrationStep.cs" />
     <Compile Include="Services\Loggers\ConsoleLogger.cs" />
     <Compile Include="Services\Loggers\DebugLogger.cs" />
     <Compile Include="Services\Loggers\MultiLogger.cs" />
