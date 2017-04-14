@@ -107,12 +107,14 @@ Booooom!!
         public void FileLogger_Tests()
         {
             string path = "./log.txt";
+            Func<LogLevel, string, string> builder = (LogLevel level, string message) => { return $"{level.ToString()} # {message}"; };
+
             if(System.IO.File.Exists(path))
                 System.IO.File.Delete(path);
 
-            Assert.IsFalse(System.IO.File.Exists(path), "Test couldn't be prepared. Unable to remove previous file";
+            Assert.IsFalse(System.IO.File.Exists(path), "Test couldn't be prepared. Unable to remove previous file");
 
-            var log = new FileLogger(path);
+            var log = new FileLogger(path, builder);
             log.Log(LogLevel.Debug, "probando");
             log.Log(LogLevel.Error, "Boooom!");
 
@@ -121,8 +123,8 @@ Booooom!!
             var output = System.IO.File.ReadAllLines(path);
 
             Assert.AreEqual(2, output.Length, "Unexptected number of lines generated");
-            Assert.IsTrue(output[0].Contains("Debug | probando"));
-            Assert.IsTrue(output[1].Contains("Error | Boooom!"));
+            Assert.AreEqual("Debug # probando", output[0]);
+            Assert.AreEqual("Error # Boooom!", output[1]);
         }
     }
 }
