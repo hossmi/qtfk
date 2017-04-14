@@ -23,8 +23,6 @@ namespace QTFK.Services.Loggers
             }
         }
 
-        public LoggerFilterDelegate<T> Filter { get; set; }
-
         public void Log(T level, string message) { }
     }
 

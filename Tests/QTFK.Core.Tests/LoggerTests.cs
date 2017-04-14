@@ -82,9 +82,7 @@ Booooom!!
             {
                 { LogLevel.Error, ConsoleColor.Red },
                 { LogLevel.Fatal, ConsoleColor.Red },
-            });
-
-            log.Filter = l => LogLevel.Warning <= l && l <= LogLevel.Error;
+            }, l => LogLevel.Warning <= l && l <= LogLevel.Error);
 
             log.Log(LogLevel.Debug, "loggin debug message");
             log.Log(LogLevel.Info, "loggin information message");

@@ -10,8 +10,6 @@ namespace QTFK.Services
 
     public interface ILogger<T>
     {
-        LoggerFilterDelegate<T> Filter { get; set; }
-
         void Log(T level, string message);
     }
 }
