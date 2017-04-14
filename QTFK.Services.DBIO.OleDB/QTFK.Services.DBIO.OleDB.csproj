@@ -43,6 +43,7 @@
     <Compile Include="Extensions\DBIO\OleDBIOExtensions\OleDBParameterExtension.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\DBIO\OleDBIO.cs" />
+    <Compile Include="Services\DBIO\OleDBMigrator.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\QTFK.Core\QTFK.Core.csproj">
