@@ -17,12 +17,6 @@ namespace QTFK.Extensions.DBIOMigrationExtensions
         {
             return migrator.GetMigrations()
                 .OrderByDescending(m => m.MigrationDate)
-                .DefaultIfEmpty(new MigrationInfo
-                {
-                    Description = string.Empty,
-                    Version = 0,
-                    MigrationDate = new System.DateTime(0)
-                })
                 .FirstOrDefault()
                 ;
         }

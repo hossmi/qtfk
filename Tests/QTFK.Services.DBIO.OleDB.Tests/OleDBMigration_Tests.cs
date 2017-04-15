@@ -41,7 +41,7 @@ namespace QTFK.Services.DBIO.OleDB.Tests
             Assert.AreEqual(new DateTime(0), migrationStep.MigrationDate);
             Assert.AreEqual(0, migrationStep.Version);
 
-            IEnumerable<MigrationInfo> steps = migrator.Upgrade().ToList();
+            IEnumerable<MigrationInfo> steps = migrator.Upgrade();
 
             version = migrator.GetCurrentVersion();
             migrationStep = migrator.GetLastMigration();
@@ -50,7 +50,7 @@ namespace QTFK.Services.DBIO.OleDB.Tests
             Assert.AreEqual("migration 3", migrationStep.Description);
             Assert.AreEqual(2, steps.Count());
 
-            steps = migrator.Upgrade().ToList();
+            steps = migrator.Upgrade();
 
             version = migrator.GetCurrentVersion();
             migrationStep = migrator.GetLastMigration();

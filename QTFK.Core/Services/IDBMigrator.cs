@@ -6,7 +6,8 @@ namespace QTFK.Services
 {
     public interface IDBMigrator
     {
-        IQueryable<MigrationInfo> GetMigrations();
+        IEnumerable<MigrationInfo> GetMigrations();
         IEnumerable<MigrationInfo> Upgrade();
+        IEnumerable<MigrationInfo> DowngradeTo(int version);
     }
 }
