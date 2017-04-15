@@ -4,6 +4,8 @@ using QTFK.Models;
 using QTFK.Extensions.DBIOMigrationExtensions;
 using System.Collections.Generic;
 using System.Linq;
+using QTFK.Extensions.DBIO;
+using QTFK.Extensions.DBCommand;
 
 namespace QTFK.Services.DBIO.OleDB.Tests
 {
@@ -47,7 +49,7 @@ namespace QTFK.Services.DBIO.OleDB.Tests
             migrationStep = migrator.GetLastMigration();
             Assert.AreEqual(3, version);
             Assert.AreEqual(3, migrationStep.Version);
-            Assert.AreEqual("migration 3", migrationStep.Description);
+            Assert.AreEqual(_kMigration3, migrationStep.Description);
             Assert.AreEqual(2, steps.Count());
 
             steps = migrator.Upgrade();
@@ -56,23 +58,33 @@ namespace QTFK.Services.DBIO.OleDB.Tests
             migrationStep = migrator.GetLastMigration();
             Assert.AreEqual(3, version);
             Assert.AreEqual(3, migrationStep.Version);
-            Assert.AreEqual("migration 3", migrationStep.Description);
+            Assert.AreEqual(_kMigration3, migrationStep.Description);
             Assert.IsFalse(steps.Any());
         }
+
+        const string _kMigration3 = "Insercion de clientes por defecto";
 
         private IEnumerable<IMigrationStep> GetMigrations()
         {
             yield return new MigrationStep
             {
                 ForVersion = 0,
-                Description = "Initial migration",
+                Description = "Creación de tabla cliente",
 
                 UpgradeFunction = db =>
                 {
+                    db.Set($@"
+CREATE TABLE cliente (
+    id int NULL
+    , nombre varchar(255) NULL
+    , id_tipo_cliente int NULL
+    , CONSTRAINT pk_cliente PRIMARY KEY (id)
+);");
                     return 1;
                 },
                 DowngradeFunction = db =>
                 {
+                    db.Set($@"DROP TABLE cliente");
                     return 0;
                 },
             };
@@ -80,17 +92,60 @@ namespace QTFK.Services.DBIO.OleDB.Tests
             yield return new MigrationStep
             {
                 ForVersion = 1,
-                Description = "migration 3",
+                Description = _kMigration3,
 
                 UpgradeFunction = db =>
                 {
+                    db.Set($@"
+INSERT INTO cliente ( 
+    id, nombre, id_tipo_cliente
+) 
+VALUES ( 
+    @id, @nombre, @tipo_cliente
+);"
+                    , db.Params()
+                        .Set("@id", 1000001)
+                        .Set("@nombre", "Pepe")
+                        .Set("@tipo_cliente", 1)
+                    );
+
+                    db.Set($@"
+INSERT INTO cliente(
+    id, nombre, id_tipo_cliente
+)
+VALUES(
+    @id, @nombre, @tipo_cliente
+); "
+                    , db.Params()
+                        .Set("@id", 1000002)
+                        .Set("@nombre", "Tronco")
+                        .Set("@tipo_cliente", 2)
+                    );
                     return 3;
                 },
                 DowngradeFunction = db =>
                 {
+                    db.Set("DELETE FROM cliente WHERE nombre = @nombre;", db.Param("@nombre", "Pepe"));
+                    db.Set("DELETE FROM cliente WHERE nombre = @nombre;", db.Param("@nombre", "Tronco"));
                     return 1;
                 },
             };
+
+            //yield return new MigrationStep
+            //{
+            //     ForVersion = 3,
+            //      Description = "campo long",
+            //       DowngradeFunction = db =>
+            //       {
+            //           db.Set("ALTER TABLE cliente DROP COLUMN campoLargo;");
+            //           return 3;
+            //       },
+            //        UpgradeFunction = db =>
+            //        {
+            //            db.Set("ALTER TABLE cliente ADD COLUMN campoLargo long NULL;");
+            //            return 4;
+            //        },
+            //};
         }
     }
 }

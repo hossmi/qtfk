@@ -16,8 +16,8 @@ namespace QTFK.Services.DBIO
     {
 
         private readonly IDBIO _db;
-        private readonly IEnumerable<IMigrationStep> _migrationSteps;
         private readonly string _tableName;
+        private readonly IDictionary<int, IMigrationStep> _migrationSteps;
 
         //static OleDBMigrator()
         //{
@@ -25,32 +25,19 @@ namespace QTFK.Services.DBIO
         //    EntityMapperExtension.Mapper.Register<MigrationInfo, IDictionary<string, object>>(Map);
         //}
 
-        private static IDictionary<string, object> Map(MigrationInfo data)
-        {
-            return DBIOExtension.Params()
-                .Set("@migrationDate", data.MigrationDate.ToString())
-                .Set("@version", data.Version)
-                .Set("@description", data.Description)
-                ;
-        }
-
         private static MigrationInfo Map(IDataRecord record)
         {
             var item = record.AutoMap<MigrationInfo>();
+            item.MigrationDate.AddMilliseconds(record.Get<int>("milis"));
             return item;
         }
 
         public OleDBMigrator(IDBIO db, IEnumerable<IMigrationStep> migrationSteps)
         {
             _db = db;
-            _migrationSteps = migrationSteps;
+            _migrationSteps = migrationSteps
+                .ToDictionary(m => m.ForVersion);
             _tableName = "__version";
-
-        }
-
-        public IEnumerable<MigrationInfo> DowngradeTo(int version)
-        {
-            throw new NotImplementedException();
         }
 
         string _SQL_Create_Table_Version
@@ -58,13 +45,14 @@ namespace QTFK.Services.DBIO
             get
             {
                 return $@"
-CREATE TABLE [{_tableName}] (
-	id int IDENTITY(1,1) NOT NULL
-    , [{nameof(MigrationInfo.MigrationDate)}] datetime NULL
-    , [{nameof(MigrationInfo.Version)}] int NULL
-    , [{nameof(MigrationInfo.Description)}] varchar(255) NULL
-    , CONSTRAINT [PK_{_tableName}] PRIMARY KEY (id)
-);";
+                    CREATE TABLE [{_tableName}] (
+	                    id long IDENTITY(1,1) NOT NULL
+                        , [{nameof(MigrationInfo.MigrationDate)}] datetime NULL
+                        , milis long NULL
+                        , [{nameof(MigrationInfo.Version)}] int NULL
+                        , [{nameof(MigrationInfo.Description)}] varchar(255) NULL
+                        , CONSTRAINT [PK_{_tableName}] PRIMARY KEY (id)
+                    );";
             }
         }
 
@@ -73,17 +61,29 @@ CREATE TABLE [{_tableName}] (
             get
             {
                 return $@"
-INSERT INTO [{_tableName}] (
-    [{nameof(MigrationInfo.MigrationDate)}]
-    , [{nameof(MigrationInfo.Version)}]
-    , [{nameof(MigrationInfo.Description)}]
-)
-VALUES (
-    @migrationDate
-    , @version
-    , @description
-);";
+                    INSERT INTO [{_tableName}] (
+                          [{nameof(MigrationInfo.MigrationDate)}]
+                        , milis
+                        , [{nameof(MigrationInfo.Version)}]
+                        , [{nameof(MigrationInfo.Description)}]
+                    )
+                    VALUES (
+                          @migrationDate
+                        , @secs
+                        , @version
+                        , @description
+                    );";
             }
+        }
+
+        private static IDictionary<string, object> Map(MigrationInfo data)
+        {
+            return DBIOExtension.Params()
+                .Set("@migrationDate", data.MigrationDate.ToString())
+                .Set("@secs", data.MigrationDate.Millisecond)
+                .Set("@version", data.Version)
+                .Set("@description", data.Description)
+                ;
         }
 
         public IEnumerable<MigrationInfo> Upgrade()
@@ -126,7 +126,8 @@ VALUES (
                     .Get<int?>($@"
 SELECT TOP 1 [version]
 FROM [{_tableName}]
-ORDER BY id DESC", r => r.Get<int?>("version"))
+ORDER BY id DESC", 
+                        r => r.Get<int?>("version"))
                     .FirstOrDefault()
                 );
 
@@ -145,10 +146,10 @@ ORDER BY id DESC", r => r.Get<int?>("version"))
             {
                 int currentVersion = GetVersion().Value;
 
-                var step = _migrationSteps.SingleOrDefault(m => m.ForVersion == currentVersion);
-
-                if (step == null)
+                if (!_migrationSteps.ContainsKey(currentVersion))
                     break;
+
+                var step = _migrationSteps[currentVersion];
 
                 var result = new Result<int>(() => step.Upgrade(_db));
                 if (result.Ok)
@@ -169,5 +170,11 @@ ORDER BY id DESC", r => r.Get<int?>("version"))
                 break;
             }
         }
+
+        public IEnumerable<MigrationInfo> DowngradeTo(int version)
+        {
+            throw new NotImplementedException();
+        }
+
     }
 }
