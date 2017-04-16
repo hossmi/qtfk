@@ -357,5 +357,48 @@ namespace QTFK.Services.DBIO.OleDB.Tests
             Assert.AreEqual("Sanchez López", testItem.Apellidos);
             Assert.AreEqual(DateTime.Today, testItem.BirthDate);
         }
+
+        [TestMethod]
+        [TestCategory("Mapping")]
+        public void AutoMap_and_DBIO_IDataRecord_tests()
+        {
+            _db.Set($@"
+                INSERT INTO persona (nombre, apellidos)
+                VALUES (@nombre,@apellidos)
+                ;", new Dictionary<string, object>
+                {
+                    { "@nombre", "Pepe" },
+                    { "@apellidos", "De la rosa Castaños" },
+                });
+
+            _db.Set($@"
+                INSERT INTO persona (nombre, apellidos)
+                VALUES (@nombre,@apellidos)
+                ;", new Dictionary<string, object>
+                {
+                    { "@nombre", "Tronco" },
+                    { "@apellidos", "Sanchez López" },
+                });
+
+            var data = _db
+                .Get<DLPerson>($@" SELECT * FROM persona")
+                .ToList()
+                ;
+
+            Assert.AreEqual(2, data.Count());
+            var testItem = data.Single(i => i.Nombre == "Tronco");
+            Assert.AreEqual("Sanchez López", testItem.Apellidos);
+            Assert.AreEqual(DateTime.MinValue, testItem.BirthDate);
+
+            data = _db
+                .Get<DLPerson>($@" SELECT * FROM persona WHERE nombre = @nombre", _db.Param("@nombre", "Pepe"))
+                .ToList()
+                ;
+
+            Assert.AreEqual(1, data.Count());
+            testItem = data.Single(i => i.Nombre == "Pepe");
+            Assert.AreEqual("De la rosa Castaños", testItem.Apellidos);
+            Assert.AreEqual(DateTime.MinValue, testItem.BirthDate);
+        }
     }
 }
