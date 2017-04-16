@@ -19,19 +19,6 @@ namespace QTFK.Services.DBIO
         private readonly string _tableName;
         private readonly IDictionary<int, IMigrationStep> _migrationSteps;
 
-        //static OleDBMigrator()
-        //{
-        //    EntityMapperExtension.Mapper.Register<IDataRecord, MigrationInfo>(Map);
-        //    EntityMapperExtension.Mapper.Register<MigrationInfo, IDictionary<string, object>>(Map);
-        //}
-
-        private static MigrationInfo Map(IDataRecord record)
-        {
-            var item = record.AutoMap<MigrationInfo>();
-            item.MigrationDate += new TimeSpan(0,0,0,0, record.Get<int>("milis"));
-            return item;
-        }
-
         public OleDBMigrator(IDBIO db, IEnumerable<IMigrationStep> migrationSteps)
         {
             _db = db;
@@ -76,6 +63,14 @@ namespace QTFK.Services.DBIO
             }
         }
 
+        string _SQL_SELECT_FROM_Version
+        {
+            get
+            {
+                return $"SELECT * FROM [{_tableName}] ";
+            }
+        }
+
         private static IDictionary<string, object> Map(MigrationInfo data)
         {
             return DBIOExtension.Params()
@@ -84,6 +79,13 @@ namespace QTFK.Services.DBIO
                 .Set("@version", data.Version)
                 .Set("@description", data.Description)
                 ;
+        }
+
+        private static MigrationInfo Map(IDataRecord record)
+        {
+            var item = record.AutoMap<MigrationInfo>();
+            item.MigrationDate += new TimeSpan(0, 0, 0, 0, record.Get<int>("milis"));
+            return item;
         }
 
         public IEnumerable<MigrationInfo> Upgrade()
@@ -110,7 +112,7 @@ namespace QTFK.Services.DBIO
         public IEnumerable<MigrationInfo> GetMigrations()
         {
             var result = new Result<IEnumerable<MigrationInfo>>(() => _db
-                .Get($"SELECT * FROM [{_tableName}] ", Map)
+                .Get(_SQL_SELECT_FROM_Version, Map)
                 .DefaultIfEmpty(new MigrationInfo())
                 );
 
@@ -126,7 +128,7 @@ namespace QTFK.Services.DBIO
                     .Get<int?>($@"
 SELECT TOP 1 [version]
 FROM [{_tableName}]
-ORDER BY id DESC", 
+ORDER BY id DESC",
                         r => r.Get<int?>("version"))
                     .FirstOrDefault()
                 );

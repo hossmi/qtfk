@@ -54,12 +54,12 @@ namespace QTFK.Services.DBIO.OleDB.Tests
 
             steps = migrator.Upgrade();
 
+            Assert.IsFalse(steps.Any());
             version = migrator.GetCurrentVersion();
             migrationStep = migrator.GetLastMigration();
             Assert.AreEqual(3, version);
             Assert.AreEqual(3, migrationStep.Version);
             Assert.AreEqual(_kMigration3, migrationStep.Description);
-            Assert.IsFalse(steps.Any());
         }
 
         const string _kMigration3 = "Insercion de clientes por defecto";
