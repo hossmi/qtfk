@@ -19,7 +19,7 @@ namespace QTFK.Extensions.Mapping
             get
             {
                 if (_mapper == null)
-                    _mapper = NullEntityMapper.Instance;
+                    _mapper = new DefaultEntityMapper();
                 return _mapper;
             }
             set { _mapper = value; }
