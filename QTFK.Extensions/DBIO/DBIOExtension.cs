@@ -70,6 +70,11 @@ namespace QTFK.Extensions.DBIO
 
         public static IDictionary<string, object> Params(this IDBIO dbio)
         {
+            return Params();
+        }
+
+        public static IDictionary<string, object> Params()
+        {
             return new Dictionary<string, object>();
         }
 
