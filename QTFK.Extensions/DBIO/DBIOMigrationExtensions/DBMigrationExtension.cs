@@ -3,7 +3,7 @@ using QTFK.Models;
 using QTFK.Services;
 using System.Linq;
 
-namespace QTFK.Extensions.DBIOMigrationExtensions
+namespace QTFK.Extensions.DBIO.DBIOMigrationExtensions
 {
 
     public static class DBMigrationExtension

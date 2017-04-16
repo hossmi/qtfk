@@ -47,6 +47,7 @@
     <Compile Include="DataSets\DataSetExtension.cs" />
     <Compile Include="DBCommand\DBCommandExtension.cs" />
     <Compile Include="DBIO\DBIOExtension.cs" />
+    <Compile Include="DBIO\DBIOMigrationExtensions\DBMigrationExtension.cs" />
     <Compile Include="File.cs" />
     <Compile Include="FileSystem\FileExtension.cs" />
     <Compile Include="Mapping\AutoMapping\AutoMapExtension.cs" />

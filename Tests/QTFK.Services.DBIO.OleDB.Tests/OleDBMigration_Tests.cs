@@ -1,11 +1,10 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using QTFK.Models;
-using QTFK.Extensions.DBIOMigrationExtensions;
+using QTFK.Extensions.DBIO.DBIOMigrationExtensions;
 using System.Collections.Generic;
 using System.Linq;
 using QTFK.Extensions.DBIO;
-using QTFK.Extensions.DBCommand;
 
 namespace QTFK.Services.DBIO.OleDB.Tests
 {

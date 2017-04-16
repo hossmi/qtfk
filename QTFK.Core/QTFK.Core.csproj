@@ -40,7 +40,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Extensions\DBIOMigrationExtensions\DBMigrationExtension.cs" />
     <Compile Include="Extensions\Loggers\LoggerLevelExtension.cs" />
     <Compile Include="Models\DBIOException.cs" />
     <Compile Include="Services\DBIO\DBMigrationStepProviderBase.cs" />
