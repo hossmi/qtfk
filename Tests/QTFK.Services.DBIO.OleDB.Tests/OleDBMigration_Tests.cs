@@ -30,6 +30,8 @@ namespace QTFK.Services.DBIO.OleDB.Tests
         public void Drop()
         {
             _createDrop.OleDB_Drop_tables();
+            IDBMigrator migrator = new OleDBMigrator(_db, new DefaultDBMigrationStepProvider(Enumerable.Empty<IDBMigrationStep>()));
+            new Result(migrator.UnInstall);
         }
 
         [TestMethod]

@@ -174,5 +174,9 @@ ORDER BY id DESC",
             }
         }
 
+        public void UnInstall()
+        {
+            _db.Set($@"DROP TABLE [{_tableName}]");
+        }
     }
 }

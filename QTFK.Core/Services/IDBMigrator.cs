@@ -8,5 +8,6 @@ namespace QTFK.Services
     {
         IEnumerable<MigrationInfo> GetMigrations();
         IEnumerable<MigrationInfo> Upgrade();
+        void UnInstall();
     }
 }
