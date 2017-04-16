@@ -28,7 +28,7 @@ namespace QTFK.Services.DBIO
         private static MigrationInfo Map(IDataRecord record)
         {
             var item = record.AutoMap<MigrationInfo>();
-            item.MigrationDate.AddMilliseconds(record.Get<int>("milis"));
+            item.MigrationDate += new TimeSpan(0,0,0,0, record.Get<int>("milis"));
             return item;
         }
 
@@ -80,7 +80,7 @@ namespace QTFK.Services.DBIO
         {
             return DBIOExtension.Params()
                 .Set("@migrationDate", data.MigrationDate.ToString())
-                .Set("@secs", data.MigrationDate.Millisecond)
+                .Set("@secs", data.MigrationDate.Millisecond.ToString())
                 .Set("@version", data.Version)
                 .Set("@description", data.Description)
                 ;
