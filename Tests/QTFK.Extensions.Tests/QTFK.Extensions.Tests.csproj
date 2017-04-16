@@ -62,6 +62,7 @@
     <Compile Include="ManipulateTests.cs" />
     <Compile Include="CastExtensionTest.cs" />
     <Compile Include="AutoMapExtensionTests.cs" />
+    <Compile Include="StringExtensionTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\QTFK.Core\QTFK.Core.csproj">
