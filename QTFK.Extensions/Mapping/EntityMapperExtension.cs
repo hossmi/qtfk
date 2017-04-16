@@ -28,14 +28,7 @@ namespace QTFK.Extensions.Mapping
         public static IEnumerable<TTarget> Map<TSource, TTarget>(this IEnumerable<TSource> items)
         {
             foreach (TSource item in items)
-            {
-                yield return Map<TSource, TTarget>(item);
-            }
-        }
-
-        public static TTarger Map<TSource, TTarger>(this TSource item)
-        {
-            return Mapper.Map<TSource, TTarger>(item);
+                yield return Mapper.Map<TSource, TTarget>(item);
         }
     }
 }
