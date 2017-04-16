@@ -33,7 +33,9 @@ namespace QTFK.Services.DBIO.OleDB.Tests
         }
 
         [TestMethod]
-        public void OleDBMigration_test_1()
+        [TestCategory("DB OleDB")]
+        [TestCategory("DB Migrations")]
+        public void OleDBMigration_tests()
         {
             IDBMigrator migrator = new OleDBMigrator(_db, GetMigrations());
 
@@ -60,6 +62,18 @@ namespace QTFK.Services.DBIO.OleDB.Tests
             Assert.AreEqual(3, version);
             Assert.AreEqual(3, migrationStep.Version);
             Assert.AreEqual(_kMigration3, migrationStep.Description);
+
+            //simulating error on migration from 3 to 4
+            migrator = new OleDBMigrator(_db, GetBadMigration());
+
+            steps = migrator.Upgrade();
+
+            Assert.IsFalse(steps.Any());
+            version = migrator.GetCurrentVersion();
+            migrationStep = migrator.GetLastMigration();
+            Assert.AreEqual(3, version);
+            Assert.AreEqual(3, migrationStep.Version);
+            Assert.AreEqual(_kMigration3, migrationStep.Description);
         }
 
         const string _kMigration3 = "Insercion de clientes por defecto";
@@ -71,22 +85,18 @@ namespace QTFK.Services.DBIO.OleDB.Tests
                 ForVersion = 0,
                 Description = "Creación de tabla cliente",
 
-                UpgradeFunction = db =>
+                Upgrade = db =>
                 {
                     db.Set($@"
-CREATE TABLE cliente (
-    id int NULL
-    , nombre varchar(255) NULL
-    , id_tipo_cliente int NULL
-    , CONSTRAINT pk_cliente PRIMARY KEY (id)
-);");
+                        CREATE TABLE cliente (
+                            id int NULL
+                            , nombre varchar(255) NULL
+                            , id_tipo_cliente int NULL
+                            , CONSTRAINT pk_cliente PRIMARY KEY (id)
+                        );");
                     return 1;
                 },
-                DowngradeFunction = db =>
-                {
-                    db.Set($@"DROP TABLE cliente");
-                    return 0;
-                },
+                Downgrade = db => db.Set($@"DROP TABLE cliente"),
             };
 
             yield return new MigrationStep
@@ -94,15 +104,15 @@ CREATE TABLE cliente (
                 ForVersion = 1,
                 Description = _kMigration3,
 
-                UpgradeFunction = db =>
+                Upgrade = db =>
                 {
                     db.Set($@"
-INSERT INTO cliente ( 
-    id, nombre, id_tipo_cliente
-) 
-VALUES ( 
-    @id, @nombre, @tipo_cliente
-);"
+                        INSERT INTO cliente ( 
+                            id, nombre, id_tipo_cliente
+                        ) 
+                        VALUES ( 
+                            @id, @nombre, @tipo_cliente
+                        );"
                     , db.Params()
                         .Set("@id", 1000001)
                         .Set("@nombre", "Pepe")
@@ -110,12 +120,12 @@ VALUES (
                     );
 
                     db.Set($@"
-INSERT INTO cliente(
-    id, nombre, id_tipo_cliente
-)
-VALUES(
-    @id, @nombre, @tipo_cliente
-); "
+                        INSERT INTO cliente(
+                            id, nombre, id_tipo_cliente
+                        )
+                        VALUES(
+                            @id, @nombre, @tipo_cliente
+                        ); "
                     , db.Params()
                         .Set("@id", 1000002)
                         .Set("@nombre", "Tronco")
@@ -123,29 +133,27 @@ VALUES(
                     );
                     return 3;
                 },
-                DowngradeFunction = db =>
+                Downgrade = db =>
                 {
                     db.Set("DELETE FROM cliente WHERE nombre = @nombre;", db.Param("@nombre", "Pepe"));
                     db.Set("DELETE FROM cliente WHERE nombre = @nombre;", db.Param("@nombre", "Tronco"));
-                    return 1;
                 },
             };
 
-            //yield return new MigrationStep
-            //{
-            //     ForVersion = 3,
-            //      Description = "campo long",
-            //       DowngradeFunction = db =>
-            //       {
-            //           db.Set("ALTER TABLE cliente DROP COLUMN campoLargo;");
-            //           return 3;
-            //       },
-            //        UpgradeFunction = db =>
-            //        {
-            //            db.Set("ALTER TABLE cliente ADD COLUMN campoLargo long NULL;");
-            //            return 4;
-            //        },
-            //};
         }
+
+        private IEnumerable<IMigrationStep> GetBadMigration()
+        {
+            yield return new MigrationStep
+            {
+                ForVersion = 3,
+                Description = "campo long",
+                Upgrade = db =>
+                {
+                    throw new Exception("Booooooom");
+                },
+            };
+        }
+
     }
 }

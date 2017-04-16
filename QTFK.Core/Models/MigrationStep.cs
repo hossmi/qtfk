@@ -9,17 +9,17 @@ namespace QTFK.Models
         public int ForVersion { get; set; }
         public string Description { get; set; }
 
-        public Func<IDBIO, int> DowngradeFunction { get; set; }
-        public Func<IDBIO, int> UpgradeFunction { get; set; }
+        public Action<IDBIO> Downgrade { get; set; }
+        public Func<IDBIO, int> Upgrade { get; set; }
 
-        public int Downgrade(IDBIO _db)
+        int IMigrationStep.Upgrade(IDBIO db)
         {
-            return DowngradeFunction(_db);
+            return Upgrade(db);
         }
 
-        public int Upgrade(IDBIO _db)
+        void IMigrationStep.Downgrade(IDBIO db)
         {
-            return UpgradeFunction(_db);
+            Downgrade?.Invoke(db);
         }
     }
 }

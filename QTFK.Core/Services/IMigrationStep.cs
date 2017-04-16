@@ -7,7 +7,7 @@ namespace QTFK.Services
         int ForVersion { get; }
         string Description { get; }
 
-        int Upgrade(IDBIO _db);
-        int Downgrade(IDBIO _db);
+        int Upgrade(IDBIO db);
+        void Downgrade(IDBIO db);
     }
 }
