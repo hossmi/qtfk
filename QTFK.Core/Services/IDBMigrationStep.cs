@@ -2,7 +2,7 @@
 
 namespace QTFK.Services
 {
-    public interface IMigrationStep
+    public interface IDBMigrationStep
     {
         int ForVersion { get; }
         string Description { get; }

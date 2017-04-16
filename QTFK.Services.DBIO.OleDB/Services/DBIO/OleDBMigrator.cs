@@ -17,14 +17,14 @@ namespace QTFK.Services.DBIO
 
         private readonly IDBIO _db;
         private readonly string _tableName;
-        private readonly IDictionary<int, IMigrationStep> _migrationSteps;
+        private readonly IDictionary<int, IDBMigrationStep> _migrationSteps;
 
-        public OleDBMigrator(IDBIO db, IEnumerable<IMigrationStep> migrationSteps)
+        public OleDBMigrator(IDBIO db, IDBMigrationStepProvider migratorProvider)
         {
             _db = db;
-            _migrationSteps = migrationSteps
+            _migrationSteps = (migratorProvider.GetSteps() ?? Enumerable.Empty<IDBMigrationStep>())
                 .ToDictionary(m => m.ForVersion);
-            _tableName = "__version";
+            _tableName = $"{migratorProvider.TablePrefix ?? ""}__version";
         }
 
         string _SQL_Create_Table_Version

@@ -2,9 +2,9 @@
 using QTFK.Models;
 using QTFK.Services;
 
-namespace QTFK.Models
+namespace QTFK.Services.DBIO
 {
-    public class MigrationStep : IMigrationStep
+    public class DBMigrationStep : IDBMigrationStep
     {
         public int ForVersion { get; set; }
         public string Description { get; set; }
@@ -12,12 +12,12 @@ namespace QTFK.Models
         public Action<IDBIO> Downgrade { get; set; }
         public Func<IDBIO, int> Upgrade { get; set; }
 
-        int IMigrationStep.Upgrade(IDBIO db)
+        int IDBMigrationStep.Upgrade(IDBIO db)
         {
             return Upgrade(db);
         }
 
-        void IMigrationStep.Downgrade(IDBIO db)
+        void IDBMigrationStep.Downgrade(IDBIO db)
         {
             Downgrade?.Invoke(db);
         }

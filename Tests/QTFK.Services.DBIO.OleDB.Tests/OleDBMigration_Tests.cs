@@ -37,7 +37,7 @@ namespace QTFK.Services.DBIO.OleDB.Tests
         [TestCategory("DB Migrations")]
         public void OleDBMigration_tests()
         {
-            IDBMigrator migrator = new OleDBMigrator(_db, GetMigrations());
+            IDBMigrator migrator = new OleDBMigrator(_db, new DefaultDBMigrationStepProvider(GetMigrations()));
 
             int version = migrator.GetCurrentVersion();
             var migrationStep = migrator.GetLastMigration();
@@ -64,7 +64,7 @@ namespace QTFK.Services.DBIO.OleDB.Tests
             Assert.AreEqual(_kMigration3, migrationStep.Description);
 
             //simulating error on migration from 3 to 4
-            migrator = new OleDBMigrator(_db, GetBadMigration());
+            migrator = new OleDBMigrator(_db, new BadMigrationProvider());
 
             steps = migrator.Upgrade();
 
@@ -78,9 +78,9 @@ namespace QTFK.Services.DBIO.OleDB.Tests
 
         const string _kMigration3 = "Insercion de clientes por defecto";
 
-        private IEnumerable<IMigrationStep> GetMigrations()
+        private IEnumerable<IDBMigrationStep> GetMigrations()
         {
-            yield return new MigrationStep
+            yield return new DBMigrationStep
             {
                 ForVersion = 0,
                 Description = "Creación de tabla cliente",
@@ -99,7 +99,7 @@ namespace QTFK.Services.DBIO.OleDB.Tests
                 Downgrade = db => db.Set($@"DROP TABLE cliente"),
             };
 
-            yield return new MigrationStep
+            yield return new DBMigrationStep
             {
                 ForVersion = 1,
                 Description = _kMigration3,
@@ -142,18 +142,20 @@ namespace QTFK.Services.DBIO.OleDB.Tests
 
         }
 
-        private IEnumerable<IMigrationStep> GetBadMigration()
+        class BadMigrationProvider : DBMigrationStepProviderBase
         {
-            yield return new MigrationStep
+            public override IEnumerable<IDBMigrationStep> GetSteps()
             {
-                ForVersion = 3,
-                Description = "campo long",
-                Upgrade = db =>
+                yield return new DBMigrationStep
                 {
-                    throw new Exception("Booooooom");
-                },
-            };
+                    ForVersion = 3,
+                    Description = "campo long",
+                    Upgrade = db =>
+                    {
+                        throw new Exception("Booooooom");
+                    },
+                };
+            }
         }
-
     }
 }
