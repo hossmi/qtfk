@@ -8,6 +8,5 @@ namespace QTFK.Services
     {
         IEnumerable<MigrationInfo> GetMigrations();
         IEnumerable<MigrationInfo> Upgrade();
-        IEnumerable<MigrationInfo> DowngradeTo(int version);
     }
 }

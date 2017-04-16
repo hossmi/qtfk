@@ -171,10 +171,5 @@ ORDER BY id DESC",
             }
         }
 
-        public IEnumerable<MigrationInfo> DowngradeTo(int version)
-        {
-            throw new NotImplementedException();
-        }
-
     }
 }
