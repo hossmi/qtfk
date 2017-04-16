@@ -14,6 +14,7 @@ namespace QTFK.Services.DBIO
 {
     public class OleDBMigrator : IDBMigrator
     {
+        public const string kVersionTableName = "__version";
 
         private readonly IDBIO _db;
         private readonly string _tableName;
@@ -24,7 +25,7 @@ namespace QTFK.Services.DBIO
             _db = db;
             _migrationSteps = (migratorProvider.GetSteps() ?? Enumerable.Empty<IDBMigrationStep>())
                 .ToDictionary(m => m.ForVersion);
-            _tableName = $"{migratorProvider.TablePrefix ?? ""}__version";
+            _tableName = $"{migratorProvider.TablePrefix ?? ""}{kVersionTableName}";
         }
 
         string _SQL_Create_Table_Version
@@ -126,7 +127,7 @@ namespace QTFK.Services.DBIO
         {
             var result = new Result<int?>(() => _db
                     .Get<int?>($@"
-SELECT TOP 1 [version]
+SELECT TOP 1 [{nameof(MigrationInfo.Version)}]
 FROM [{_tableName}]
 ORDER BY id DESC",
                         r => r.Get<int?>("version"))
