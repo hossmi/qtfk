@@ -8,7 +8,8 @@ namespace QTFK.Extensions.Tests
     public class ManipulateTests
     {
         [TestMethod]
-        public void ManipulateExtensionTests()
+        [TestCategory("Extensions")]
+        public void ManipulateExtension_tests()
         {
             var pepe = new Models.SimpleTestClass
             {

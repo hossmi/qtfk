@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 
 namespace QTFK.Services
 {
+    public delegate bool LoggerFilterDelegate<T>(T level);
+
     public interface ILogger<T>
     {
         void Log(T level, string message);

@@ -2,6 +2,7 @@
 using QTFK.Extensions.Collections.Filters;
 using QTFK.Extensions.DBCommand;
 using QTFK.Extensions.DataReader;
+using QTFK.Extensions.Mapping.AutoMapping;
 using QTFK.Models;
 using QTFK.Services;
 using System;
@@ -65,10 +66,25 @@ namespace QTFK.Extensions.DBIO
 
         public static IEnumerable<T> Get<T>(this IDBIO dbio, string query, Func<IDataRecord, T> buildDelegate)
         {
-            return dbio.Get(query, Params(dbio), buildDelegate);
+            return dbio.Get(query, Params(), buildDelegate);
+        }
+
+        public static IEnumerable<T> Get<T>(this IDBIO dbio, string query) where T : new()
+        {
+            return dbio.Get<T>(query, AutoMapExtension.AutoMap<T>);
+        }
+
+        public static IEnumerable<T> Get<T>(this IDBIO dbio, string query, IDictionary<string, object> parameters) where T : new()
+        {
+            return dbio.Get<T>(query, parameters, AutoMapExtension.AutoMap<T>);
         }
 
         public static IDictionary<string, object> Params(this IDBIO dbio)
+        {
+            return Params();
+        }
+
+        public static IDictionary<string, object> Params()
         {
             return new Dictionary<string, object>();
         }

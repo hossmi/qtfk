@@ -47,6 +47,7 @@
     <Compile Include="DataSets\DataSetExtension.cs" />
     <Compile Include="DBCommand\DBCommandExtension.cs" />
     <Compile Include="DBIO\DBIOExtension.cs" />
+    <Compile Include="DBIO\DBIOMigrationExtensions\DBMigrationExtension.cs" />
     <Compile Include="File.cs" />
     <Compile Include="FileSystem\FileExtension.cs" />
     <Compile Include="Mapping\AutoMapping\AutoMapExtension.cs" />
@@ -63,6 +64,9 @@
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>xcopy $(TargetPath) $(SolutionDir)\$(ConfigurationName)\qtfk\</PostBuildEvent>
+  </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

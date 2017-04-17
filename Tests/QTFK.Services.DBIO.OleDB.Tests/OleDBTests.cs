@@ -3,6 +3,7 @@ using QTFK.Extensions.DataReader;
 using QTFK.Extensions.DataSets;
 using QTFK.Extensions.DBCommand;
 using QTFK.Extensions.DBIO;
+using QTFK.Extensions.DBIO.OleDBIOExtensions;
 using QTFK.Extensions.Mapping.AutoMapping;
 using QTFK.Models;
 using QTFK.Services.DBIO.OleDB.Tests.Models;
@@ -156,6 +157,58 @@ namespace QTFK.Services.DBIO.OleDB.Tests
 
         [TestMethod]
         [TestCategory("DB OleDB")]
+        public void OleDB_Date_Time_field_test()
+        {
+            var pepePerson = new Person
+            {
+                Name = "pepe",
+                LastName = "De la rosa Castaños",
+                BirdhDate = new DateTime(2015,10,21,23,59,58),
+            };
+
+            var troncoPerson = new Person
+            {
+                Name = "tronco",
+            };
+
+            _db.Set($@"
+                INSERT INTO persona (nombre, apellidos, fecha_nacimiento, hora_nacimiento)
+                VALUES (@nombre,@apellidos, @fecha_nacimiento, @hora_nacimiento)
+                ;", _db.Params()
+                    .Set("@nombre", pepePerson.Name )
+                    .Set("@apellidos", pepePerson.LastName)
+                    .SetDateTime("@fecha_nacimiento", "@hora_nacimiento", pepePerson.BirdhDate)
+                );
+
+            _db.Set($@"
+                INSERT INTO persona (nombre, apellidos, fecha_nacimiento, hora_nacimiento)
+                VALUES (@nombre,@apellidos, @fecha_nacimiento, @hora_nacimiento)
+                ;", _db.Params()
+                    .Set("@nombre", troncoPerson.Name)
+                    .Set("@apellidos", troncoPerson.LastName)
+                    .SetDateTime("@fecha_nacimiento", "@hora_nacimiento", troncoPerson.DeathDate)
+                );
+
+            var personsDB = _db.Get($@" SELECT * FROM persona;", r => new Person
+                {
+                    Name = r.Get<string>("nombre"),
+                    LastName = r.Get<string>("apellidos"),
+                    BirdhDate = r.GetDateTime("fecha_nacimiento", "hora_nacimiento"),
+                    DeathDate = r.GetNullableDateTime("fecha_nacimiento", "hora_nacimiento")
+                });
+
+            var pepeDB = personsDB.Single(p => p.Name == "pepe");
+            var troncoDB = personsDB.Single(p => p.Name == "tronco");
+
+            Assert.AreEqual(pepePerson.BirdhDate, pepeDB.BirdhDate);
+            Assert.AreEqual(pepePerson.BirdhDate, pepeDB.DeathDate);
+            Assert.AreEqual(troncoPerson.BirdhDate, troncoDB.BirdhDate);
+            Assert.AreEqual(troncoPerson.DeathDate, troncoDB.DeathDate);
+            Assert.IsNull(troncoDB.DeathDate);
+        }
+
+        [TestMethod]
+        [TestCategory("DB OleDB")]
         public void OleDB_Get_T_error_test()
         {
             _db.Set($@"
@@ -303,6 +356,49 @@ namespace QTFK.Services.DBIO.OleDB.Tests
             testItem = data.Single(i => i.Nombre == "Tronco");
             Assert.AreEqual("Sanchez López", testItem.Apellidos);
             Assert.AreEqual(DateTime.Today, testItem.BirthDate);
+        }
+
+        [TestMethod]
+        [TestCategory("Mapping")]
+        public void AutoMap_and_DBIO_IDataRecord_tests()
+        {
+            _db.Set($@"
+                INSERT INTO persona (nombre, apellidos)
+                VALUES (@nombre,@apellidos)
+                ;", new Dictionary<string, object>
+                {
+                    { "@nombre", "Pepe" },
+                    { "@apellidos", "De la rosa Castaños" },
+                });
+
+            _db.Set($@"
+                INSERT INTO persona (nombre, apellidos)
+                VALUES (@nombre,@apellidos)
+                ;", new Dictionary<string, object>
+                {
+                    { "@nombre", "Tronco" },
+                    { "@apellidos", "Sanchez López" },
+                });
+
+            var data = _db
+                .Get<DLPerson>($@" SELECT * FROM persona")
+                .ToList()
+                ;
+
+            Assert.AreEqual(2, data.Count());
+            var testItem = data.Single(i => i.Nombre == "Tronco");
+            Assert.AreEqual("Sanchez López", testItem.Apellidos);
+            Assert.AreEqual(DateTime.MinValue, testItem.BirthDate);
+
+            data = _db
+                .Get<DLPerson>($@" SELECT * FROM persona WHERE nombre = @nombre", _db.Param("@nombre", "Pepe"))
+                .ToList()
+                ;
+
+            Assert.AreEqual(1, data.Count());
+            testItem = data.Single(i => i.Nombre == "Pepe");
+            Assert.AreEqual("De la rosa Castaños", testItem.Apellidos);
+            Assert.AreEqual(DateTime.MinValue, testItem.BirthDate);
         }
     }
 }
