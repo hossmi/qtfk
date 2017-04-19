@@ -62,6 +62,7 @@
     <Compile Include="ManipulateTests.cs" />
     <Compile Include="CastExtensionTest.cs" />
     <Compile Include="AutoMapExtensionTests.cs" />
+    <Compile Include="DictionariesExtensionTests.cs" />
     <Compile Include="StringExtensionTest.cs" />
   </ItemGroup>
   <ItemGroup>
