@@ -44,5 +44,27 @@ namespace QTFK.Extensions.Tests
             {
             }
         }
+
+        [TestMethod]
+        [TestCategory("Extensions")]
+        public void DictionariesExtension_Tests_2()
+        {
+            var d = new Dictionary<string, string>
+            {
+                { "pepe", "lorem ipsum dolor shit" },
+                { "tronco", "uno que llega" },
+            };
+
+            string tronco = "", pepe = "";
+            string notExists = "pepe";
+            d.Get("pepe", v => pepe = v);
+            d.Get("tronco", v => tronco = v);
+
+            Assert.AreEqual("lorem ipsum dolor shit", pepe);
+            Assert.AreEqual(@"uno que llega", tronco);
+
+            d.Get("notExist", v => notExists = v);
+            Assert.AreEqual(string.Empty, notExists);
+        }
     }
 }

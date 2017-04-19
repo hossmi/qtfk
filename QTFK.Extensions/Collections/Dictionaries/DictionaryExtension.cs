@@ -20,5 +20,14 @@ namespace QTFK.Extensions.Collections.Dictionaries
             else
                 setter(defaultValue);
         }
+
+        public static void Get(this IDictionary<string, string> dic, string key, Action<string> setter)
+        {
+            string value = string.Empty;
+            if (dic.TryGetValue(key, out value))
+                setter(value);
+            else
+                setter(string.Empty);
+        }
     }
 }
