@@ -131,5 +131,25 @@ namespace QTFK.Core.Tests
             Assert.IsInstanceOfType(res.Exception.InnerException, typeof(DivideByZeroException));
             Assert.AreEqual("boooom", res.Exception.InnerException.Message);
         }
+
+        [TestMethod]
+        [TestCategory("Result<T>")]
+        public void Result_wrap_Exception_test_2()
+        {
+            var res = new Result(() =>
+            {
+                int i = 2 + 3;
+                i = 3 * i;
+                throw new DivideByZeroException("boooom");
+                //return i;
+            });
+            Assert.IsInstanceOfType(res.Exception, typeof(DivideByZeroException));
+
+            res = res.Wrap(e => new EntryPointNotFoundException("wrapping exception with this message :)", e));
+            Assert.IsInstanceOfType(res.Exception, typeof(EntryPointNotFoundException));
+            Assert.AreEqual("wrapping exception with this message :)", res.Exception.Message);
+            Assert.IsInstanceOfType(res.Exception.InnerException, typeof(DivideByZeroException));
+            Assert.AreEqual("boooom", res.Exception.InnerException.Message);
+        }
     }
 }
