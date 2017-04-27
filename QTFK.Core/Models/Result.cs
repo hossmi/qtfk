@@ -9,7 +9,7 @@ namespace QTFK.Models
 
         public Exception Exception { get { return _exception; } }
         public bool Ok { get { return Exception == null; } }
-        public string Message { get { return _exception?.Message; }  }
+        public string Message { get { return _exception?.Message; } }
 
         public Result() { }
 
@@ -32,7 +32,7 @@ namespace QTFK.Models
             _exception = ex;
         }
 
-        public Result Wrap(Func<Exception, EntryPointNotFoundException> exceptionWrapperDelegate)
+        public Result Wrap<TExcep>(Func<Exception, TExcep> exceptionWrapperDelegate) where TExcep : Exception
         {
             _exception = exceptionWrapperDelegate(_exception);
             return this;
@@ -41,7 +41,7 @@ namespace QTFK.Models
 
     public class Result<T> : Result
     {
-        public Result(T value) 
+        public Result(T value)
         {
             Value = value;
         }
@@ -62,9 +62,10 @@ namespace QTFK.Models
 
         public T Value { get; }
 
-        public new Result<T> Wrap(Func<Exception, EntryPointNotFoundException> exceptionWrapperDelegate)
+        public new Result<T> Wrap<TExcep>(Func<Exception, TExcep> exceptionWrapperDelegate) where TExcep : Exception
         {
-            return base.Wrap(exceptionWrapperDelegate) as Result<T>;
+            _exception = exceptionWrapperDelegate(_exception);
+            return this;
         }
 
     }
