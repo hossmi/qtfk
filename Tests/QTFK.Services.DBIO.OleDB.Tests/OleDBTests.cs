@@ -1,4 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using QTFK.Extensions.Collections.Dictionaries;
 using QTFK.Extensions.DataReader;
 using QTFK.Extensions.DataSets;
 using QTFK.Extensions.DBCommand;
@@ -142,7 +143,9 @@ namespace QTFK.Services.DBIO.OleDB.Tests
                     { "@apellidos", "Sanchez López" },
                 });
 
-            var personDB = _db.Get($@" SELECT * FROM persona WHERE nombre = @nombre;", _db.Param("@nombre", testPerson.Name), r => new Person
+            var personDB = _db.Get($@" SELECT * FROM persona WHERE nombre = @nombre;", 
+                _db.Params().Set("@nombre", testPerson.Name), 
+                r => new Person
                 {
                     Name = r.Get<string>("nombre"),
                     LastName = r.Get<string>("apellidos"),
@@ -392,7 +395,7 @@ namespace QTFK.Services.DBIO.OleDB.Tests
             Assert.AreEqual(DateTime.MinValue, testItem.BirthDate);
 
             data = _db
-                .Get<DLPerson>($@" SELECT * FROM persona WHERE nombre = @nombre", _db.Param("@nombre", "Pepe"))
+                .Get<DLPerson>($@" SELECT * FROM persona WHERE nombre = @nombre", _db.Params().Set("@nombre", "Pepe"))
                 .ToList()
                 ;
 
@@ -409,7 +412,7 @@ namespace QTFK.Services.DBIO.OleDB.Tests
             IDBQuery insert = new OleDBInsertQuery
             {
                 Table = "persona",
-                Columns = DBIOExtension.Params()
+                Columns = _db.Params()
                     .Set("nombre", "Pepe")
                     .Set("apellidos", "De la rosa Castaños")
             };
@@ -419,19 +422,19 @@ namespace QTFK.Services.DBIO.OleDB.Tests
             insert = new OleDBInsertQuery
             {
                 Table = "persona",
-                Columns = DBIOExtension.Params()
+                Columns = _db.Params()
                     .Set("nombre", "@nombre")
                     .Set("apellidos", "@apellidos")
             };
 
-            var insertValues = DBIOExtension.Params()
+            var insertValues = _db.Params()
                 .Set("@nombre", "Tronco")
                 .Set("@apellidos", "Sanchez López")
                 ;
 
             _db.Set(insert, insertValues);
 
-            insertValues = DBIOExtension.Params()
+            insertValues = _db.Params()
                 .Set("@nombre", "Louis")
                 .Set("@apellidos", "Norton Smith")
                 ;
@@ -450,7 +453,7 @@ namespace QTFK.Services.DBIO.OleDB.Tests
             Assert.AreEqual(DateTime.MinValue, testItem.BirthDate);
 
             data = _db
-                .Get<DLPerson>($@" SELECT * FROM persona WHERE nombre = @nombre", _db.Param("@nombre", "Pepe"))
+                .Get<DLPerson>($@" SELECT * FROM persona WHERE nombre = @nombre", _db.Params().Set("@nombre", "Pepe"))
                 .ToList()
                 ;
 
@@ -480,7 +483,7 @@ namespace QTFK.Services.DBIO.OleDB.Tests
             select.Where = "nombre = @nombre";
 
             data = _db
-                .Get<DLPerson>(select, _db.Param("@nombre", "Pepe"))
+                .Get<DLPerson>(select, _db.Params().Set("@nombre", "Pepe"))
                 .ToList()
                 ;
 

@@ -13,6 +13,7 @@ using QTFK.Services.DBIO.SQLServer.Tests.Models;
 using System.Data;
 using QTFK.Extensions.DataSets;
 using QTFK.Models;
+using QTFK.Extensions.Collections.Dictionaries;
 
 namespace QTFK.Services.DBIO.SQLServer.Tests
 {
@@ -146,13 +147,15 @@ namespace QTFK.Services.DBIO.SQLServer.Tests
                     { "@apellidos", "Sanchez López" },
                 });
 
-            var personDB = _db.Get($@" SELECT * FROM persona WHERE nombre = @nombre;", _db.Param("@nombre", testPerson.Name), r => new Person
-                {
-                    Name = r.Get<string>("nombre"),
-                    LastName = r.Get<string>("apellidos"),
-                })
-                .FirstOrDefault()
-                ;
+            var personDB = _db.Get($@" SELECT * FROM persona WHERE nombre = @nombre;", 
+                    _db.Params().Set("@nombre", testPerson.Name), 
+                    r => new Person
+                    {
+                        Name = r.Get<string>("nombre"),
+                        LastName = r.Get<string>("apellidos"),
+                    })
+                    .FirstOrDefault()
+                    ;
 
             Assert.IsNotNull(personDB);
             Assert.AreEqual(testPerson.Name, personDB.Name);

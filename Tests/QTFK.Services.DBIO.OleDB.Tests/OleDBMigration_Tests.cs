@@ -5,6 +5,7 @@ using QTFK.Extensions.DBIO.DBIOMigrationExtensions;
 using System.Collections.Generic;
 using System.Linq;
 using QTFK.Extensions.DBIO;
+using QTFK.Extensions.Collections.Dictionaries;
 
 namespace QTFK.Services.DBIO.OleDB.Tests
 {
@@ -136,8 +137,8 @@ namespace QTFK.Services.DBIO.OleDB.Tests
                 },
                 Downgrade = db =>
                 {
-                    db.Set("DELETE FROM cliente WHERE nombre = @nombre;", db.Param("@nombre", "Pepe"));
-                    db.Set("DELETE FROM cliente WHERE nombre = @nombre;", db.Param("@nombre", "Tronco"));
+                    db.Set("DELETE FROM cliente WHERE nombre = @nombre;", db.Params().Set("@nombre", "Pepe"));
+                    db.Set("DELETE FROM cliente WHERE nombre = @nombre;", db.Params().Set("@nombre", "Tronco"));
                 },
             };
 
