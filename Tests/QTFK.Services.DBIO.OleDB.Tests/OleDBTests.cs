@@ -4,6 +4,7 @@ using QTFK.Extensions.DataReader;
 using QTFK.Extensions.DataSets;
 using QTFK.Extensions.DBCommand;
 using QTFK.Extensions.DBIO;
+using QTFK.Extensions.DBIO.DBQueries;
 using QTFK.Extensions.DBIO.OleDBIOExtensions;
 using QTFK.Extensions.Mapping.AutoMapping;
 using QTFK.Models;
@@ -419,13 +420,11 @@ namespace QTFK.Services.DBIO.OleDB.Tests
 
             _db.Set(insert);
 
-            insert = new OleDBInsertQuery
-            {
-                Table = "persona",
-                Columns = _db.Params()
-                    .Set("nombre", "@nombre")
-                    .Set("apellidos", "@apellidos")
-            };
+            insert = new OleDBInsertQuery()
+                .SetTable("persona")
+                .SetColumn("nombre", "@nombre")
+                .SetColumn("apellidos", "@apellidos")
+                ;
 
             var insertValues = _db.Params()
                 .Set("@nombre", "Tronco")
@@ -464,11 +463,10 @@ namespace QTFK.Services.DBIO.OleDB.Tests
 
 
             //IDBQuery selects
-            var select = new OleDBSelectQuery
-            {
-                Table = "persona",
-                Columns = new string[] { "nombre", "apellidos"}
-            };
+            var select = new OleDBSelectQuery()
+                .SetTable("persona")
+                .AddColumns("nombre", "apellidos")
+                ;
 
             data = _db
                 .Get<DLPerson>(select)

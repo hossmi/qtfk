@@ -4,9 +4,16 @@ using System.Collections.Generic;
 
 namespace QTFK.Models.DBIO
 {
-    public class OleDBSelectQuery : IDBQuery
+    public class OleDBSelectQuery : IDBQuery, IDBQueryWithTableProperty, IDBQueryWithFieldsProperty
     {
-        public IEnumerable<string> Columns { get; set; }
+        public OleDBSelectQuery()
+        {
+            Table = "";
+            Where = "";
+            Columns = new List<string>();
+        }
+
+        public ICollection<string> Columns { get; set; }
         public string Table { get; set; }
         public string Where { get; set; }
 

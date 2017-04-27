@@ -5,8 +5,14 @@ using System.Linq;
 
 namespace QTFK.Models.DBIO
 {
-    public class OleDBInsertQuery : IDBQuery
+    public class OleDBInsertQuery : IDBQuery, IDBQueryWithTableProperty, IDBQueryWithColumnsProperty
     {
+        public OleDBInsertQuery()
+        {
+            Table = "";
+            Columns = new Dictionary<string, object>();
+        }
+
         public string Table { get; set; }
         public IDictionary<string, object> Columns { get; set; }
 
