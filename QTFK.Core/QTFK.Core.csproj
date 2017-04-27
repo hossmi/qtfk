@@ -42,6 +42,7 @@
   <ItemGroup>
     <Compile Include="Extensions\Loggers\LoggerLevelExtension.cs" />
     <Compile Include="Models\DBIOException.cs" />
+    <Compile Include="Models\IDBQuery.cs" />
     <Compile Include="Services\DBIO\DBMigrationStepProviderBase.cs" />
     <Compile Include="Services\DBIO\DefaultDBMigrationStepProvider.cs" />
     <Compile Include="Services\DBIO\DBMigrationStep.cs" />

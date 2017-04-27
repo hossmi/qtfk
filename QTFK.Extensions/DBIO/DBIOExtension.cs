@@ -26,9 +26,19 @@ namespace QTFK.Extensions.DBIO
             });
         }
 
+        public static int Set(this IDBIO dbio, IDBQuery query)
+        {
+            return Set(dbio, query.Compile(), Params());
+        }
+
+        public static int Set(this IDBIO dbio, IDBQuery query, IDictionary<string, object> parameters)
+        {
+            return Set(dbio, query.Compile(), parameters);
+        }
+
         public static int Set(this IDBIO dbio, string query)
         {
-            return Set(dbio, query, Params(dbio));
+            return Set(dbio, query, Params());
         }
 
         public static int Set(this IDBIO dbio, string query, IDictionary<string, object> parameters)
@@ -77,6 +87,16 @@ namespace QTFK.Extensions.DBIO
         public static IEnumerable<T> Get<T>(this IDBIO dbio, string query, IDictionary<string, object> parameters) where T : new()
         {
             return dbio.Get<T>(query, parameters, AutoMapExtension.AutoMap<T>);
+        }
+
+        public static IEnumerable<T> Get<T>(this IDBIO dbio, IDBQuery query) where T : new()
+        {
+            return dbio.Get<T>(query.Compile(), AutoMapExtension.AutoMap<T>);
+        }
+
+        public static IEnumerable<T> Get<T>(this IDBIO dbio, IDBQuery query, IDictionary<string, object> parameters) where T : new()
+        {
+            return dbio.Get<T>(query.Compile(), parameters, AutoMapExtension.AutoMap<T>);
         }
 
         public static IDictionary<string, object> Params(this IDBIO dbio)
