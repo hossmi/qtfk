@@ -7,19 +7,24 @@ namespace QTFK.Models
         string Compile();
     }
 
-    public interface IDBQueryWithTableProperty : IDBQuery
+    public interface IDBQueryWithTableName : IDBQuery
     {
         string Table { get; set; }
     }
 
-    public interface IDBQueryWithColumnsProperty : IDBQuery
+    public interface IDBQueryWithValuedFields : IDBQuery
     {
-        IDictionary<string, object> Columns { get; set; }
+        IDictionary<string, object> ValuedFields { get; set; }
     }
 
-    public interface IDBQueryWithFieldsProperty : IDBQuery
+    public interface IDBQueryWithFields : IDBQuery
     {
-        ICollection<string> Columns { get; set; }
+        ICollection<string> Fields { get; set; }
+    }
+
+    public interface IDBQueryWithWhere : IDBQuery
+    {
+        string Where { get; set; }
     }
 
 }

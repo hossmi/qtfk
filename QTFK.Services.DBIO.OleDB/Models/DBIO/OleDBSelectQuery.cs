@@ -4,16 +4,16 @@ using System.Collections.Generic;
 
 namespace QTFK.Models.DBIO
 {
-    public class OleDBSelectQuery : IDBQuery, IDBQueryWithTableProperty, IDBQueryWithFieldsProperty
+    public class OleDBSelectQuery : IDBQuery, IDBQueryWithTableName, IDBQueryWithFields, IDBQueryWithWhere
     {
         public OleDBSelectQuery()
         {
             Table = "";
             Where = "";
-            Columns = new List<string>();
+            Fields = new List<string>();
         }
 
-        public ICollection<string> Columns { get; set; }
+        public ICollection<string> Fields { get; set; }
         public string Table { get; set; }
         public string Where { get; set; }
 
@@ -22,7 +22,7 @@ namespace QTFK.Models.DBIO
             string whereSegment = string.IsNullOrWhiteSpace(Where) ? "" : $"WHERE {Where}";
 
             return $@"
-                SELECT {Columns.Stringify()}
+                SELECT {Fields.Stringify()}
                 FROM {Table}
                 {whereSegment}
                 ;";

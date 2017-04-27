@@ -5,9 +5,9 @@ using System.Linq;
 
 namespace QTFK.Models.DBIO
 {
-    public class OleDBInsertQuery : IDBQuery, IDBQueryWithTableName, IDBQueryWithValuedFields
+    public class OleDBUpdateQuery : IDBQuery, IDBQueryWithTableName, IDBQueryWithValuedFields, IDBQueryWithWhere
     {
-        public OleDBInsertQuery()
+        public OleDBUpdateQuery()
         {
             Table = "";
             ValuedFields = new Dictionary<string, object>();
@@ -15,6 +15,7 @@ namespace QTFK.Models.DBIO
 
         public string Table { get; set; }
         public IDictionary<string, object> ValuedFields { get; set; }
+        public string Where { get; set; }
 
         public string Compile()
         {
@@ -23,9 +24,12 @@ namespace QTFK.Models.DBIO
                 .ToList()
                 ;
 
+            string whereSegment = string.IsNullOrWhiteSpace(Where) ? "" : $"WHERE {Where}";
+
             return $@"
-                INSERT INTO {Table} ({columnList.Stringify(c => c.K)})
-                VALUES ({columnList.Stringify(c => c.V.StartsWith("@") ? c.V : $"'{c.V}'")})
+                UPDATE {Table}
+                SET {columnList.Stringify(c => $"{c.K} = {(c.V.StartsWith("@") ? c.V : $"'{c.V}'")}")}
+                {whereSegment}
                 ;";
         }
     }

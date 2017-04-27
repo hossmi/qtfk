@@ -413,7 +413,7 @@ namespace QTFK.Services.DBIO.OleDB.Tests
             IDBQuery insert = new OleDBInsertQuery
             {
                 Table = "persona",
-                Columns = _db.Params()
+                ValuedFields = _db.Params()
                     .Set("nombre", "Pepe")
                     .Set("apellidos", "De la rosa Castaños")
             };
@@ -478,16 +478,38 @@ namespace QTFK.Services.DBIO.OleDB.Tests
             Assert.AreEqual("Sanchez López", testItem.Apellidos);
             Assert.AreEqual(DateTime.MinValue, testItem.BirthDate);
 
-            select.Where = "nombre = @nombre";
+            var wherePepe = _db
+                .Params()
+                .Set("@nombre", "Pepe")
+                ;
 
             data = _db
-                .Get<DLPerson>(select, _db.Params().Set("@nombre", "Pepe"))
+                .Get<DLPerson>(select.SetWhere("nombre = @nombre"), wherePepe)
                 .ToList()
                 ;
 
             Assert.AreEqual(1, data.Count());
             testItem = data.Single(i => i.Nombre == "Pepe");
             Assert.AreEqual("De la rosa Castaños", testItem.Apellidos);
+            Assert.AreEqual(DateTime.MinValue, testItem.BirthDate);
+
+            //IDBQuery updates
+            var update = new OleDBUpdateQuery()
+                .SetTable("persona")
+                .SetColumn("apellidos", "Ramírez de Villalobos")
+                .SetWhere("nombre = @nombre")
+                ;
+
+            _db.Set(update, wherePepe);
+
+            data = _db
+                .Get<DLPerson>(select.SetWhere("nombre = @nombre"), wherePepe)
+                .ToList()
+                ;
+
+            Assert.AreEqual(1, data.Count());
+            testItem = data.Single(i => i.Nombre == "Pepe");
+            Assert.AreEqual("Ramírez de Villalobos", testItem.Apellidos);
             Assert.AreEqual(DateTime.MinValue, testItem.BirthDate);
         }
     }
