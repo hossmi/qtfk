@@ -132,5 +132,83 @@ namespace QTFK.Extensions.Tests
             notExists = d.Get("notExist");
             Assert.AreEqual(string.Empty, notExists);
         }
+
+        [TestMethod]
+        [TestCategory("Extensions")]
+        public void DictionariesExtension_Tests_5()
+        {
+            var d = DictionaryExtension
+                .New()
+                .Set("pepe", 3.14m)
+                .Set("tronco", "uno que llega")
+                ;
+
+            string tronco = "";
+            decimal pepe = 0;
+            double doubleNumber = 3;
+            double intNumber = 0;
+
+            d
+                .Get<decimal>("pepe", v => pepe = v)
+                .Get<string>("tronco", v => tronco = v)
+                ;
+
+            Assert.AreEqual(3.14m, pepe);
+            Assert.AreEqual(@"uno que llega", tronco);
+
+            d.Get<double>("notExist", v => doubleNumber = v);
+            Assert.AreEqual(0.0, doubleNumber);
+
+            d.Get<double>("notExist", 34.0, v => doubleNumber = v);
+            Assert.AreEqual(34.0, doubleNumber);
+
+            try
+            {
+                d.Get<int>("tronco", 55, v => intNumber = v);
+                Assert.Fail("It must fail on wrong data type?");
+            }
+            catch
+            {
+            }
+        }
+
+        [TestMethod]
+        [TestCategory("Extensions")]
+        public void DictionariesExtension_Tests_6()
+        {
+            var d = DictionaryExtension
+                .New<object>()
+                .Set("pepe", 3.14m)
+                .Set("tronco", "uno que llega")
+                ;
+
+            string tronco = "";
+            decimal pepe = 0;
+            double doubleNumber = 3;
+            double intNumber = 0;
+
+            d
+                .Get<decimal>("pepe", v => pepe = v)
+                .Get<string>("tronco", v => tronco = v)
+                ;
+
+            Assert.AreEqual(3.14m, pepe);
+            Assert.AreEqual(@"uno que llega", tronco);
+
+            d.Get<double>("notExist", v => doubleNumber = v);
+            Assert.AreEqual(0.0, doubleNumber);
+
+            d.Get<double>("notExist", 34.0, v => doubleNumber = v);
+            Assert.AreEqual(34.0, doubleNumber);
+
+            try
+            {
+                d.Get<int>("tronco", 55, v => intNumber = v);
+                Assert.Fail("It must fail on wrong data type?");
+            }
+            catch
+            {
+            }
+        }
     }
 }

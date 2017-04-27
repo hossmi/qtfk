@@ -53,5 +53,27 @@ namespace QTFK.Extensions.Collections.Dictionaries
             else
                 return string.Empty;
         }
+
+        public static IDictionary<TKey, TValue> New<TKey, TValue>()
+        {
+            return new Dictionary<TKey, TValue>();
+        }
+
+        public static IDictionary<string, T> New<T>()
+        {
+            return New<string, T>();
+        }
+
+        public static IDictionary<string, object> New()
+        {
+            return New<string, object>();
+        }
+
+        public static IDictionary<TKey, TValue> Set<TKey, TValue>(this IDictionary<TKey, TValue> dic, TKey name, TValue value)
+        {
+            //TODO test adding existing key
+            dic[name] = value;
+            return dic;
+        }
     }
 }
