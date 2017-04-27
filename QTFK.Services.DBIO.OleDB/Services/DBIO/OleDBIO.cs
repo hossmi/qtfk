@@ -47,6 +47,7 @@ namespace QTFK.Services.DBIO
                 {
                     string message = $@"Error ocurred executing SQL instructions:
 Exception: {ex.GetType().Name}
+Message: {ex.Message}
 Query: '{query ?? ""}'";
                     _log.Log(LogLevel.Error, message);
                     throw new DBIOException(message, ex);
@@ -86,6 +87,7 @@ Query: '{query ?? ""}'";
                 {
                     string message = $@"Error ocurred executing SQL instruction:
 Exception: {ex.GetType().Name}
+Message: {ex.Message}
 Current command: {command?.CommandText ?? ""}";
                     _log.Log(LogLevel.Error, message);
                     throw new DBIOException(message, ex);
@@ -114,6 +116,7 @@ Current command: {command?.CommandText ?? ""}";
             {
                 string message = $@"Error ocurred getting las ID:
 Exception: {ex.GetType().Name}
+Message: {ex.Message}
 Current command: {cmd?.CommandText ?? ""}";
                 _log.Log(LogLevel.Error, message);
                 throw new DBIOException(message, ex);
@@ -141,6 +144,7 @@ Current command: {cmd?.CommandText ?? ""}";
 
                     string message = $@"Error ocurred executing SQL instructions:
 Exception: {ex.GetType().Name}
+Message: {ex.Message}
 Current command: {command?.CommandText ?? ""}";
                     _log.Log(LogLevel.Error, message);
                     throw new DBIOException(message, ex);
