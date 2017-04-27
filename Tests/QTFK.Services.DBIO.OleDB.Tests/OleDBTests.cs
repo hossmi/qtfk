@@ -1,4 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using QTFK.Extensions.Collections.Dictionaries;
 using QTFK.Extensions.DataReader;
 using QTFK.Extensions.DataSets;
 using QTFK.Extensions.DBCommand;
@@ -141,7 +142,9 @@ namespace QTFK.Services.DBIO.OleDB.Tests
                     { "@apellidos", "Sanchez López" },
                 });
 
-            var personDB = _db.Get($@" SELECT * FROM persona WHERE nombre = @nombre;", _db.Param("@nombre", testPerson.Name), r => new Person
+            var personDB = _db.Get($@" SELECT * FROM persona WHERE nombre = @nombre;", 
+                _db.Params().Set("@nombre", testPerson.Name), 
+                r => new Person
                 {
                     Name = r.Get<string>("nombre"),
                     LastName = r.Get<string>("apellidos"),
@@ -391,7 +394,7 @@ namespace QTFK.Services.DBIO.OleDB.Tests
             Assert.AreEqual(DateTime.MinValue, testItem.BirthDate);
 
             data = _db
-                .Get<DLPerson>($@" SELECT * FROM persona WHERE nombre = @nombre", _db.Param("@nombre", "Pepe"))
+                .Get<DLPerson>($@" SELECT * FROM persona WHERE nombre = @nombre", _db.Params().Set("@nombre", "Pepe"))
                 .ToList()
                 ;
 
