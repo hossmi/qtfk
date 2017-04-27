@@ -24,7 +24,7 @@ namespace QTFK.Models.DBIO
                 ;
 
             return $@"
-                INSERT INTO {Table} ({columnList.Stringify(c => c.K)})
+                INSERT INTO [{Table}] ({columnList.Stringify(c => $"[{c.K}]")})
                 VALUES ({columnList.Stringify(c => c.V.StartsWith("@") ? c.V : $"'{c.V}'")})
                 ;";
         }

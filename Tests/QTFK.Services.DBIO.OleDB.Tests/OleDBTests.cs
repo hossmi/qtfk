@@ -483,8 +483,10 @@ namespace QTFK.Services.DBIO.OleDB.Tests
                 .Set("@nombre", "Pepe")
                 ;
 
+            select.SetWhere("nombre = @nombre");
+
             data = _db
-                .Get<DLPerson>(select.SetWhere("nombre = @nombre"), wherePepe)
+                .Get<DLPerson>(select, wherePepe)
                 .ToList()
                 ;
 
@@ -503,7 +505,7 @@ namespace QTFK.Services.DBIO.OleDB.Tests
             _db.Set(update, wherePepe);
 
             data = _db
-                .Get<DLPerson>(select.SetWhere("nombre = @nombre"), wherePepe)
+                .Get<DLPerson>(select, wherePepe)
                 .ToList()
                 ;
 
@@ -511,6 +513,20 @@ namespace QTFK.Services.DBIO.OleDB.Tests
             testItem = data.Single(i => i.Nombre == "Pepe");
             Assert.AreEqual("Ramírez de Villalobos", testItem.Apellidos);
             Assert.AreEqual(DateTime.MinValue, testItem.BirthDate);
+
+            var delete = new OleDBDeleteQuery()
+                .SetTable("persona")
+                .SetWhere("nombre = @nombre")
+                ;
+
+            _db.Set(delete, wherePepe);
+
+            data = _db
+                .Get<DLPerson>(select, wherePepe)
+                .ToList()
+                ;
+
+            Assert.AreEqual(0, data.Count());
         }
     }
 }

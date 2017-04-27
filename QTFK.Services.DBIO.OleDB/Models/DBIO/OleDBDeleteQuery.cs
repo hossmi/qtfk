@@ -1,19 +1,18 @@
 ﻿using QTFK.Extensions.Collections.Strings;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace QTFK.Models.DBIO
 {
-    public class OleDBSelectQuery : IDBQuery, IDBQueryWithTableName, IDBQueryWithFields, IDBQueryWithWhere
+    public class OleDBDeleteQuery : IDBQuery, IDBQueryWithTableName, IDBQueryWithWhere
     {
-        public OleDBSelectQuery()
+        public OleDBDeleteQuery()
         {
             Table = "";
             Where = "";
-            Fields = new List<string>();
         }
 
-        public ICollection<string> Fields { get; set; }
         public string Table { get; set; }
         public string Where { get; set; }
 
@@ -22,8 +21,7 @@ namespace QTFK.Models.DBIO
             string whereSegment = string.IsNullOrWhiteSpace(Where) ? "" : $"WHERE {Where}";
 
             return $@"
-                SELECT {Fields.Stringify(f => $"[{f}]")}
-                FROM [{Table}]
+                DELETE FROM [{Table}]
                 {whereSegment}
                 ;";
         }

@@ -27,8 +27,8 @@ namespace QTFK.Models.DBIO
             string whereSegment = string.IsNullOrWhiteSpace(Where) ? "" : $"WHERE {Where}";
 
             return $@"
-                UPDATE {Table}
-                SET {columnList.Stringify(c => $"{c.K} = {(c.V.StartsWith("@") ? c.V : $"'{c.V}'")}")}
+                UPDATE [{Table}]
+                SET {columnList.Stringify(c => $"[{c.K}] = {(c.V.StartsWith("@") ? c.V : $"'{c.V}'")}")}
                 {whereSegment}
                 ;";
         }
