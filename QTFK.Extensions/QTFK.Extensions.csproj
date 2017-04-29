@@ -43,6 +43,7 @@
     <Compile Include="Collections\Casting\CastExtension.cs" />
     <Compile Include="Collections\Dictionaries\DictionaryExtension.cs" />
     <Compile Include="Collections\Filters\EnumerableFilterExtension.cs" />
+    <Compile Include="Collections\Repositories\CRUDRepositoryExtension.cs" />
     <Compile Include="Collections\Strings\StringExtension.cs" />
     <Compile Include="DataReader\DataReaderExtension.cs" />
     <Compile Include="DataSets\DataSetExtension.cs" />
