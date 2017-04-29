@@ -80,6 +80,37 @@ namespace QTFK.Extensions.Mapping.AutoMapping
             return item;
         }
 
+        private static bool _SkipNothing(PropertyInfo property)
+        {
+            return false;
+        }
+
+        public static void AutoMap<T>(this T source, T target)
+        {
+            AutoMap<T>(source, target, _SkipNothing);
+        }
+        public static void AutoMap<T>(this T source, T target, Func<PropertyInfo, bool> skip)
+        {
+            var props = _GetProperties(source.GetType())
+                .Where(prop => !skip(prop))
+                ;
+
+            foreach (var p in props)
+                p.SetValue(target, p.GetValue(source));
+        }
+
+        public static T AutoMap<T>(this T source) where T : new()
+        {
+            return AutoMap<T>(source, _SkipNothing);
+        }
+
+        public static T AutoMap<T>(this T source, Func<PropertyInfo, bool> skip) where T : new()
+        {
+            T target = new T();
+            AutoMap<T>(source, target, skip);
+            return target;
+        }
+
         private static IEnumerable<PropertyInfo> _GetProperties(Type type)
         {
             return type
