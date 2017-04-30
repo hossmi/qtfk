@@ -144,8 +144,8 @@ namespace QTFK.Services.DBIO.OleDB.Tests
                     { "@apellidos", "Sanchez López" },
                 });
 
-            var personDB = _db.Get($@" SELECT * FROM persona WHERE nombre = @nombre;", 
-                _db.Params().Set("@nombre", testPerson.Name), 
+            var personDB = _db.Get($@" SELECT * FROM persona WHERE nombre = @nombre;",
+                _db.Params().Set("@nombre", testPerson.Name),
                 r => new Person
                 {
                     Name = r.Get<string>("nombre"),
@@ -422,8 +422,7 @@ namespace QTFK.Services.DBIO.OleDB.Tests
 
             insert = new OleDBInsertQuery()
                 .SetTable("persona")
-                .SetColumn("nombre", "@nombre")
-                .SetColumn("apellidos", "@apellidos")
+                .SetColumns("nombre", "apellidos")
                 ;
 
             var insertValues = _db.Params()
