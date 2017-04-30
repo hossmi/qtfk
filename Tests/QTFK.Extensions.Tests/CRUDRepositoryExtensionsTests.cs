@@ -100,7 +100,7 @@ namespace QTFK.Core.Tests
             Assert.AreEqual(Math.PI, item2.DoubleNumber);
 
             Assert.IsFalse(ReferenceEquals(item1, item2));
-
+            System.Threading.Thread.Sleep(5);
             var id2 = repo.Add(item2);
             Assert.AreNotEqual(id2, item1.DecimalNumber);
 
