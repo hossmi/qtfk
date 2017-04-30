@@ -27,4 +27,9 @@ namespace QTFK.Models
         string Where { get; set; }
     }
 
+    public interface IDBQueryWithTablePrefix : IDBQuery
+    {
+        string Prefix { get; set; }
+    }
+
 }
