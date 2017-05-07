@@ -76,6 +76,7 @@ namespace QTFK.Core.Tests
                     target.Name = source.Name;
                     target.LastName = source.LastName;
                     target.Number = source.Number;
+                    target.DecimalNumber = source.DecimalNumber;
                 }
                 , item => DateTime.Now.Ticks
                 );
@@ -113,6 +114,7 @@ namespace QTFK.Core.Tests
 
             Assert.IsFalse(ReferenceEquals(item1, item2));
 
+            item2.DecimalNumber = 0m;
             var id2 = repo.Add(item2);
             Assert.AreNotEqual(id2, item1.DecimalNumber);
 

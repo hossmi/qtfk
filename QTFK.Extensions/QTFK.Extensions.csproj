@@ -40,6 +40,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Collections\CollectionExtension.cs" />
     <Compile Include="Collections\Casting\CastExtension.cs" />
     <Compile Include="Collections\Dictionaries\DictionaryExtension.cs" />
     <Compile Include="Collections\Filters\EnumerableFilterExtension.cs" />

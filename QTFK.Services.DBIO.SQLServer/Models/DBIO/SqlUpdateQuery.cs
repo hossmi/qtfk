@@ -6,18 +6,23 @@ using System.Linq;
 
 namespace QTFK.Models.DBIO
 {
-    public class OleDBDeleteQuery : IDBQuery, IDBQueryWithTableName, IDBQueryWhereClause
+    public class SqlUpdateQuery : IDBQuery, IDBQueryWithTableName, IDBQueryWriteColumns, IDBQueryWhereClause, IDBQueryTablePrefix
     {
+        public string Prefix { get; set; } = "";
         public string Table { get; set; } = "";
+        public IDictionary<string, object> Fields { get; set; } = DictionaryExtension.New();
         public string Where { get; set; } = "";
         public IDictionary<string, object> Parameters { get; set; } = DictionaryExtension.New();
 
         public string Compile()
         {
             string whereSegment = string.IsNullOrWhiteSpace(Where) ? "" : $"WHERE ({Where})";
+            string prefix = string.IsNullOrWhiteSpace(Prefix) ? "" : Prefix.Trim();
+            string fieldValueList = Fields.Stringify(c => $"[{c.Key}] = {c.Value}");
 
             return $@"
-                DELETE FROM [{Table}]
+                UPDATE {prefix}[{Table}] 
+                SET {fieldValueList}
                 {whereSegment}
                 ;";
         }

@@ -24,7 +24,7 @@ namespace QTFK.Extensions.DBIO
 
         public static int Set(this IDBIO dbio, IDBQuery query)
         {
-            return Set(dbio, query.Compile(), dbio.Params());
+            return Set(dbio, query.Compile(), query.Parameters);
         }
 
         public static int Set(this IDBIO dbio, IDBQuery query, IDictionary<string, object> parameters)
@@ -65,14 +65,18 @@ namespace QTFK.Extensions.DBIO
             });
         }
 
+
+
         public static DataSet Get(this IDBIO dbio, string query)
         {
             return dbio.Get(query, dbio.Params());
         }
 
+
+
         public static IEnumerable<T> Get<T>(this IDBIO dbio, string query, Func<IDataRecord, T> buildDelegate)
         {
-            return dbio.Get(query, dbio.Params(), buildDelegate);
+            return dbio.Get<T>(query, dbio.Params(), buildDelegate);
         }
 
         public static IEnumerable<T> Get<T>(this IDBIO dbio, string query) where T : new()
@@ -85,15 +89,29 @@ namespace QTFK.Extensions.DBIO
             return dbio.Get<T>(query, parameters, AutoMapExtension.AutoMap<T>);
         }
 
+
+
         public static IEnumerable<T> Get<T>(this IDBIO dbio, IDBQuery query) where T : new()
         {
-            return dbio.Get<T>(query.Compile(), AutoMapExtension.AutoMap<T>);
+            return dbio.Get<T>(query.Compile(), query.Parameters);
         }
 
         public static IEnumerable<T> Get<T>(this IDBIO dbio, IDBQuery query, IDictionary<string, object> parameters) where T : new()
         {
-            return dbio.Get<T>(query.Compile(), parameters, AutoMapExtension.AutoMap<T>);
+            return dbio.Get<T>(query.Compile(), parameters);
         }
+
+        public static IEnumerable<T> Get<T>(this IDBIO dbio, IDBQuery query, Func<IDataRecord, T> buildDelegate)
+        {
+            return dbio.Get<T>(query.Compile(), query.Parameters, buildDelegate);
+        }
+
+        public static IEnumerable<T> Get<T>(this IDBIO dbio, IDBQuery query, IDictionary<string, object> parameters, Func<IDataRecord, T> buildDelegate)
+        {
+            return dbio.Get<T>(query.Compile(), parameters, buildDelegate);
+        }
+
+
 
         public static IDictionary<string, object> Params(this IDBIO dbio)
         {

@@ -144,8 +144,8 @@ namespace QTFK.Services.DBIO.OleDB.Tests
                     { "@apellidos", "Sanchez López" },
                 });
 
-            var personDB = _db.Get($@" SELECT * FROM persona WHERE nombre = @nombre;", 
-                _db.Params().Set("@nombre", testPerson.Name), 
+            var personDB = _db.Get($@" SELECT * FROM persona WHERE nombre = @nombre;",
+                _db.Params().Set("@nombre", testPerson.Name),
                 r => new Person
                 {
                     Name = r.Get<string>("nombre"),
@@ -413,7 +413,7 @@ namespace QTFK.Services.DBIO.OleDB.Tests
             IDBQuery insert = new OleDBInsertQuery
             {
                 Table = "persona",
-                ValuedFields = _db.Params()
+                Fields = _db.Params()
                     .Set("nombre", "Pepe")
                     .Set("apellidos", "De la rosa Castaños")
             };
@@ -421,10 +421,10 @@ namespace QTFK.Services.DBIO.OleDB.Tests
             _db.Set(insert);
 
             insert = new OleDBInsertQuery()
-                .SetTable("persona")
-                .SetColumn("nombre", "@nombre")
-                .SetColumn("apellidos", "@apellidos")
-                ;
+                .Set("persona", c => c
+                    .Column("nombre")
+                    .Column("apellidos")
+                );
 
             var insertValues = _db.Params()
                 .Set("@nombre", "Tronco")
@@ -464,9 +464,10 @@ namespace QTFK.Services.DBIO.OleDB.Tests
 
             //IDBQuery selects
             var select = new OleDBSelectQuery()
-                .SetTable("persona")
-                .AddColumns("nombre", "apellidos")
-                ;
+                .Select("persona", c => c
+                    .Column("nombre")
+                    .Column("apellidos")
+                );
 
             data = _db
                 .Get<DLPerson>(select)
@@ -497,12 +498,13 @@ namespace QTFK.Services.DBIO.OleDB.Tests
 
             //IDBQuery updates
             var update = new OleDBUpdateQuery()
-                .SetTable("persona")
-                .SetColumn("apellidos", "Ramírez de Villalobos")
+                .Set("persona", c => c
+                    .Column("apellidos", "Ramírez de Villalobos"))
                 .SetWhere("nombre = @nombre")
+                .SetParam("@nombre", "Pepe")
                 ;
 
-            _db.Set(update, wherePepe);
+            _db.Set(update);
 
             data = _db
                 .Get<DLPerson>(select, wherePepe)

@@ -40,6 +40,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Models\DBIO\SqlDeleteQuery.cs" />
+    <Compile Include="Models\DBIO\SqlInsertQuery.cs" />
+    <Compile Include="Models\DBIO\SqlSelectQuery.cs" />
+    <Compile Include="Models\DBIO\SqlUpdateQuery.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\DBIO\SQLServerDBMigrator.cs" />
     <Compile Include="Services\DBIO\SQLServerDBIO.cs" />
