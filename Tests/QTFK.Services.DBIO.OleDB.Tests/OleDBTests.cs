@@ -1,11 +1,14 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using QTFK.Extensions.Collections.Dictionaries;
 using QTFK.Extensions.DataReader;
 using QTFK.Extensions.DataSets;
 using QTFK.Extensions.DBCommand;
 using QTFK.Extensions.DBIO;
+using QTFK.Extensions.DBIO.DBQueries;
 using QTFK.Extensions.DBIO.OleDBIOExtensions;
 using QTFK.Extensions.Mapping.AutoMapping;
 using QTFK.Models;
+using QTFK.Models.DBIO;
 using QTFK.Services.DBIO.OleDB.Tests.Models;
 using System;
 using System.Collections.Generic;
@@ -141,7 +144,9 @@ namespace QTFK.Services.DBIO.OleDB.Tests
                     { "@apellidos", "Sanchez López" },
                 });
 
-            var personDB = _db.Get($@" SELECT * FROM persona WHERE nombre = @nombre;", _db.Param("@nombre", testPerson.Name), r => new Person
+            var personDB = _db.Get($@" SELECT * FROM persona WHERE nombre = @nombre;",
+                _db.Params().Set("@nombre", testPerson.Name),
+                r => new Person
                 {
                     Name = r.Get<string>("nombre"),
                     LastName = r.Get<string>("apellidos"),
@@ -163,7 +168,7 @@ namespace QTFK.Services.DBIO.OleDB.Tests
             {
                 Name = "pepe",
                 LastName = "De la rosa Castaños",
-                BirdhDate = new DateTime(2015,10,21,23,59,58),
+                BirdhDate = new DateTime(2015, 10, 21, 23, 59, 58),
             };
 
             var troncoPerson = new Person
@@ -175,7 +180,7 @@ namespace QTFK.Services.DBIO.OleDB.Tests
                 INSERT INTO persona (nombre, apellidos, fecha_nacimiento, hora_nacimiento)
                 VALUES (@nombre,@apellidos, @fecha_nacimiento, @hora_nacimiento)
                 ;", _db.Params()
-                    .Set("@nombre", pepePerson.Name )
+                    .Set("@nombre", pepePerson.Name)
                     .Set("@apellidos", pepePerson.LastName)
                     .SetDateTime("@fecha_nacimiento", "@hora_nacimiento", pepePerson.BirdhDate)
                 );
@@ -190,12 +195,12 @@ namespace QTFK.Services.DBIO.OleDB.Tests
                 );
 
             var personsDB = _db.Get($@" SELECT * FROM persona;", r => new Person
-                {
-                    Name = r.Get<string>("nombre"),
-                    LastName = r.Get<string>("apellidos"),
-                    BirdhDate = r.GetDateTime("fecha_nacimiento", "hora_nacimiento"),
-                    DeathDate = r.GetNullableDateTime("fecha_nacimiento", "hora_nacimiento")
-                });
+            {
+                Name = r.Get<string>("nombre"),
+                LastName = r.Get<string>("apellidos"),
+                BirdhDate = r.GetDateTime("fecha_nacimiento", "hora_nacimiento"),
+                DeathDate = r.GetNullableDateTime("fecha_nacimiento", "hora_nacimiento")
+            });
 
             var pepeDB = personsDB.Single(p => p.Name == "pepe");
             var troncoDB = personsDB.Single(p => p.Name == "tronco");
@@ -344,7 +349,7 @@ namespace QTFK.Services.DBIO.OleDB.Tests
                     .SetCommandText($@" SELECT * FROM persona")
                     .ExecuteReader()
                     .GetRecords()
-                    .AutoMap<DLPerson>((r,i) =>
+                    .AutoMap<DLPerson>((r, i) =>
                     {
                         i.BirthDate = DateTime.Today;
                     })
@@ -391,7 +396,7 @@ namespace QTFK.Services.DBIO.OleDB.Tests
             Assert.AreEqual(DateTime.MinValue, testItem.BirthDate);
 
             data = _db
-                .Get<DLPerson>($@" SELECT * FROM persona WHERE nombre = @nombre", _db.Param("@nombre", "Pepe"))
+                .Get<DLPerson>($@" SELECT * FROM persona WHERE nombre = @nombre", _db.Params().Set("@nombre", "Pepe"))
                 .ToList()
                 ;
 
@@ -399,6 +404,131 @@ namespace QTFK.Services.DBIO.OleDB.Tests
             testItem = data.Single(i => i.Nombre == "Pepe");
             Assert.AreEqual("De la rosa Castaños", testItem.Apellidos);
             Assert.AreEqual(DateTime.MinValue, testItem.BirthDate);
+        }
+
+        [TestMethod]
+        [TestCategory("DB OleDB")]
+        public void QueryBuilder_OleBDInsert_tests()
+        {
+            IDBQuery insert = new OleDBInsertQuery
+            {
+                Table = "persona",
+                Fields = _db.Params()
+                    .Set("nombre", "Pepe")
+                    .Set("apellidos", "De la rosa Castaños")
+            };
+
+            _db.Set(insert);
+
+            insert = new OleDBInsertQuery()
+                .Set("persona", c => c
+                    .Column("nombre")
+                    .Column("apellidos")
+                );
+
+            var insertValues = _db.Params()
+                .Set("@nombre", "Tronco")
+                .Set("@apellidos", "Sanchez López")
+                ;
+
+            _db.Set(insert, insertValues);
+
+            insertValues = _db.Params()
+                .Set("@nombre", "Louis")
+                .Set("@apellidos", "Norton Smith")
+                ;
+
+            _db.Set(insert, insertValues);
+
+            //inline selects
+            var data = _db
+                .Get<DLPerson>($@" SELECT * FROM persona")
+                .ToList()
+                ;
+
+            Assert.AreEqual(3, data.Count());
+            var testItem = data.Single(i => i.Nombre == "Tronco");
+            Assert.AreEqual("Sanchez López", testItem.Apellidos);
+            Assert.AreEqual(DateTime.MinValue, testItem.BirthDate);
+
+            data = _db
+                .Get<DLPerson>($@" SELECT * FROM persona WHERE nombre = @nombre", _db.Params().Set("@nombre", "Pepe"))
+                .ToList()
+                ;
+
+            Assert.AreEqual(1, data.Count());
+            testItem = data.Single(i => i.Nombre == "Pepe");
+            Assert.AreEqual("De la rosa Castaños", testItem.Apellidos);
+            Assert.AreEqual(DateTime.MinValue, testItem.BirthDate);
+
+
+            //IDBQuery selects
+            var select = new OleDBSelectQuery()
+                .Select("persona", c => c
+                    .Column("nombre")
+                    .Column("apellidos")
+                );
+
+            data = _db
+                .Get<DLPerson>(select)
+                .ToList()
+                ;
+
+            Assert.AreEqual(3, data.Count());
+            testItem = data.Single(i => i.Nombre == "Tronco");
+            Assert.AreEqual("Sanchez López", testItem.Apellidos);
+            Assert.AreEqual(DateTime.MinValue, testItem.BirthDate);
+
+            var wherePepe = _db
+                .Params()
+                .Set("@nombre", "Pepe")
+                ;
+
+            select.SetWhere("nombre = @nombre");
+
+            data = _db
+                .Get<DLPerson>(select, wherePepe)
+                .ToList()
+                ;
+
+            Assert.AreEqual(1, data.Count());
+            testItem = data.Single(i => i.Nombre == "Pepe");
+            Assert.AreEqual("De la rosa Castaños", testItem.Apellidos);
+            Assert.AreEqual(DateTime.MinValue, testItem.BirthDate);
+
+            //IDBQuery updates
+            var update = new OleDBUpdateQuery()
+                .Set("persona", c => c
+                    .Column("apellidos", "Ramírez de Villalobos"))
+                .SetWhere("nombre = @nombre")
+                .SetParam("@nombre", "Pepe")
+                ;
+
+            _db.Set(update);
+
+            data = _db
+                .Get<DLPerson>(select, wherePepe)
+                .ToList()
+                ;
+
+            Assert.AreEqual(1, data.Count());
+            testItem = data.Single(i => i.Nombre == "Pepe");
+            Assert.AreEqual("Ramírez de Villalobos", testItem.Apellidos);
+            Assert.AreEqual(DateTime.MinValue, testItem.BirthDate);
+
+            var delete = new OleDBDeleteQuery()
+                .SetTable("persona")
+                .SetWhere("nombre = @nombre")
+                ;
+
+            _db.Set(delete, wherePepe);
+
+            data = _db
+                .Get<DLPerson>(select, wherePepe)
+                .ToList()
+                ;
+
+            Assert.AreEqual(0, data.Count());
         }
     }
 }

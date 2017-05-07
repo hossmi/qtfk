@@ -1,17 +1,13 @@
 ﻿
 using QTFK.Extensions.Collections.Filters;
+using QTFK.Extensions.Collections.Dictionaries;
 using QTFK.Extensions.DBCommand;
-using QTFK.Extensions.DataReader;
 using QTFK.Extensions.Mapping.AutoMapping;
 using QTFK.Models;
 using QTFK.Services;
 using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Globalization;
-using System.IO;
-using System.Linq;
-using System.Text;
 
 namespace QTFK.Extensions.DBIO
 {
@@ -26,9 +22,19 @@ namespace QTFK.Extensions.DBIO
             });
         }
 
+        public static int Set(this IDBIO dbio, IDBQuery query)
+        {
+            return Set(dbio, query.Compile(), query.Parameters);
+        }
+
+        public static int Set(this IDBIO dbio, IDBQuery query, IDictionary<string, object> parameters)
+        {
+            return Set(dbio, query.Compile(), parameters);
+        }
+
         public static int Set(this IDBIO dbio, string query)
         {
-            return Set(dbio, query, Params(dbio));
+            return Set(dbio, query, dbio.Params());
         }
 
         public static int Set(this IDBIO dbio, string query, IDictionary<string, object> parameters)
@@ -59,14 +65,18 @@ namespace QTFK.Extensions.DBIO
             });
         }
 
+
+
         public static DataSet Get(this IDBIO dbio, string query)
         {
-            return dbio.Get(query, Params(dbio));
+            return dbio.Get(query, dbio.Params());
         }
+
+
 
         public static IEnumerable<T> Get<T>(this IDBIO dbio, string query, Func<IDataRecord, T> buildDelegate)
         {
-            return dbio.Get(query, Params(), buildDelegate);
+            return dbio.Get<T>(query, dbio.Params(), buildDelegate);
         }
 
         public static IEnumerable<T> Get<T>(this IDBIO dbio, string query) where T : new()
@@ -79,27 +89,33 @@ namespace QTFK.Extensions.DBIO
             return dbio.Get<T>(query, parameters, AutoMapExtension.AutoMap<T>);
         }
 
+
+
+        public static IEnumerable<T> Get<T>(this IDBIO dbio, IDBQuery query) where T : new()
+        {
+            return dbio.Get<T>(query.Compile(), query.Parameters);
+        }
+
+        public static IEnumerable<T> Get<T>(this IDBIO dbio, IDBQuery query, IDictionary<string, object> parameters) where T : new()
+        {
+            return dbio.Get<T>(query.Compile(), parameters);
+        }
+
+        public static IEnumerable<T> Get<T>(this IDBIO dbio, IDBQuery query, Func<IDataRecord, T> buildDelegate)
+        {
+            return dbio.Get<T>(query.Compile(), query.Parameters, buildDelegate);
+        }
+
+        public static IEnumerable<T> Get<T>(this IDBIO dbio, IDBQuery query, IDictionary<string, object> parameters, Func<IDataRecord, T> buildDelegate)
+        {
+            return dbio.Get<T>(query.Compile(), parameters, buildDelegate);
+        }
+
+
+
         public static IDictionary<string, object> Params(this IDBIO dbio)
         {
-            return Params();
-        }
-
-        public static IDictionary<string, object> Params()
-        {
-            return new Dictionary<string, object>();
-        }
-
-        public static IDictionary<string, object> Param(this IDBIO dbio, string name, object value)
-        {
-            //return dbio.Params().Set(name, value);
-            return new Dictionary<string, object> { { name, value } };
-        }
-
-        public static IDictionary<string, object> Set(this IDictionary<string, object> parameters, string name, object value)
-        {
-            //TODO test adding existing key
-            parameters[name] = value;
-            return parameters;
+            return DictionaryExtension.New<string, object>();
         }
     }
 }

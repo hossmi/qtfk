@@ -41,6 +41,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Extensions\DBIO\OleDBIOExtensions\OleDBParameterExtension.cs" />
+    <Compile Include="Models\DBIO\OleDBDeleteQuery.cs" />
+    <Compile Include="Models\DBIO\OleDBUpdateQuery.cs" />
+    <Compile Include="Models\DBIO\OleDBInsertQuery.cs" />
+    <Compile Include="Models\DBIO\OleDBSelectQuery.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\DBIO\OleDBIO.cs" />
     <Compile Include="Services\DBIO\OleDBMigrator.cs" />
