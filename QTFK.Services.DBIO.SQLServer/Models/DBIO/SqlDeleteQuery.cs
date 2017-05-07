@@ -1,12 +1,14 @@
-﻿using QTFK.Extensions.Collections.Strings;
+﻿using QTFK.Extensions.Collections.Dictionaries;
+using QTFK.Extensions.Collections.Strings;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace QTFK.Models.DBIO
 {
-    public class SqlDeleteQuery : IDBQuery, IDBQueryWithTableName, IDBQueryWithWhere, IDBQueryWithTablePrefix
+    public class SqlDeleteQuery : IDBQuery, IDBQueryWithTableName, IDBQueryWhereClause, IDBQueryTablePrefix
     {
+        public IDictionary<string, object> Parameters { get; set; } = DictionaryExtension.New();
         public string Prefix { get; set; } = "";
         public string Table { get; set; } = "";
         public string Where { get; set; } = "";

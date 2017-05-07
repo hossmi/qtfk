@@ -52,6 +52,13 @@ namespace QTFK.Extensions.Mapping.AutoMapping
             return _AutoMap<T>(record, _GetProperties(typeof(T)));
         }
 
+        public static T AutoMap<T>(this IDataRecord record, Action<T> configureDelegate) where T : new()
+        {
+            T item = _AutoMap<T>(record, _GetProperties(typeof(T)));
+            configureDelegate(item);
+            return item;
+        }
+
         private static T _AutoMap<T>(IDataRecord record, IEnumerable<PropertyInfo> props) where T : new()
         {
             T item = new T();
@@ -85,11 +92,11 @@ namespace QTFK.Extensions.Mapping.AutoMapping
             return false;
         }
 
-        public static void AutoMap<T>(this T source, T target)
+        public static void Copy<T>(this T source, T target)
         {
-            AutoMap<T>(source, target, _SkipNothing);
+            Copy<T>(source, target, _SkipNothing);
         }
-        public static void AutoMap<T>(this T source, T target, Func<PropertyInfo, bool> skip)
+        public static void Copy<T>(this T source, T target, Func<PropertyInfo, bool> skip)
         {
             var props = _GetProperties(source.GetType())
                 .Where(prop => !skip(prop))
@@ -99,15 +106,15 @@ namespace QTFK.Extensions.Mapping.AutoMapping
                 p.SetValue(target, p.GetValue(source));
         }
 
-        public static T AutoMap<T>(this T source) where T : new()
+        public static T Copy<T>(this T source) where T : new()
         {
-            return AutoMap<T>(source, _SkipNothing);
+            return Copy<T>(source, _SkipNothing);
         }
 
-        public static T AutoMap<T>(this T source, Func<PropertyInfo, bool> skip) where T : new()
+        public static T Copy<T>(this T source, Func<PropertyInfo, bool> skip) where T : new()
         {
             T target = new T();
-            AutoMap<T>(source, target, skip);
+            Copy<T>(source, target, skip);
             return target;
         }
 

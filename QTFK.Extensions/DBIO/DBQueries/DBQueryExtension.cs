@@ -1,6 +1,9 @@
-﻿using QTFK.Models;
+﻿using QTFK.Extensions.Collections.Dictionaries;
+using QTFK.Models;
 using QTFK.Services;
 using System.Linq;
+using System;
+using System.Collections.Generic;
 
 namespace QTFK.Extensions.DBIO.DBQueries
 {
@@ -12,64 +15,117 @@ namespace QTFK.Extensions.DBIO.DBQueries
             return query;
         }
 
-        public static T SetColumns<T>(this T query,  params string[] columns) where T : IDBQueryWithValuedFields
+
+
+        public static T Set<T>(this T query, string table, Action<ICollection<SetColumn>> columns) where T : IDBQueryWriteColumns 
         {
-            foreach (var column in columns)
-                query.ValuedFields[column] = $"@{column}";
+            var columnsCollection = new List<SetColumn>();
+            columns(columnsCollection);
+            columnsCollection.ForEach(c => SetColumn<T>(query, c.Name, c.Value, c.Parameter));
+            query.Table = table;
             return query;
         }
 
-        /// <summary>
-        /// Adds or sets the column [column] with "'@' + [column value]" as value
-        /// </summary>
-        /// <typeparam name="T">IDBQuery implementation</typeparam>
-        /// <param name="query">IDBQuery object</param>
-        /// <param name="column">name of the column</param>
-        /// <returns>returns the IDBQuery</returns>
-        public static T SetColumn<T>(this T query, string column) where T : IDBQueryWithValuedFields
+        public static T SetColumn<T>(this T query, string column, object value, string parameter = null) where T : IDBQueryWriteColumns
         {
-            query.ValuedFields[column] = $"@{column}";
+            parameter = string.IsNullOrWhiteSpace(parameter) ? $"@{column}" : parameter;
+            query.Fields.Set(column, parameter);
+            query.Parameters.Set(parameter, value);
             return query;
         }
 
-        /// <summary>
-        /// Adds or sets the column [column] with parameter [parameter] as value
-        /// </summary>
-        /// <typeparam name="T">IDBQuery implementation</typeparam>
-        /// <param name="query">IDBQuery object</param>
-        /// <param name="column">name of the column</param>
-        /// <param name="parameter"></param>
-        /// <returns></returns>
-        public static T SetColumn<T>(this T query, string column, string parameter) where T : IDBQueryWithValuedFields
+        public static ICollection<SetColumn> Column(this ICollection<SetColumn> columns, string name, object value = null, string parameter = null)
         {
-            query.ValuedFields[column] = parameter;
+            columns.Add(new SetColumn
+            {
+                Name = name,
+                Parameter = parameter,
+                Value = value,
+            });
+            return columns;
+        }
+
+
+
+        public static T Select<T>(this T query, string table, Action<ICollection<SelectColumn>> columns) where T : IDBQuerySelectColumns
+        {
+            var columnsCollection = new List<SelectColumn>();
+            columns(columnsCollection);
+            columnsCollection.ForEach(c => query.Columns.Add(c));
+            query.Table = table;
             return query;
         }
 
-        public static T AddColumn<T>(this T query, string column) where T : IDBQueryWithFields
+        public static T AddColumn<T>(this T query, string column, string alias = null) where T : IDBQuerySelectColumns
         {
-            query.Fields.Add(column);
+            query.Columns.Add(new SelectColumn { Name = column, Alias = alias });
             return query;
         }
 
-        public static T AddColumns<T>(this T query, params string[] columns) where T : IDBQueryWithFields
+        public static ICollection<SelectColumn> Column(this ICollection<SelectColumn> columns, string name, string alias = null)
         {
-            foreach (var column in columns)
-                query.Fields.Add(column);
-            return query;
+            columns.Add(new SelectColumn
+            {
+                Name = name,
+                Alias = alias,
+            });
+            return columns;
         }
 
-        public static T SetWhere<T>(this T query, string where) where T : IDBQueryWithWhere
+
+
+        public static T SetWhere<T>(this T query, string where) where T : IDBQueryWhereClause
         {
             query.Where = where;
             return query;
         }
 
-        public static T SetTablePrefix<T>(this T query, string prefix) where T : IDBQueryWithTablePrefix
+        public static T SetTablePrefix<T>(this T query, string prefix) where T : IDBQueryTablePrefix
         {
             query.Prefix = prefix;
             return query;
         }
 
+        public static T AddJoin<T>(this T query, JoinKind kind, string rightTable, Action<ICollection<JoinMatch>> matches, Action<ICollection<SelectColumn>> columns) where T : IDBQueryJoin
+        {
+            var joinMatches = new List<JoinMatch>();
+            matches(joinMatches);
+
+            var columnsCollection = new List<SelectColumn>();
+            columns(columnsCollection);
+
+            query.Joins.Add(new JoinTable
+            {
+                Table = rightTable,
+                Kind = kind,
+                Matches = joinMatches,
+                Columns = columnsCollection,
+            });
+
+            return query;
+        }
+
+        public static T AddJoin<T>(this T query, JoinKind kind, string rightTable, string leftField, string rightField, Action<ICollection<SelectColumn>> columns) where T : IDBQueryJoin
+        {
+            return AddJoin<T>(query, kind, rightTable, m => m.Add(leftField, rightField), columns);
+        }
+
+        public static ICollection<JoinMatch> Add(this ICollection<JoinMatch> matches, string leftField, string rightField)
+        {
+            matches.Add(new JoinMatch
+            {
+                LeftField = leftField,
+                RightField = rightField,
+            });
+            return matches;
+        }
+
+
+
+        public static T SetParam<T>(this T query, string parameter, object value) where T : IDBQuery
+        {
+            query.Parameters.Set(parameter, value);
+            return query;
+        }
     }
 }

@@ -43,6 +43,9 @@
     <Compile Include="Extensions\Loggers\LoggerLevelExtension.cs" />
     <Compile Include="Models\DBIOException.cs" />
     <Compile Include="Models\IDBQuery.cs" />
+    <Compile Include="Models\SetColumn.cs" />
+    <Compile Include="Models\SelectColumn.cs" />
+    <Compile Include="Models\Joins.cs" />
     <Compile Include="Services\CRUDRepositories\InMemoryCRUDRepositoryBase.cs" />
     <Compile Include="Services\CRUDRepositories\InMemoryLambdaCRUDRepository.cs" />
     <Compile Include="Services\DBIO\DBMigrationStepProviderBase.cs" />

@@ -21,7 +21,7 @@ namespace QTFK.Core.Tests
                 new Dictionary<string,SimpleTestClass>()
                 , item => item.LastName
                 , item => !string.IsNullOrWhiteSpace(item.LastName)
-                , AutoMapExtension.AutoMap);
+                , AutoMapExtension.Copy);
 
             Assert.IsFalse(repo.Get(i => true).AsEnumerable().Any());
 
@@ -64,7 +64,7 @@ namespace QTFK.Core.Tests
                 new Dictionary<decimal, SimpleTestClass>()
                 , item => item.DecimalNumber
                 , item => item.DecimalNumber > 0
-                , (source, target) => source.AutoMap(target, p => p.Name == nameof(SimpleTestClass.DecimalNumber))
+                , (source, target) => source.Copy(target, p => p.Name == nameof(SimpleTestClass.DecimalNumber))
                 , item => DateTime.Now.Ticks
                 );
 
