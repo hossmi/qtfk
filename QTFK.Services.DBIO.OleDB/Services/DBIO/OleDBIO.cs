@@ -15,8 +15,8 @@ namespace QTFK.Services.DBIO
 {
     public class OleDBIO : IDBIO
     {
-        private readonly string _connectionString;
-        private readonly ILogger<LogLevel> _log;
+        protected readonly string _connectionString;
+        protected readonly ILogger<LogLevel> _log;
 
         public OleDBIO(
             string connectionString
