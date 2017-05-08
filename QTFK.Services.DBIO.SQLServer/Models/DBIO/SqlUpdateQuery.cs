@@ -6,7 +6,7 @@ using System.Linq;
 
 namespace QTFK.Models.DBIO
 {
-    public class SqlUpdateQuery : IDBQuery, IDBQueryWithTableName, IDBQueryWriteColumns, IDBQueryWhereClause, IDBQueryTablePrefix
+    public class SqlUpdateQuery : IDBQueryUpdate
     {
         public string Prefix { get; set; } = "";
         public string Table { get; set; } = "";

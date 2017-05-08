@@ -6,7 +6,7 @@ using System.Linq;
 
 namespace QTFK.Models.DBIO
 {
-    public class SqlDeleteQuery : IDBQuery, IDBQueryWithTableName, IDBQueryWhereClause, IDBQueryTablePrefix
+    public class SqlDeleteQuery : IDBQueryDelete
     {
         public IDictionary<string, object> Parameters { get; set; } = DictionaryExtension.New();
         public string Prefix { get; set; } = "";

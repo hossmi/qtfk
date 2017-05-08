@@ -259,7 +259,7 @@ namespace QTFK.Services.DBIO.SQLServer.Tests
             IDBQuery insert;
 
             insert = new SqlInsertQuery()
-                .SetTablePrefix("qtfk.dbo.")
+                .SetPrefix("qtfk.dbo.")
                 .Set("persona", c => c
                     .Column("nombre")
                     .Column("apellidos")
@@ -282,7 +282,7 @@ namespace QTFK.Services.DBIO.SQLServer.Tests
 
             //selects
             var select = new SqlSelectQuery()
-                    .SetTablePrefix("qtfk.dbo.")
+                    .SetPrefix("qtfk.dbo.")
                     .SetTable("persona")
                     .AddColumn("*")
                     //.SetWhere("nombre = @nombre")
@@ -310,7 +310,7 @@ namespace QTFK.Services.DBIO.SQLServer.Tests
 
             //IDBQuery updates
             var update = new SqlUpdateQuery()
-                .SetTablePrefix("qtfk.dbo.")
+                .SetPrefix("qtfk.dbo.")
                 .Set("persona", c => c
                     .Column("apellidos"))
                 .SetWhere("nombre = @nombre")
@@ -332,7 +332,7 @@ namespace QTFK.Services.DBIO.SQLServer.Tests
             Assert.AreEqual("Ramírez de Villalobos", testItem.Apellidos);
 
             var delete = new SqlDeleteQuery()
-                .SetTablePrefix("qtfk.dbo.")
+                .SetPrefix("qtfk.dbo.")
                 .SetTable("persona")
                 .SetWhere("nombre = @nombre")
                 ;
@@ -354,7 +354,7 @@ namespace QTFK.Services.DBIO.SQLServer.Tests
             IDBQuery insert;
 
             insert = new SqlInsertQuery()
-                .SetTablePrefix("qtfk.dbo.")
+                .SetPrefix("qtfk.dbo.")
                 .Set("persona", c => c
                     .Column("nombre")
                     .Column("apellidos")
@@ -365,7 +365,7 @@ namespace QTFK.Services.DBIO.SQLServer.Tests
             _db.Set(insert, _db.Params().Set("@nombre", "Louis").Set("@apellidos", "Norton Smith"));
 
             insert = new SqlInsertQuery()
-                .SetTablePrefix("qtfk.dbo.")
+                .SetPrefix("qtfk.dbo.")
                 .Set("etiqueta", c => c
                     .Column("nombre")
                 );
@@ -377,7 +377,7 @@ namespace QTFK.Services.DBIO.SQLServer.Tests
 
             var persons = _db
                 .Get<DLPerson>(new SqlSelectQuery()
-                    .SetTablePrefix("qtfk.dbo.")
+                    .SetPrefix("qtfk.dbo.")
                     .Select("persona", c => c
                         .Column("*")
                     ))
@@ -386,7 +386,7 @@ namespace QTFK.Services.DBIO.SQLServer.Tests
 
             var tags = _db
                 .Get<DLTag>(new SqlSelectQuery()
-                    .SetTablePrefix("qtfk.dbo.")
+                    .SetPrefix("qtfk.dbo.")
                     .SetTable("etiqueta")
                     .AddColumn("*"))
                 .ToList()
@@ -398,7 +398,7 @@ namespace QTFK.Services.DBIO.SQLServer.Tests
                 ;
 
             insert = new SqlInsertQuery()
-                .SetTablePrefix("qtfk.dbo.")
+                .SetPrefix("qtfk.dbo.")
                 .Set("etiquetas_personas", c => c
                     .Column("persona_id")
                     .Column("etiqueta_id")
@@ -408,7 +408,7 @@ namespace QTFK.Services.DBIO.SQLServer.Tests
                 _db.Set(insert, _db.Params().Set("@persona_id", pair.person_ID).Set("@etiqueta_id", pair.tag_ID));
 
             var select = new SqlSelectQuery()
-                .SetTablePrefix("qtfk.dbo.")
+                .SetPrefix("qtfk.dbo.")
                 .Select("etiquetas_personas", c => c.Column("*"))
                 .AddJoin(JoinKind.Left, "etiqueta", m => m.Add("etiqueta_id", "id"), c => c
                     .Column("*")
@@ -420,7 +420,7 @@ namespace QTFK.Services.DBIO.SQLServer.Tests
                     )
                 ;
 
-            //string sql = select.Compile();
+            string sql = select.Compile();
 
             var data = _db
                 .Get(select, r => new
@@ -439,7 +439,7 @@ namespace QTFK.Services.DBIO.SQLServer.Tests
 
             //IDBQuery updates
             var update = new SqlUpdateQuery()
-                .SetTablePrefix("qtfk.dbo.")
+                .SetPrefix("qtfk.dbo.")
                 .Set("persona", c => c
                     .Column("apellidos"))
                 .SetWhere("nombre = @nombre")
@@ -451,7 +451,7 @@ namespace QTFK.Services.DBIO.SQLServer.Tests
                 );
 
             var selectPersons = new SqlSelectQuery()
-                .SetTablePrefix("qtfk.dbo.")
+                .SetPrefix("qtfk.dbo.")
                 .Select("persona", c => c.Column("*"))
                 .SetWhere("nombre = @nombre")
                 .SetParam("@nombre", "Pepe")
@@ -465,7 +465,7 @@ namespace QTFK.Services.DBIO.SQLServer.Tests
             Assert.AreEqual("Ramírez de Villalobos", person.Apellidos);
 
             var delete = new SqlDeleteQuery()
-                .SetTablePrefix("qtfk.dbo.")
+                .SetPrefix("qtfk.dbo.")
                 .SetTable("persona")
                 .SetWhere("nombre = @nombre")
                 .SetParam("@nombre", "Pepe")

@@ -7,7 +7,7 @@ using System.Collections.Generic;
 
 namespace QTFK.Models.DBIO
 {
-    public class SqlSelectQuery : IDBQuery, IDBQueryWithTableName, IDBQuerySelectColumns, IDBQueryWhereClause, IDBQueryTablePrefix, IDBQueryJoin
+    public class SqlSelectQuery : IDBQuerySelect
     {
         public string Prefix { get; set; } = "";
         public string Table { get; set; } = "";
@@ -22,9 +22,9 @@ namespace QTFK.Models.DBIO
                 .Select(c =>
                 {
                     if (c.Name.Trim() == "*")
-                        return $"[{table}].*";
+                        return $"{table}.*";
 
-                    return $"[{table}].[{c.Name}] {(string.IsNullOrWhiteSpace(c.Alias) ? "" : $" AS [{c.Alias}]")}";
+                    return $"{table}.[{c.Name}] {(string.IsNullOrWhiteSpace(c.Alias) ? "" : $" AS [{c.Alias}]")}";
                 });
         }
 
@@ -36,6 +36,8 @@ namespace QTFK.Models.DBIO
             string t0 = "t0";
             IList<IEnumerable<string>> allColumns = new List<IEnumerable<string>>();
 
+            allColumns.Add(PrepareColumns(t0, Columns));
+
             string joins = Joins
                 .Stringify(join =>
                 {
@@ -43,12 +45,10 @@ namespace QTFK.Models.DBIO
                     allColumns.Add(PrepareColumns(alias, join.Columns));
 
                     string matches = join.Matches
-                        .Stringify(match => $"{t0}.{match.LeftField} = {alias}.{match.RightField}", " AND ");
+                        .Stringify(match => $"{t0}.[{match.LeftField}] = {alias}.[{match.RightField}]", " AND ");
 
-                    return $"{join.Kind} JOIN {prefix}{join.Table} AS {alias} ON {matches} ";
+                    return $"{join.Kind} JOIN {prefix}[{join.Table}] AS {alias} ON {matches} ";
                 }, Environment.NewLine);
-
-            allColumns.Add(PrepareColumns(t0, Columns));
 
             string columns = allColumns
                 .SelectMany(c => c)

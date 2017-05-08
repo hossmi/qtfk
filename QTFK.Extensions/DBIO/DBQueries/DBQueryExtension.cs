@@ -80,7 +80,7 @@ namespace QTFK.Extensions.DBIO.DBQueries
             return query;
         }
 
-        public static T SetTablePrefix<T>(this T query, string prefix) where T : IDBQueryTablePrefix
+        public static T SetPrefix<T>(this T query, string prefix) where T : IDBQuery
         {
             query.Prefix = prefix;
             return query;

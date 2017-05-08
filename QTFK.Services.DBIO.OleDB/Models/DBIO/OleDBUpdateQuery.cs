@@ -6,8 +6,9 @@ using System.Linq;
 
 namespace QTFK.Models.DBIO
 {
-    public class OleDBUpdateQuery : IDBQuery, IDBQueryWithTableName, IDBQueryWriteColumns, IDBQueryWhereClause
+    public class OleDBUpdateQuery : IDBQueryUpdate
     {
+        public string Prefix { get; set; } = "";
         public string Table { get; set; } = "";
         public IDictionary<string, object> Fields { get; set; } = DictionaryExtension.New();
         public string Where { get; set; } = "";
@@ -15,6 +16,7 @@ namespace QTFK.Models.DBIO
 
         public string Compile()
         {
+            string prefix = string.IsNullOrWhiteSpace(Prefix) ? "" : Prefix.Trim();
             var columnList = Fields
                 .Select(c => new { K = c.Key, V = c.Value.ToString() })
                 .ToList()
@@ -23,7 +25,7 @@ namespace QTFK.Models.DBIO
             string whereSegment = string.IsNullOrWhiteSpace(Where) ? "" : $"WHERE ({Where})";
 
             return $@"
-                UPDATE [{Table}]
+                UPDATE {prefix}[{Table}]
                 SET {columnList.Stringify(c => $"[{c.K}] = {(c.V.StartsWith("@") ? c.V : $"'{c.V}'")}")}
                 {whereSegment}
                 ;";
