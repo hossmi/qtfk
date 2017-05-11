@@ -15,7 +15,7 @@ namespace QTFK.Extensions.Objects.Factory
         /// <returns>The created instance</returns>
         /// <remarks>Intended to be used over POCO's and objects that represent simple models.
         /// Properties that implement special logic inside their getter/setter's may present undesired results.
-        /// Members are NOT cloned, onlu properties, which may indirectly affect members.</remarks>
+        /// Members are NOT cloned, only properties, which may indirectly affect members.</remarks>
         public static T ShallowClone<T>(this T source) where T : class, new()
         {
             if (source == null)
