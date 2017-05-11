@@ -58,6 +58,7 @@
     <Compile Include="Mapping\AutoMapping\AutoMapExtension.cs" />
     <Compile Include="Mapping\EntityMapperExtension.cs" />
     <Compile Include="Objects\DictionaryConverter\DictionaryExtension.cs" />
+    <Compile Include="Objects\Factory\GenericFactory.cs" />
     <Compile Include="Objects\Manipulator\ManipulatorExtension.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
