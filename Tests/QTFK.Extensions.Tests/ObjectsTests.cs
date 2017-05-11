@@ -56,22 +56,6 @@ namespace QTFK.Extensions.Tests
                 }
                 return result;
             }
-
-            public static Dummy WithTwos()
-            {
-                Dummy result = null;
-                lock (locker)
-                {
-                    readOnlyValue = 2;
-                    result = new Dummy()
-                    {
-                        WriteOnlyProperty = 2,
-                        FullAccessProperty = 2,
-                    };
-                    readOnlyValue = 0;
-                }
-                return result;
-            }
         }
     }
 }
