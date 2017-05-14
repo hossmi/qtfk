@@ -45,7 +45,7 @@
     <Compile Include="Models\DBIO\SqlSelectQuery.cs" />
     <Compile Include="Models\DBIO\SqlUpdateQuery.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Services\DBIO\SQLServerCrudDBIO.cs" />
+    <Compile Include="Services\DBIO\SqlServerCrudFactory.cs" />
     <Compile Include="Services\DBIO\SQLServerDBMigrator.cs" />
     <Compile Include="Services\DBIO\SQLServerDBIO.cs" />
   </ItemGroup>

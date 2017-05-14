@@ -13,7 +13,7 @@ using QTFK.Extensions.DataReader;
 
 namespace QTFK.Services.DBIO
 {
-    public class OleDBIO : IDBIO
+    public class OleDBIO : IDBIO, IOleDB
     {
         protected readonly string _connectionString;
         protected readonly ILogger<LogLevel> _log;

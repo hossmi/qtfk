@@ -1,13 +1,17 @@
-﻿using QTFK.Models;
+﻿using System;
+using QTFK.Models;
 using QTFK.Models.DBIO;
 
 namespace QTFK.Services.DBIO
 {
-    public class OleDBCrudDBIO : OleDBIO, ICRUDDBIO
+    public class OleDBCrudFactory : ICRUDQueryFactory, IOleDB
     {
-        public OleDBCrudDBIO(string connectionString, ILogger<LogLevel> log = null) : base(connectionString, log)
+        public OleDBCrudFactory(IDBIO db)
         {
+            DB = db;
         }
+
+        public IDBIO DB { get; }
 
         public IDBQueryDelete NewDelete()
         {

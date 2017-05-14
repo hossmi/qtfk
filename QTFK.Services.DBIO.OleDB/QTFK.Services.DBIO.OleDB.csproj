@@ -46,7 +46,7 @@
     <Compile Include="Models\DBIO\OleDBInsertQuery.cs" />
     <Compile Include="Models\DBIO\OleDBSelectQuery.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Services\DBIO\OleDBCrudDBIO.cs" />
+    <Compile Include="Services\DBIO\OleDBCrudFactory.cs" />
     <Compile Include="Services\DBIO\OleDBIO.cs" />
     <Compile Include="Services\DBIO\OleDBMigrator.cs" />
   </ItemGroup>

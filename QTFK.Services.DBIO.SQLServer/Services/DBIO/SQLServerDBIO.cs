@@ -13,7 +13,7 @@ using QTFK.Services.Loggers;
 
 namespace QTFK.Services.DBIO
 {
-    public class SQLServerDBIO : IDBIO
+    public class SQLServerDBIO : IDBIO, ISQLServer
     {
         protected readonly string _connectionString;
         protected readonly ILogger<LogLevel> _log;
