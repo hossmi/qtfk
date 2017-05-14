@@ -8,7 +8,12 @@ using System.Threading.Tasks;
 
 namespace QTFK.Services
 {
-    public interface ICRUDDBIO : IDBIO
+    public interface IQueryFactory
+    {
+        IDBIO DB { get; }
+    }
+
+    public interface ICRUDQueryFactory : IQueryFactory
     {
         IDBQuerySelect NewSelect();
         IDBQueryInsert NewInsert();
