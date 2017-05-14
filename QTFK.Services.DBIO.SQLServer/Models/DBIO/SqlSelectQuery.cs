@@ -4,10 +4,11 @@ using QTFK.Extensions.Collections.Strings;
 using System;
 using System.Linq;
 using System.Collections.Generic;
+using QTFK.Services;
 
 namespace QTFK.Models.DBIO
 {
-    public class SqlSelectQuery : IDBQuerySelect
+    public class SqlSelectQuery : IDBQuerySelect, ISQLServer
     {
         public string Prefix { get; set; } = "";
         public string Table { get; set; } = "";

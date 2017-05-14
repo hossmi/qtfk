@@ -1,12 +1,13 @@
 ﻿using QTFK.Extensions.Collections.Dictionaries;
 using QTFK.Extensions.Collections.Strings;
+using QTFK.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace QTFK.Models.DBIO
 {
-    public class OleDBDeleteQuery : IDBQueryDelete
+    public class OleDBDeleteQuery : IDBQueryDelete, IOleDB
     {
         public string Prefix { get; set; } = "";
         public string Table { get; set; } = "";
