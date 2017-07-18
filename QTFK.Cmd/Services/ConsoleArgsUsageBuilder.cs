@@ -19,22 +19,22 @@ namespace QTFK.Services
             _onUsageOption = onUsageOption;
         }
 
-        public string ByName(string name, string description)
+        public string Required(string name, string description)
         {
             return Usage(name, description);
         }
 
-        public string ByName(string name, string description, string defaultValue)
+        public string Optional(string name, string description, string defaultValue)
         {
             return Usage(name, description, defaultValue);
         }
 
-        public string ByIndex(int index, string name, string description)
+        public string Required(int index, string name, string description)
         {
             return Usage(name, description);
         }
 
-        public string ByIndex(int index, string name, string description, string defaultValue)
+        public string Optional(int index, string name, string description, string defaultValue)
         {
             return Usage(name, description, defaultValue);
         }
@@ -47,13 +47,15 @@ namespace QTFK.Services
 
         private string Usage(string name, string description, string defaultValue = null)
         {
+            defaultValue = defaultValue ?? string.Empty;
+
             _onUsageOption?.Invoke(new ArgumentInfo
             {
                 Name = name,
                 Description = description,
-                Default = defaultValue ?? string.Empty,
+                Default = defaultValue,
             });
-            return null;
+            return defaultValue;
         }
     }
 }

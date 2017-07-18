@@ -22,7 +22,7 @@ namespace QTFK.Services
             _onError = onError;
         }
 
-        public string ByName(string name, string description)
+        public string Required(string name, string description)
         {
             string result = FindNamed(name, 0);
 
@@ -32,12 +32,12 @@ namespace QTFK.Services
             return result;
         }
 
-        public string ByName(string name, string description, string defaultValue)
+        public string Optional(string name, string description, string defaultValue)
         {
             return FindNamed(name, 0) ?? defaultValue;
         }
 
-        public string ByIndex(int index, string name, string description)
+        public string Required(int index, string name, string description)
         {
             string result = FindUnnamed(index, 0, 1);
 
@@ -47,7 +47,7 @@ namespace QTFK.Services
             return result;
         }
 
-        public string ByIndex(int index, string name, string description, string defaultValue)
+        public string Optional(int index, string name, string description, string defaultValue)
         {
             return FindUnnamed(index, 0, 1) ?? defaultValue;
         }

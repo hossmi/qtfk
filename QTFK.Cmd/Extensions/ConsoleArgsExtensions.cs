@@ -68,28 +68,28 @@ namespace QTFK.Extensions
             return service;
         }
 
-        public static T ByName<T>(this IConsoleArgsBuilder builder, string name, string description, T defaultValue)
+        public static T Optional<T>(this IConsoleArgsBuilder builder, string name, string description, T defaultValue)
         {
-            string result = builder.ByName(name, description, defaultValue.ToString());
+            string result = builder.Optional(name, description, defaultValue.ToString());
             var converter = TypeDescriptor.GetConverter(defaultValue);
             return (T)converter.ConvertFromString(result);
         }
 
-        public static T ByName<T>(this IConsoleArgsBuilder builder, string name, string description, T defaultValue, Func<string,T> customConverter)
+        public static T Optional<T>(this IConsoleArgsBuilder builder, string name, string description, T defaultValue, Func<string,T> customConverter)
         {
-            string result = builder.ByName(name, description, defaultValue.ToString());
+            string result = builder.Optional(name, description, defaultValue.ToString());
             return customConverter(result);
         }
 
-        public static T ByIndex<T>(this IConsoleArgsBuilder builder, int index, string name, string description, T defaultValue)
+        public static T Optional<T>(this IConsoleArgsBuilder builder, int index, string name, string description, T defaultValue)
         {
-            string result = builder.ByIndex(index, name, description, defaultValue.ToString());
+            string result = builder.Optional(index, name, description, defaultValue.ToString());
             var converter = TypeDescriptor.GetConverter(defaultValue);
             return (T)converter.ConvertFromString(result);
         }
-        public static T ByIndex<T>(this IConsoleArgsBuilder builder, int index, string name, string description, T defaultValue, Func<string, T> customConverter)
+        public static T Optional<T>(this IConsoleArgsBuilder builder, int index, string name, string description, T defaultValue, Func<string, T> customConverter)
         {
-            string result = builder.ByIndex(index, name, description, defaultValue.ToString());
+            string result = builder.Optional(index, name, description, defaultValue.ToString());
             return customConverter(result);
         }
     }

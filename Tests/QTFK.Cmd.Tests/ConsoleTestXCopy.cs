@@ -20,14 +20,14 @@ namespace QTFK.Cmd.Tests
         {
             _builder = b => new XCopyArgsTest
             {
-                Source = b.ByIndex(1, "source", "Source files to be copied."),
-                Target = b.ByIndex(2, "target", "Destination path.", Environment.CurrentDirectory),
+                Source = b.Required(1, "source", "Source files to be copied."),
+                Target = b.Optional(2, "target", "Destination path.", Environment.CurrentDirectory),
                 Recursive = b.Flag("s", "Recursive copy of subfoldes."),
                 CopyEmptyFolders = b.Flag("e", "With 's' option, copies empty subfolders."),
                 VerifyEachFileSize = b.Flag("v", "Verifies file size after each copy."),
-                CopyAfter = b.ByName("d", "Copy files modified during or after specified date.", DateTime.MinValue),
+                CopyAfter = b.Optional("d", "Copy files modified during or after specified date.", DateTime.MinValue),
                 Overwrite = b.Flag("r", "Overwrites existing files."),
-                Retries = b.ByName("retries", "Number of times to retry the copy operation", 3),
+                Retries = b.Optional("retries", "Number of times to retry the copy operation", 3),
             };
         }
 

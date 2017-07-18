@@ -34,13 +34,13 @@ namespace QTFK.Cmd.Tests
                 .AddErrorHandler(error => Assert.Fail($"Unexpected Argument Error! {error.Message}"))
                 .Parse(args, builder => new
                 {
-                    RequiredString = builder.ByName("someString", "Description for someString option."),
-                    RequiredNumber = double.Parse(builder.ByName("someNumber", "Description for someNumber option.")),
-                    Input2 = builder.ByIndex(2, "source", "Source path"),
-                    Input1 = builder.ByIndex(1, "target", "Target path"),
-                    Input3_optional = builder.ByIndex(3, "iterations", "Number of times to try copy", 13),
+                    RequiredString = builder.Required("someString", "Description for someString option."),
+                    RequiredNumber = double.Parse(builder.Required("someNumber", "Description for someNumber option.")),
+                    Input2 = builder.Required(2, "source", "Source path"),
+                    Input1 = builder.Required(1, "target", "Target path"),
+                    Input3_optional = builder.Optional(3, "iterations", "Number of times to try copy", 13),
                     Flag = builder.Flag("someFlag", "Description for someFlag."),
-                    OptionalDate = builder.ByName("someOptionalDate", "Description for someOptionalDate.", new DateTime(2099, 12, 31))
+                    OptionalDate = builder.Optional("someOptionalDate", "Description for someOptionalDate.", new DateTime(2099, 12, 31))
                 });
 
             Assert.AreEqual("pepe", appArgs.RequiredString);
