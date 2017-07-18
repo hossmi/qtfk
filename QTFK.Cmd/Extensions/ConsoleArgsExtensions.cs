@@ -47,10 +47,24 @@ namespace QTFK.Extensions
             return service;
         }
 
+        public static IConsoleArgsService SetShowHelpOnError(this IConsoleArgsService service, bool value)
+        {
+            service.ShowHelpOnError = value;
+            return service;
+        }
+
         public static IConsoleArgsService SetHelp(this IConsoleArgsService service, string name, string description)
         {
-            service.HelpOptionName = name;
-            service.HelpDescription = description;
+            return SetHelp(service, new ArgumentInfo
+            {
+                Name = name,
+                Description = description
+            });
+        }
+
+        public static IConsoleArgsService SetHelp(this IConsoleArgsService service, ArgumentInfo info)
+        {
+            service.HelpArgument = info;
             return service;
         }
 

@@ -12,8 +12,8 @@ namespace QTFK.Services
         event Action<string> Usage;
         event Action<ArgumentInfo> UsageOption;
         string Description { get; set; }
-        string HelpOptionName { get; set; }
-        string HelpDescription { get; set; }
+        ArgumentInfo HelpArgument { get; set; }
+        bool ShowHelpOnError { get; set; }
 
         T Parse<T>(IEnumerable<string> args, Func<IConsoleArgsBuilder, T> builder) where T: class;
     }

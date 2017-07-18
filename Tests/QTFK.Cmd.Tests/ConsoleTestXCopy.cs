@@ -47,6 +47,7 @@ namespace QTFK.Cmd.Tests
                 .AddErrorHandler(errors.Add)
                 .AddUsageHandler(description => appHelp = description)
                 .AddUsageOptionHandler(appOptions.Add)
+                .SetShowHelpOnError(true)
                 ;
 
             var result = appArgs.Parse(Enumerable.Empty<string>(), _builder);

@@ -43,6 +43,7 @@
     <Compile Include="Extensions\ConsoleArgsExtensions.cs" />
     <Compile Include="Models\ArgumentInfo.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Services\ConsoleArgsUsageBuilder.cs" />
     <Compile Include="Services\ConsoleArgsBuilder.cs" />
     <Compile Include="Services\ConsoleArgsService.cs" />
     <Compile Include="Services\IConsoleArgsBuilder.cs" />
