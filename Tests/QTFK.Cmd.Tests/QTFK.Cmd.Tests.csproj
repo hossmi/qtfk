@@ -48,7 +48,9 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ConsoleTestXCopy.cs" />
     <Compile Include="ConsoleTest1.cs" />
+    <Compile Include="Models\XCopyArgsTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -62,6 +64,10 @@
     <ProjectReference Include="..\..\QTFK.Core\QTFK.Core.csproj">
       <Project>{8C740ADF-E4E1-444A-A9F0-2E40B174260F}</Project>
       <Name>QTFK.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\QTFK.Extensions\QTFK.Extensions.csproj">
+      <Project>{D6DB2C2B-D86D-45CF-A756-37ED71C614D3}</Project>
+      <Name>QTFK.Extensions</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup />

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using QTFK.Models;
+using System;
 using System.Collections.Generic;
 
 namespace QTFK.Services
@@ -7,17 +8,13 @@ namespace QTFK.Services
     {
         bool CaseSensitive { get; set; }
         string Prefix { get; set; }
-        Action<ArgumentException> OnError { get; set; }
+        event Action<ArgumentException> Error;
+        event Action<string> Usage;
+        event Action<ArgumentInfo> UsageOption;
+        string Description { get; set; }
+        string HelpOptionName { get; set; }
+        string HelpDescription { get; set; }
 
         T Parse<T>(IEnumerable<string> args, Func<IConsoleArgsBuilder, T> builder) where T: class;
-    }
-
-    public interface IConsoleArgsBuilder
-    {
-        string Get(string name);
-        string Get<T>(string name, T defaultValue);
-        string Get(int index);
-        string Get<T>(int index, T defaultValue);
-        bool HasFlag(string name);
     }
 }

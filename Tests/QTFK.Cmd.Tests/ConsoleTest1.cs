@@ -5,6 +5,8 @@ using System.Collections.Generic;
 using QTFK.Models;
 using System.Linq;
 using QTFK.Extensions;
+using QTFK.Extensions.Collections.Casting;
+using QTFK.Cmd.Tests.Models;
 
 namespace QTFK.Cmd.Tests
 {
@@ -29,16 +31,16 @@ namespace QTFK.Cmd.Tests
             var appArgs = new ConsoleArgsService()
                 .SetCaseSensitive(false)
                 .SetPrefix("--")
-                .SetErrorHandler(error => Assert.Fail($"Unexpected Argument Error! {error.Message}"))
+                .AddErrorHandler(error => Assert.Fail($"Unexpected Argument Error! {error.Message}"))
                 .Parse(args, builder => new
                 {
-                    RequiredString = builder.Get("someString"),
-                    RequiredNumber = double.Parse(builder.Get("someNumber")),
-                    Input2 = builder.Get(2),
-                    Input1 = builder.Get(1),
-                    Input3_optional = int.Parse(builder.Get(3, 13)),
-                    Flag = builder.HasFlag("someFlag"),
-                    OptionalDate = DateTime.Parse(builder.Get("someOptionalDate", new DateTime(2099, 12, 31)))
+                    RequiredString = builder.ByName("someString", "Description for someString option."),
+                    RequiredNumber = double.Parse(builder.ByName("someNumber", "Description for someNumber option.")),
+                    Input2 = builder.ByIndex(2, "source", "Source path"),
+                    Input1 = builder.ByIndex(1, "target", "Target path"),
+                    Input3_optional = builder.ByIndex(3, "iterations", "Number of times to try copy", 13),
+                    Flag = builder.Flag("someFlag", "Description for someFlag."),
+                    OptionalDate = builder.ByName("someOptionalDate", "Description for someOptionalDate.", new DateTime(2099, 12, 31))
                 });
 
             Assert.AreEqual("pepe", appArgs.RequiredString);
@@ -49,6 +51,5 @@ namespace QTFK.Cmd.Tests
             Assert.AreEqual(true, appArgs.Flag);
             Assert.AreEqual(someDate, appArgs.OptionalDate);
         }
-
     }
 }

@@ -41,13 +41,14 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Extensions\ConsoleArgsExtensions.cs" />
+    <Compile Include="Models\ArgumentInfo.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Services\ConsoleArgsBuilder.cs" />
     <Compile Include="Services\ConsoleArgsService.cs" />
+    <Compile Include="Services\IConsoleArgsBuilder.cs" />
     <Compile Include="Services\IConsoleArgsService.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Models\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <ProjectReference Include="..\QTFK.Core\QTFK.Core.csproj">
       <Project>{8C740ADF-E4E1-444A-A9F0-2E40B174260F}</Project>

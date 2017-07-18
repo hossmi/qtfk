@@ -1,6 +1,8 @@
-﻿using QTFK.Services;
+﻿using QTFK.Models;
+using QTFK.Services;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -21,10 +23,60 @@ namespace QTFK.Extensions
             return service;
         }
 
-        public static IConsoleArgsService SetErrorHandler(this IConsoleArgsService service, Action<ArgumentException> onError)
+        public static IConsoleArgsService AddErrorHandler(this IConsoleArgsService service, Action<ArgumentException> onError)
         {
-            service.OnError = onError;
+            service.Error += onError;
             return service;
+        }
+
+        public static IConsoleArgsService AddUsageHandler(this IConsoleArgsService service, Action<string> onUsage)
+        {
+            service.Usage += onUsage;
+            return service;
+        }
+
+        public static IConsoleArgsService AddUsageOptionHandler(this IConsoleArgsService service, Action<ArgumentInfo> onUsageOption)
+        {
+            service.UsageOption += onUsageOption;
+            return service;
+        }
+
+        public static IConsoleArgsService SetDescription(this IConsoleArgsService service, string description)
+        {
+            service.Description = description;
+            return service;
+        }
+
+        public static IConsoleArgsService SetHelp(this IConsoleArgsService service, string name, string description)
+        {
+            service.HelpOptionName = name;
+            service.HelpDescription = description;
+            return service;
+        }
+
+        public static T ByName<T>(this IConsoleArgsBuilder builder, string name, string description, T defaultValue)
+        {
+            string result = builder.ByName(name, description, defaultValue.ToString());
+            var converter = TypeDescriptor.GetConverter(defaultValue);
+            return (T)converter.ConvertFromString(result);
+        }
+
+        public static T ByName<T>(this IConsoleArgsBuilder builder, string name, string description, T defaultValue, Func<string,T> customConverter)
+        {
+            string result = builder.ByName(name, description, defaultValue.ToString());
+            return customConverter(result);
+        }
+
+        public static T ByIndex<T>(this IConsoleArgsBuilder builder, int index, string name, string description, T defaultValue)
+        {
+            string result = builder.ByIndex(index, name, description, defaultValue.ToString());
+            var converter = TypeDescriptor.GetConverter(defaultValue);
+            return (T)converter.ConvertFromString(result);
+        }
+        public static T ByIndex<T>(this IConsoleArgsBuilder builder, int index, string name, string description, T defaultValue, Func<string, T> customConverter)
+        {
+            string result = builder.ByIndex(index, name, description, defaultValue.ToString());
+            return customConverter(result);
         }
     }
 }
