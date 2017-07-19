@@ -45,7 +45,7 @@ namespace QTFK.Services
             string result = FindUnnamed(index, 0, 1);
 
             if (result == null)
-                _onError(new ArgumentException($"Missing {index}{(index == 1 ? "st" : "")}{(index == 2 ? "nd" : "")}{(index > 2 ? "th" : "")} argument."));
+                _onError(new ArgumentException($"Missing '{name}' argument."));
 
             return result;
         }
