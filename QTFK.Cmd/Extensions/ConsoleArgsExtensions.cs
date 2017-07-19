@@ -68,6 +68,16 @@ namespace QTFK.Extensions
             return service;
         }
 
+        public static T Required<T>(this IConsoleArgsBuilder builder, string name, string description) where T: struct
+        {
+            string result = builder.Required(name, description);
+            if (string.IsNullOrEmpty(result))
+                return default(T);
+
+            var converter = TypeDescriptor.GetConverter(typeof(T));
+            return (T)converter.ConvertFromString(result);
+        }
+
         public static T Optional<T>(this IConsoleArgsBuilder builder, string name, string description, T defaultValue)
         {
             string result = builder.Optional(name, description, defaultValue.ToString());

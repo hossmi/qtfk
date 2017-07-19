@@ -10,16 +10,19 @@ namespace QTFK.Services
         private string[] _args;
         private readonly IConsoleArgsService _service;
         private readonly Action<ArgumentException> _onError;
+        private readonly IDictionary<string, ArgumentInfo> _argsInfo;
 
         public ConsoleArgsBuilder(
             IConsoleArgsService service
             , Action<ArgumentException> onError
             , IEnumerable<string> args
+            , IDictionary<string, ArgumentInfo> argsInfo
             )
         {
             _args = args.ToArray();
             _service = service;
             _onError = onError;
+            _argsInfo = argsInfo;
         }
 
         public string Required(string name, string description)
@@ -98,6 +101,10 @@ namespace QTFK.Services
             {
                 if (i + 1 >= _args.Length)
                     return null;
+
+                string optionName = _args[i].Remove(0, _service.Prefix.Length);
+                if (_argsInfo[optionName].IsFlag)
+                    return FindUnnamed(index, i + 1, currentIndex);
 
                 if (IsOption(_args[i + 1]))
                     return FindUnnamed(index, i + 1, currentIndex);

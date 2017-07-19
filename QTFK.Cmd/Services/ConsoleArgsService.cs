@@ -30,25 +30,33 @@ namespace QTFK.Services
             HelpArgument.Name = HelpArgument.Name ?? "help";
             HelpArgument.Description = HelpArgument.Description ?? string.Empty;
 
+            var argsInfo = new Dictionary<string, ArgumentInfo>();
+            var result = new Result<T>(() => builder(new ExplorerConsoleArgsBuilder(argsInfo)));
+            if (!result.Ok)
+                throw new ArgumentException($"Can not obtain arguments data. Unexpected error building output type: '{result.Exception.Message}'", result.Exception);
+
             int anyErrors = 0;
 
-            IConsoleArgsBuilder argsBuilder = null;
             Action showHelp = () =>
             {
                 Usage(Description);
-                UsageOption(HelpArgument);
-                argsBuilder = new ConsoleArgsUsageBuilder(this, UsageOption);
-                builder(argsBuilder);
+                argsInfo
+                    .Values
+                    .Concat(new ArgumentInfo[] { HelpArgument })
+                    .OrderBy(k => k.Name)
+                    .ToList()
+                    .ForEach(UsageOption)
+                    ;
             };
-            if (ExistsHelpFlag(args.ToArray(), 0))
+
+            if (args.Contains($"{Prefix}{HelpArgument.Name}"))
             {
                 showHelp();
                 return null;
             }
 
-            argsBuilder = new ConsoleArgsBuilder(this, e => { ++anyErrors; Error(e); }, args);
-
-            var result = new Result<T>(() => builder(argsBuilder));
+            IConsoleArgsBuilder argsBuilder = new ConsoleArgsBuilder(this, e => { ++anyErrors; Error(e); }, args, argsInfo);
+            result = new Result<T>(() => builder(argsBuilder));
 
             if (result.Ok)
             {
@@ -67,17 +75,5 @@ namespace QTFK.Services
             Error(new ArgumentException($"Un expected error '{result.Exception.Message}'", result.Exception));
             return null;
         }
-
-        private bool ExistsHelpFlag(string[] args, int i)
-        {
-            if (i >= args.Length)
-                return false;
-
-            if ($"{Prefix}{HelpArgument.Name}" == args[i])
-                return true;
-
-            return ExistsHelpFlag(args, i + 1);
-        }
-
     }
 }

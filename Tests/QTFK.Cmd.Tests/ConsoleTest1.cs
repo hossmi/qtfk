@@ -14,6 +14,7 @@ namespace QTFK.Cmd.Tests
     public class ConsoleTest1
     {
         [TestMethod]
+        [TestCategory("Console")]
         public void Console_Test1()
         {
             var someDate = new DateTime(2012, 1, 1);
@@ -35,7 +36,7 @@ namespace QTFK.Cmd.Tests
                 .Parse(args, builder => new
                 {
                     RequiredString = builder.Required("someString", "Description for someString option."),
-                    RequiredNumber = double.Parse(builder.Required("someNumber", "Description for someNumber option.")),
+                    RequiredNumber = builder.Required<double>("someNumber", "Description for someNumber option."),
                     Input2 = builder.Required(2, "source", "Source path"),
                     Input1 = builder.Required(1, "target", "Target path"),
                     Input3_optional = builder.Optional(3, "iterations", "Number of times to try copy", 13),
