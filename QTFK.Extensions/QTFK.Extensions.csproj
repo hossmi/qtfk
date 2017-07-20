@@ -46,6 +46,7 @@
     <Compile Include="Collections\Filters\EnumerableFilterExtension.cs" />
     <Compile Include="Collections\Repositories\CRUDRepositoryExtension.cs" />
     <Compile Include="Collections\Strings\StringExtension.cs" />
+    <Compile Include="Collections\SwitchCase\SwitchCaseExtension.cs" />
     <Compile Include="DataReader\DataReaderExtension.cs" />
     <Compile Include="DataSets\DataSetExtension.cs" />
     <Compile Include="DBCommand\DBCommandExtension.cs" />
