@@ -54,7 +54,7 @@ namespace QTFK.Extensions.Tests
                 ;
 
             var jobs = cases
-                .CaseEnd(int.MaxValue)
+                .CaseElse(int.MaxValue)
                 .ToList()
                 ;
 
@@ -66,7 +66,7 @@ namespace QTFK.Extensions.Tests
             Assert.AreEqual(1, jobs.Count(s => s.Contains(" is in age of retirement.")));
 
             jobs = cases
-                .CaseEnd()
+                .CaseElse()
                 .ToList()
                 ;
 
@@ -89,7 +89,7 @@ namespace QTFK.Extensions.Tests
                     FullName = $"{p.LastName}, {p.Name}",
                     Status = "Developer",
                 })
-                .CaseEnd(int.MaxValue)
+                .CaseElse(int.MaxValue)
                 .ToList()
                 ;
 
@@ -98,6 +98,17 @@ namespace QTFK.Extensions.Tests
             Assert.AreEqual(1, filteredPersons.Count(s => s.Status == "Developer"));
             Assert.AreEqual(2, filteredPersons.Count(s => s.FullName == "Del Bosque Huertas, John"));
 
+            var emptyPersons = persons
+                .Case(p => !string.IsNullOrWhiteSpace(p.CurrentJob), p => $"Employed {p.Name}")
+                .Case(p => p.Age < 18, p => $"Children {p.Name}")
+                .CaseElse(p => $"Other {p.Name}")
+                .ToList()
+                ;
+
+            Assert.AreEqual(4, emptyPersons.Count());
+            Assert.AreEqual(2, emptyPersons.Count(s => s.StartsWith("Employed")));
+            Assert.AreEqual(1, emptyPersons.Count(s => s.StartsWith("Children")));
+            Assert.AreEqual(1, emptyPersons.Count(s => s.StartsWith("Other")));
         }
     }
 }

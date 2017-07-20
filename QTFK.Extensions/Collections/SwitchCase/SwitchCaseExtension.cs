@@ -14,7 +14,7 @@ namespace QTFK.Extensions.Collections.SwitchCase
 
     public static class SwitchCaseExtension
     {
-        public static CaseCollection<T,TResult> Case<T, TResult>(
+        public static CaseCollection<T, TResult> Case<T, TResult>(
             this IEnumerable<T> items
             , Func<T, bool> condition
             , Func<T, TResult> selector
@@ -24,7 +24,7 @@ namespace QTFK.Extensions.Collections.SwitchCase
             {
                 Items = items,
                 Cases = new List<KeyValuePair<Func<T, bool>, Func<T, TResult>>>()
-                    .Push(new KeyValuePair<Func<T, bool>, Func<T, TResult>>(condition,selector)),
+                    .Push(new KeyValuePair<Func<T, bool>, Func<T, TResult>>(condition, selector)),
             };
         }
 
@@ -38,9 +38,10 @@ namespace QTFK.Extensions.Collections.SwitchCase
             return cases;
         }
 
-        public static IEnumerable<TResult> CaseEnd<T, TResult>(
+        public static IEnumerable<TResult> CaseElse<T, TResult>(
             this CaseCollection<T, TResult> cases
-            , int matches = 1
+            , Func<T, TResult> selector
+            , int matches
             )
         {
             foreach (T item in cases.Items)
@@ -52,11 +53,37 @@ namespace QTFK.Extensions.Collections.SwitchCase
                     {
                         ++matchesFound;
                         yield return option.Value(item);
+                        if (matchesFound >= matches)
+                            break;
                     }
-                    if (matchesFound >= matches)
-                        break;
                 }
+                if (matchesFound <= 0)
+                    if (selector != null)
+                        yield return selector(item);
             }
+        }
+
+        public static IEnumerable<TResult> CaseElse<T, TResult>(
+            this CaseCollection<T, TResult> cases
+            , int matches
+            )
+        {
+            return CaseElse<T, TResult>(cases, null, matches);
+        }
+
+        public static IEnumerable<TResult> CaseElse<T, TResult>(
+            this CaseCollection<T, TResult> cases
+            , Func<T, TResult> selector
+            )
+        {
+            return CaseElse<T, TResult>(cases, selector, 1);
+        }
+
+        public static IEnumerable<TResult> CaseElse<T, TResult>(
+            this CaseCollection<T, TResult> cases
+            )
+        {
+            return CaseElse<T, TResult>(cases, null, 1);
         }
     }
 }
