@@ -16,8 +16,8 @@ namespace QTFK.Extensions.Collections.SwitchCase
     {
         public static CaseCollection<T, TResult> Case<T, TResult>(
             this IEnumerable<T> items
-            , Func<T, bool> condition
             , Func<T, TResult> selector
+            , Func<T, bool> condition
             )
         {
             return new CaseCollection<T, TResult>
@@ -30,8 +30,8 @@ namespace QTFK.Extensions.Collections.SwitchCase
 
         public static CaseCollection<T, TResult> Case<T, TResult>(
             this CaseCollection<T, TResult> cases
-            , Func<T, bool> condition
             , Func<T, TResult> selector
+            , Func<T, bool> condition
             )
         {
             cases.Cases.Add(new KeyValuePair<Func<T, bool>, Func<T, TResult>>(condition, selector));

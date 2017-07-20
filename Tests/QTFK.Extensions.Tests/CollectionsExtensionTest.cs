@@ -46,11 +46,11 @@ namespace QTFK.Extensions.Tests
             };
 
             var cases = persons
-                .Case(i => i.Age < 18, i => $"{i.Name} is not an adult.") //1
-                .Case(i => i.Age >= 18 && !string.IsNullOrWhiteSpace(i.CurrentJob), i => $"{i.Name} is employed as {i.CurrentJob}.") //2
-                .Case(i => i.Age >= 18 && string.IsNullOrWhiteSpace(i.CurrentJob), i => $"{i.Name} is unemployed.") //1
-                .Case(i => i.Age >= 65 && string.IsNullOrWhiteSpace(i.CurrentJob), i => $"{i.Name} is retired.") //0
-                .Case(i => i.Age >= 65, i => $"{i.Name} is in age of retirement.") //1
+                .Case(i => $"{i.Name} is not an adult.", i => i.Age < 18) //1
+                .Case(i => $"{i.Name} is employed as {i.CurrentJob}.", i => i.Age >= 18 && !string.IsNullOrWhiteSpace(i.CurrentJob)) //2
+                .Case(i => $"{i.Name} is unemployed.", i => i.Age >= 18 && string.IsNullOrWhiteSpace(i.CurrentJob)) //1
+                .Case(i => $"{i.Name} is retired.", i => i.Age >= 65 && string.IsNullOrWhiteSpace(i.CurrentJob)) //0
+                .Case(i => $"{i.Name} is in age of retirement.", i => i.Age >= 65) //1
                 ;
 
             var jobs = cases
@@ -79,16 +79,16 @@ namespace QTFK.Extensions.Tests
 
             // from anonymous to anonymous switch-case test
             var filteredPersons = persons
-                .Case(p => p.Age >= 18 && !string.IsNullOrWhiteSpace(p.CurrentJob), p => new
+                .Case(p => new
                 {
                     FullName = $"{p.LastName}, {p.Name}",
                     Status = "Employed",
-                })
-                .Case(p => p.CurrentJob != null && p.CurrentJob == "Developer", p => new
+                }, p => p.Age >= 18 && !string.IsNullOrWhiteSpace(p.CurrentJob))
+                .Case(p => new
                 {
                     FullName = $"{p.LastName}, {p.Name}",
                     Status = "Developer",
-                })
+                }, p => p.CurrentJob != null && p.CurrentJob == "Developer")
                 .CaseElse(int.MaxValue)
                 .ToList()
                 ;
@@ -99,8 +99,8 @@ namespace QTFK.Extensions.Tests
             Assert.AreEqual(2, filteredPersons.Count(s => s.FullName == "Del Bosque Huertas, John"));
 
             var emptyPersons = persons
-                .Case(p => !string.IsNullOrWhiteSpace(p.CurrentJob), p => $"Employed {p.Name}")
-                .Case(p => p.Age < 18, p => $"Children {p.Name}")
+                .Case(p => $"Employed {p.Name}", p => !string.IsNullOrWhiteSpace(p.CurrentJob))
+                .Case(p => $"Children {p.Name}", p => p.Age < 18)
                 .CaseElse(p => $"Other {p.Name}")
                 .ToList()
                 ;
