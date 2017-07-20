@@ -23,21 +23,15 @@ namespace QTFK.Extensions
             return service;
         }
 
-        public static IConsoleArgsService AddErrorHandler(this IConsoleArgsService service, Action<ArgumentException> onError)
+        public static IConsoleArgsService SetErrorHandler(this IConsoleArgsService service, ArgsErrorDelegate onError)
         {
-            service.Error += onError;
+            service.ErrorMessage = onError;
             return service;
         }
 
-        public static IConsoleArgsService AddUsageHandler(this IConsoleArgsService service, Action<string> onUsage)
+        public static IConsoleArgsService SetUsageHandler(this IConsoleArgsService service, ArgsUsageDelegate onUsage)
         {
-            service.Usage += onUsage;
-            return service;
-        }
-
-        public static IConsoleArgsService AddUsageOptionHandler(this IConsoleArgsService service, Action<ArgumentInfo> onUsageOption)
-        {
-            service.UsageOption += onUsageOption;
+            service.UsageMessage = onUsage;
             return service;
         }
 
@@ -67,6 +61,9 @@ namespace QTFK.Extensions
             service.HelpArgument = info;
             return service;
         }
+
+
+
 
         public static T Required<T>(this IConsoleArgsBuilder builder, string name, string description) where T: struct
         {

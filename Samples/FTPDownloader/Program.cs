@@ -20,9 +20,6 @@ namespace FTPDownloader
                 .SetHelp("help", "Shows this help page.")
                 .SetPrefix("--")
                 .SetShowHelpOnError(true)
-                .AddErrorHandler(e => Console.Error.WriteLine($"{e.Message} -- Parameter: {e.ParamName}"))
-                .AddUsageHandler(t => Console.Error.WriteLine(t))
-                .AddUsageOptionHandler(opt => Console.Error.WriteLine($"{(opt.IsIndexed ? opt.Name : $"--{opt.Name}" )}\t{opt.Description} {(opt.IsOptional ? $"(default: {opt.Default})" : "")}"))
                 .Parse(args, b => new
                 {
                     Host = b.Required("host","Remote ip or domain."),

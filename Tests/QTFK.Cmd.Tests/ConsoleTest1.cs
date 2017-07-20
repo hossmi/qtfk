@@ -32,7 +32,7 @@ namespace QTFK.Cmd.Tests
             var appArgs = new ConsoleArgsService()
                 .SetCaseSensitive(false)
                 .SetPrefix("--")
-                .AddErrorHandler(error => Assert.Fail($"Unexpected Argument Error! {error.Message}"))
+                .SetErrorHandler(error => Assert.Fail($"Unexpected Argument Error! {error.Message}"))
                 .Parse(args, builder => new
                 {
                     RequiredString = builder.Required("someString", "Description for someString option."),

@@ -16,14 +16,14 @@ namespace QTFK.Cmd.Tests
         private IConsoleArgsService _appArgs;
         private Func<IConsoleArgsBuilder, XCopyArgsTest> _builder;
         private IList<ArgumentException> _errors;
-        private IList<ArgumentInfo> _appOptions;
+        private IEnumerable<ArgumentInfo> _appOptions;
         private string _appDescription;
 
         [TestInitialize()]
         public void Init()
         {
             _errors = new List<ArgumentException>();
-            _appOptions = new List<ArgumentInfo>();
+            _appOptions = Enumerable.Empty<ArgumentInfo>();
             _appDescription = string.Empty;
 
             _appArgs = new ConsoleArgsService()
@@ -32,9 +32,8 @@ namespace QTFK.Cmd.Tests
                 .SetDescription("Copy directory trees and files.")
                 .SetHelp("?", "Shows this help.")
                 .SetPrefix("/")
-                .AddErrorHandler(_errors.Add)
-                .AddUsageHandler(description => _appDescription = description)
-                .AddUsageOptionHandler(_appOptions.Add)
+                .SetErrorHandler(_errors.Add)
+                .SetUsageHandler((description,options) => { _appDescription = description; _appOptions = options; })
                 .SetShowHelpOnError(true)
                 ;
 
@@ -59,9 +58,9 @@ namespace QTFK.Cmd.Tests
 
             Assert.IsNull(result);
 
-            Assert.AreEqual(1, _errors.Count);
+            Assert.AreEqual(1, _errors.Count());
             Assert.AreEqual("Copy directory trees and files.", _appDescription);
-            Assert.AreEqual(9, _appOptions.Count);
+            Assert.AreEqual(9, _appOptions.Count());
         }
 
         [TestMethod]
@@ -80,9 +79,9 @@ namespace QTFK.Cmd.Tests
             Assert.AreEqual(false, result.CopyEmptyFolders);
             Assert.AreEqual(DateTime.MinValue, result.CopyAfter);
 
-            Assert.AreEqual(0, _errors.Count);
+            Assert.AreEqual(0, _errors.Count());
             Assert.AreEqual(string.Empty, _appDescription);
-            Assert.AreEqual(0, _appOptions.Count);
+            Assert.AreEqual(0, _appOptions.Count());
         }
 
         [TestMethod]
@@ -111,9 +110,9 @@ namespace QTFK.Cmd.Tests
             Assert.AreEqual(true, result.CopyEmptyFolders);
             Assert.AreEqual(new DateTime(2099, 12, 31), result.CopyAfter);
 
-            Assert.AreEqual(0, _errors.Count);
+            Assert.AreEqual(0, _errors.Count());
             Assert.AreEqual(string.Empty, _appDescription);
-            Assert.AreEqual(0, _appOptions.Count);
+            Assert.AreEqual(0, _appOptions.Count());
         }
     }
 }
