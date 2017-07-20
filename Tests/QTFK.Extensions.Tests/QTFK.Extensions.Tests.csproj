@@ -65,6 +65,7 @@
     <Compile Include="AutoMapExtensionTests.cs" />
     <Compile Include="DictionariesExtensionTests.cs" />
     <Compile Include="StringExtensionTest.cs" />
+    <Compile Include="CollectionsExtensionTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\QTFK.Core\QTFK.Core.csproj">
