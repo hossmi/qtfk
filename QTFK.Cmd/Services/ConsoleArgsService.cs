@@ -14,8 +14,8 @@ namespace QTFK.Services
         public string Description { get; set; }
         public ArgumentInfo HelpArgument { get; set; }
         public bool ShowHelpOnError { get; set; }
-        public ArgsErrorDelegate ErrorMessage { get; set; }
-        public ArgsUsageDelegate UsageMessage { get; set; }
+        public event ArgsErrorDelegate Error;
+        public event ArgsUsageDelegate Usage;
 
         public T Parse<T>(IEnumerable<string> args, Func<IConsoleArgsBuilder, T> builder) where T : class
         {
@@ -28,7 +28,7 @@ namespace QTFK.Services
 
             Action showHelp = () =>
             {
-                UsageMessage(Description, argsInfo
+                Usage?.Invoke(Description, argsInfo
                     .Values
                     .Concat(new ArgumentInfo[] { HelpArgument })
                     );
@@ -46,7 +46,7 @@ namespace QTFK.Services
             argsBuilder.Error += e =>
             {
                 reportedErrors.Add(e);
-                ErrorMessage(e);
+                Error?.Invoke(e);
             };
             
             result = new Result<T>(() => builder(argsBuilder));
@@ -65,7 +65,7 @@ namespace QTFK.Services
                 }
             }
 
-            ErrorMessage(new Exception($"Un expected error '{result.Exception.Message}'", result.Exception));
+            Error?.Invoke(new Exception($"Un expected error '{result.Exception.Message}'", result.Exception));
             return null;
         }
 
@@ -79,45 +79,6 @@ namespace QTFK.Services
             HelpArgument = HelpArgument ?? new ArgumentInfo();
             HelpArgument.Name = HelpArgument.Name ?? "help";
             HelpArgument.Description = HelpArgument.Description ?? string.Empty;
-
-            ErrorMessage = ErrorMessage ?? (e => Console.Error.WriteLine($"{e.Message}"));
-
-            if(UsageMessage == null)
-                UsageMessage = (descrip, options) =>
-                {
-                    options = options
-                        .OrderByDescending(o => o.IsIndexed)
-                        .ThenBy(o => o.IsOptional)
-                        .ThenBy(o => o.IsFlag)
-                        .ThenBy(o => o.Name)
-                        ;
-
-                    var optionsCommand = options
-                        .Case(o => $"<{o.Name}>", o => o.IsIndexed)
-                        .Case(o => $"{Prefix + o.Name + $" <{o.Name}>"}", o => !o.IsFlag)
-                        .CaseElse(o => $"{Prefix + o.Name}")
-                        .Stringify(" ")
-                        ;
-                    var optionsList = options
-                        .Case(o => $"{"",5}{o.Name,-21}{o.Description}", o => o.IsIndexed && !o.IsOptional)
-                        .Case(o => $"{"",5}{o.Name,-21}{o.Description}{Environment.NewLine,-28}(default: {o.Default})", o => o.IsIndexed)
-                        .Case(o => $"{"",5}{Prefix + o.Name + $" <{o.Name}>",-21}{o.Description}", o => !o.IsOptional)
-                        .Case(o => $"{"",5}{Prefix + o.Name + $" <{o.Name}>",-21}{o.Description}{Environment.NewLine,-28}(default: {o.Default})", o => !o.IsFlag)
-                        .CaseElse(o => $"{"",5}{Prefix + o.Name,-21}{o.Description}")
-                        .Stringify(Environment.NewLine)
-                        ;
-                    Console.Error.WriteLine($@"
-
-    {descrip}
-
-    Usage:
-        {optionsCommand}
-
-    Options:
-
-{optionsList}
-");
-                };
         }
     }
 }

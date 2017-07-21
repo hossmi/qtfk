@@ -23,15 +23,15 @@ namespace QTFK.Extensions
             return service;
         }
 
-        public static IConsoleArgsService SetErrorHandler(this IConsoleArgsService service, ArgsErrorDelegate onError)
+        public static IConsoleArgsService AddErrorHandler(this IConsoleArgsService service, ArgsErrorDelegate onError)
         {
-            service.ErrorMessage = onError;
+            service.Error += onError;
             return service;
         }
 
-        public static IConsoleArgsService SetUsageHandler(this IConsoleArgsService service, ArgsUsageDelegate onUsage)
+        public static IConsoleArgsService AddUsageHandler(this IConsoleArgsService service, ArgsUsageDelegate onUsage)
         {
-            service.UsageMessage = onUsage;
+            service.Usage += onUsage;
             return service;
         }
 

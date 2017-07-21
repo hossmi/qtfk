@@ -32,8 +32,8 @@ namespace QTFK.Cmd.Tests
                 .SetDescription("Copy directory trees and files.")
                 .SetHelp("?", "Shows this help.")
                 .SetPrefix("/")
-                .SetErrorHandler(_errors.Add)
-                .SetUsageHandler((description,options) => { _appDescription = description; _appOptions = options; })
+                .AddErrorHandler(_errors.Add)
+                .AddUsageHandler((description,options) => { _appDescription = description; _appOptions = options; })
                 .SetShowHelpOnError(true)
                 ;
 
