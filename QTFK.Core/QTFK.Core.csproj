@@ -61,6 +61,7 @@
     <Compile Include="Services\IDBIO.cs" />
     <Compile Include="Services\IDBMigrator.cs" />
     <Compile Include="Services\IEntityMapper.cs" />
+    <Compile Include="Services\IFactory.cs" />
     <Compile Include="Services\ILogger.cs" />
     <Compile Include="Services\IDBMigrationStep.cs" />
     <Compile Include="Services\IDBMigrationStepProvider.cs" />
