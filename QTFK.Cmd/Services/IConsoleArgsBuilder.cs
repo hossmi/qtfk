@@ -1,4 +1,6 @@
-﻿namespace QTFK.Services
+﻿using System;
+
+namespace QTFK.Services
 {
     public interface IConsoleArgsBuilder
     {
@@ -9,5 +11,7 @@
         string Optional(int index, string name, string description, string defaultValue);
 
         bool Flag(string name, string description);
+
+        event ArgsErrorDelegate Error;
     }
 }

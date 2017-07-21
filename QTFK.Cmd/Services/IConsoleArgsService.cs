@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace QTFK.Services
 {
-    public delegate void ArgsErrorDelegate(ArgumentException error);
+    public delegate void ArgsErrorDelegate(Exception error);
     public delegate void ArgsUsageDelegate(string description, IEnumerable<ArgumentInfo> options);
 
     public interface IConsoleArgsService

@@ -19,7 +19,7 @@ namespace FTPDownloader
                 .SetCaseSensitive(false)
                 .SetHelp("help", "Shows this help page.")
                 .SetPrefix("--")
-                .SetShowHelpOnError(true)
+                //.SetShowHelpOnError(true)
                 .Parse(args, b => new
                 {
                     Host = b.Required("host","Remote ip or domain."),

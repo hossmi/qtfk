@@ -49,23 +49,22 @@ namespace QTFK.Extensions
 
         public static IConsoleArgsService SetHelp(this IConsoleArgsService service, string name, string description)
         {
-            return SetHelp(service, new ArgumentInfo
+            service.HelpArgument = new ArgumentInfo
             {
                 Name = name,
-                Description = description
-            });
-        }
-
-        public static IConsoleArgsService SetHelp(this IConsoleArgsService service, ArgumentInfo info)
-        {
-            service.HelpArgument = info;
+                Description = description,
+                IsFlag = true,
+                IsIndexed = false,
+                IsOptional = true,
+            };
             return service;
         }
 
 
 
 
-        public static T Required<T>(this IConsoleArgsBuilder builder, string name, string description) where T: struct
+
+        public static T Required<T>(this IConsoleArgsBuilder builder, string name, string description) where T : struct
         {
             string result = builder.Required(name, description);
             if (string.IsNullOrEmpty(result))
@@ -82,7 +81,7 @@ namespace QTFK.Extensions
             return (T)converter.ConvertFromString(result);
         }
 
-        public static T Optional<T>(this IConsoleArgsBuilder builder, string name, string description, T defaultValue, Func<string,T> customConverter)
+        public static T Optional<T>(this IConsoleArgsBuilder builder, string name, string description, T defaultValue, Func<string, T> customConverter)
         {
             string result = builder.Optional(name, description, defaultValue.ToString());
             return customConverter(result);

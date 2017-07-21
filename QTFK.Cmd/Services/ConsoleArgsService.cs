@@ -3,13 +3,12 @@ using System.Collections.Generic;
 using QTFK.Models;
 using System.Linq;
 using QTFK.Extensions.Collections.Strings;
+using QTFK.Extensions.Collections.SwitchCase;
 
 namespace QTFK.Services
 {
     public partial class ConsoleArgsService : IConsoleArgsService
     {
-        private IList<ArgumentException> _reportedErrors;
-
         public bool CaseSensitive { get; set; }
         public string Prefix { get; set; }
         public string Description { get; set; }
@@ -32,7 +31,6 @@ namespace QTFK.Services
                 UsageMessage(Description, argsInfo
                     .Values
                     .Concat(new ArgumentInfo[] { HelpArgument })
-                    .OrderBy(k => k.Name)
                     );
             };
 
@@ -44,11 +42,18 @@ namespace QTFK.Services
 
 
             IConsoleArgsBuilder argsBuilder = new ConsoleArgsBuilder(this, args, argsInfo);
+            var reportedErrors = new List<Exception>();
+            argsBuilder.Error += e =>
+            {
+                reportedErrors.Add(e);
+                ErrorMessage(e);
+            };
+            
             result = new Result<T>(() => builder(argsBuilder));
 
             if (result.Ok)
             {
-                if (_reportedErrors.Any())
+                if (reportedErrors.Any())
                 {
                     if (ShowHelpOnError)
                         showHelp();
@@ -60,7 +65,7 @@ namespace QTFK.Services
                 }
             }
 
-            ErrorMessage(new ArgumentException($"Un expected error '{result.Exception.Message}'", result.Exception));
+            ErrorMessage(new Exception($"Un expected error '{result.Exception.Message}'", result.Exception));
             return null;
         }
 
@@ -75,28 +80,44 @@ namespace QTFK.Services
             HelpArgument.Name = HelpArgument.Name ?? "help";
             HelpArgument.Description = HelpArgument.Description ?? string.Empty;
 
-            _reportedErrors = new List<ArgumentException>();
-            var subErrorMessage = ErrorMessage ?? (e => Console.Error.WriteLine($"{e.Message} (Argument: {e.ParamName})"));
-            ErrorMessage = (e =>
-            {
-                subErrorMessage(e);
-                _reportedErrors.Add(e);
-            });
-            UsageMessage = UsageMessage ?? ((descrip, options) => Console.Error.WriteLine($@"
+            ErrorMessage = ErrorMessage ?? (e => Console.Error.WriteLine($"{e.Message}"));
+
+            if(UsageMessage == null)
+                UsageMessage = (descrip, options) =>
+                {
+                    options = options
+                        .OrderByDescending(o => o.IsIndexed)
+                        .ThenBy(o => o.IsOptional)
+                        .ThenBy(o => o.IsFlag)
+                        .ThenBy(o => o.Name)
+                        ;
+
+                    var optionsCommand = options
+                        .Case(o => $"<{o.Name}>", o => o.IsIndexed)
+                        .Case(o => $"{Prefix + o.Name + $" <{o.Name}>"}", o => !o.IsFlag)
+                        .CaseElse(o => $"{Prefix + o.Name}")
+                        .Stringify(" ")
+                        ;
+                    var optionsList = options
+                        .Case(o => $"{"",5}{o.Name,-21}{o.Description}", o => o.IsIndexed && !o.IsOptional)
+                        .Case(o => $"{"",5}{o.Name,-21}{o.Description}{Environment.NewLine,-28}(default: {o.Default})", o => o.IsIndexed)
+                        .Case(o => $"{"",5}{Prefix + o.Name + $" <{o.Name}>",-21}{o.Description}", o => !o.IsOptional)
+                        .Case(o => $"{"",5}{Prefix + o.Name + $" <{o.Name}>",-21}{o.Description}{Environment.NewLine,-28}(default: {o.Default})", o => !o.IsFlag)
+                        .CaseElse(o => $"{"",5}{Prefix + o.Name,-21}{o.Description}")
+                        .Stringify(Environment.NewLine)
+                        ;
+                    Console.Error.WriteLine($@"
 
     {descrip}
 
     Usage:
-        {options
-            .Select(o => $"{(o.IsIndexed ? "" : Prefix)}{o.Name}{(!o.IsFlag && !o.IsIndexed ? $"<{o.Name}>" : "")}")
-            .Stringify(" ")}
+        {optionsCommand}
 
     Options:
 
-{options
-    .Select(o => $"{(o.IsIndexed ? "" : Prefix)}{o.Name}{(!o.IsFlag && !o.IsIndexed ? $"<{o.Name}>" : "\t")}\t{o.Description} Default: '{o.Default}'")
-    .Stringify(Environment.NewLine)}
-"));
+{optionsList}
+");
+                };
         }
     }
 }

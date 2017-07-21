@@ -11,6 +11,8 @@ namespace QTFK.Services
         private readonly IConsoleArgsService _service;
         private readonly IDictionary<string, ArgumentInfo> _argsInfo;
 
+        public event ArgsErrorDelegate Error;
+
         public ConsoleArgsBuilder(
             IConsoleArgsService service
             , IEnumerable<string> args
@@ -27,7 +29,7 @@ namespace QTFK.Services
             string result = FindNamed(name, 0);
 
             if (result == null)
-                _service.ErrorMessage(new ArgumentException($"Missing value for option '{name}'"));
+                Error?.Invoke(new Exception($"Missing value for '{name}'"));
 
             return result;
         }
@@ -42,7 +44,7 @@ namespace QTFK.Services
             string result = FindUnnamed(index, 0, 1);
 
             if (result == null)
-                _service.ErrorMessage(new ArgumentException($"Missing '{name}' argument."));
+                Error?.Invoke(new Exception($"Missing value for {index}{(index==1 ? "st" : index == 2 ? "nd" : "th")} argument '{name}'."));
 
             return result;
         }

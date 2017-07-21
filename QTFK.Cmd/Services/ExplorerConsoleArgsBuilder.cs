@@ -13,6 +13,8 @@ namespace QTFK.Services
             _data = data;
         }
 
+        public event ArgsErrorDelegate Error;
+
         public bool Flag(string name, string description)
         {
             _data.Set(name, new ArgumentInfo

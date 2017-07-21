@@ -15,14 +15,14 @@ namespace QTFK.Cmd.Tests
     {
         private IConsoleArgsService _appArgs;
         private Func<IConsoleArgsBuilder, XCopyArgsTest> _builder;
-        private IList<ArgumentException> _errors;
+        private IList<Exception> _errors;
         private IEnumerable<ArgumentInfo> _appOptions;
         private string _appDescription;
 
         [TestInitialize()]
         public void Init()
         {
-            _errors = new List<ArgumentException>();
+            _errors = new List<Exception>();
             _appOptions = Enumerable.Empty<ArgumentInfo>();
             _appDescription = string.Empty;
 
