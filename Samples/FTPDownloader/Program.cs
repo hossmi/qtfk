@@ -1,6 +1,7 @@
 ﻿using QTFK.Extensions;
 using QTFK.Extensions.Collections.Casting;
 using QTFK.Services;
+using QTFK.Services.Factories;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,12 +14,10 @@ namespace FTPDownloader
     {
         static void Main(string[] args)
         {
-            var info = new ConsoleArgsService()
-                .As<IConsoleArgsService>()
+            var info = new DefaultConsoleArgsFactory()
+                .Build()
                 .SetDescription("Downloads remotes files from an FTP or SFTP.")
                 .SetCaseSensitive(false)
-                .SetHelp("help", "Shows this help page.")
-                .SetPrefix("--")
                 //.SetShowHelpOnError(true)
                 .Parse(args, b => new
                 {
