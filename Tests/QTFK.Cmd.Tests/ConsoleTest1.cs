@@ -20,8 +20,8 @@ namespace QTFK.Cmd.Tests
             var someDate = new DateTime(2012, 1, 1);
             var args = new string[]
             {
-                "--someString", "pepe",
-                "--someNumber", "3,1415",
+                "--somestring", "pepe",
+                "--somenumber", "3,1415",
                 @"c:\source",
                 "--someOptionalDate", someDate.ToShortDateString(),
                 @"d:\target",
@@ -51,6 +51,36 @@ namespace QTFK.Cmd.Tests
             Assert.AreEqual(5, appArgs.Input3_optional);
             Assert.AreEqual(true, appArgs.Flag);
             Assert.AreEqual(someDate, appArgs.OptionalDate);
+        }
+
+        [TestMethod]
+        [TestCategory("Console")]
+        public void Console_Test_Case_Sensitive()
+        {
+            var errors = new List<Exception>();
+
+            var service = new ConsoleArgsService()
+                .SetCaseSensitive(true)
+                .SetPrefix("/")
+                .AddErrorHandler(errors.Add)
+                ;
+
+            string[] args = new string[] { "/somearg", "3" };
+            var result = service.Parse(args, builder => new
+            {
+                Arg1 = builder.Required("someArg", "Description for someArg option."),
+            });
+
+            Assert.AreEqual(1, errors.Count());
+
+            errors.Clear();
+            service.CaseSensitive = false;
+            result = service.Parse(args, builder => new
+            {
+                Arg1 = builder.Required("someArg", "Description for someArg option."),
+            });
+
+            Assert.AreEqual(0, errors.Count());
         }
     }
 }

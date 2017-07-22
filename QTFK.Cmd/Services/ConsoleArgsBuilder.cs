@@ -10,6 +10,7 @@ namespace QTFK.Services
         private string[] _args;
         private readonly IConsoleArgsService _service;
         private readonly IDictionary<string, ArgumentInfo> _argsInfo;
+        private readonly IEqualityComparer<string> _stringComparer;
 
         public event ArgsErrorDelegate Error;
 
@@ -17,11 +18,13 @@ namespace QTFK.Services
             IConsoleArgsService service
             , IEnumerable<string> args
             , IDictionary<string, ArgumentInfo> argsInfo
+            , IEqualityComparer<string> stringcomparer
             )
         {
             _args = args.ToArray();
             _service = service;
             _argsInfo = argsInfo;
+            _stringComparer = stringcomparer;
         }
 
         public string Required(string name, string description)
@@ -128,7 +131,7 @@ namespace QTFK.Services
 
         private bool IsOption(string arg, string name)
         {
-            return $"{_service.Prefix}{name}" == arg;
+            return _stringComparer.Equals($"{_service.Prefix}{name}", arg);
         }
     }
 }

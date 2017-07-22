@@ -22,7 +22,12 @@ namespace QTFK.Services
         {
             Init();
 
-            var argsInfo = new Dictionary<string, ArgumentInfo>();
+            var stringComparer = CaseSensitive
+                ? StringComparer.InvariantCulture
+                : StringComparer.InvariantCultureIgnoreCase
+                ;
+
+            var argsInfo = new Dictionary<string, ArgumentInfo>(stringComparer);
             var result = new Result<T>(() => builder(new ExplorerConsoleArgsBuilder(argsInfo)));
             if (!result.Ok)
                 throw new ArgumentException($"Can not obtain arguments data. Unexpected error building output type: '{result.Exception.Message}'", result.Exception);
@@ -35,22 +40,21 @@ namespace QTFK.Services
                     );
             };
 
-            if (args.Contains($"{Prefix}{HelpArgument.Name}"))
+            if (args.Contains($"{Prefix}{HelpArgument.Name}", stringComparer))
             {
                 showHelp();
                 OnNullResult?.Invoke();
                 return null;
             }
 
-
-            IConsoleArgsBuilder argsBuilder = new ConsoleArgsBuilder(this, args, argsInfo);
+            IConsoleArgsBuilder argsBuilder = new ConsoleArgsBuilder(this, args, argsInfo, stringComparer);
             var reportedErrors = new List<Exception>();
             argsBuilder.Error += e =>
             {
                 reportedErrors.Add(e);
                 Error?.Invoke(e);
             };
-            
+
             result = new Result<T>(() => builder(argsBuilder));
 
             if (result.Ok)

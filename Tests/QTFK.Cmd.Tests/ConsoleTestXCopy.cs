@@ -46,7 +46,7 @@ namespace QTFK.Cmd.Tests
                 VerifyEachFileSize = b.Flag("v", "Verifies file size after each copy."),
                 CopyAfter = b.Optional("d", "Copy files modified during or after specified date.", DateTime.MinValue),
                 Overwrite = b.Flag("r", "Overwrites existing files."),
-                Retries = b.Optional("retries", "Number of times to retry the copy operation", 3),
+                Retries = b.Optional("Retries", "Number of times to retry the copy operation", 3),
             };
         }
 
