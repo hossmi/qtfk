@@ -17,6 +17,7 @@ namespace QTFK.Services.Factories
                 .SetHelp("help", "Shows this help page.")
                 .SetPrefix("--")
                 .AddErrorHandler(e => Console.Error.WriteLine($"{e.Message}"))
+                .SetTermination(() => Environment.Exit(1))
                 ;
 
             service.Usage += (descrip, options) =>

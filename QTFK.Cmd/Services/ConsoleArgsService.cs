@@ -16,6 +16,7 @@ namespace QTFK.Services
         public bool ShowHelpOnError { get; set; }
         public event ArgsErrorDelegate Error;
         public event ArgsUsageDelegate Usage;
+        public Action OnNullResult { get; set; }
 
         public T Parse<T>(IEnumerable<string> args, Func<IConsoleArgsBuilder, T> builder) where T : class
         {
@@ -37,6 +38,7 @@ namespace QTFK.Services
             if (args.Contains($"{Prefix}{HelpArgument.Name}"))
             {
                 showHelp();
+                OnNullResult?.Invoke();
                 return null;
             }
 
@@ -57,6 +59,7 @@ namespace QTFK.Services
                 {
                     if (ShowHelpOnError)
                         showHelp();
+                    OnNullResult?.Invoke();
                     return null;
                 }
                 else
@@ -66,6 +69,7 @@ namespace QTFK.Services
             }
 
             Error?.Invoke(new Exception($"Un expected error '{result.Exception.Message}'", result.Exception));
+            OnNullResult?.Invoke();
             return null;
         }
 

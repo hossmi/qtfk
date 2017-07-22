@@ -14,6 +14,8 @@ namespace QTFK.Services
         string Description { get; set; }
         ArgumentInfo HelpArgument { get; set; }
         bool ShowHelpOnError { get; set; }
+
+        Action OnNullResult { get; set; }
         event ArgsErrorDelegate Error;
         event ArgsUsageDelegate Usage;
 

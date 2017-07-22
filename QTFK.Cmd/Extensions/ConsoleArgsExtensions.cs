@@ -60,6 +60,12 @@ namespace QTFK.Extensions
             return service;
         }
 
+        public static IConsoleArgsService SetTermination(this IConsoleArgsService service, Action termination)
+        {
+            service.OnNullResult = termination;
+            return service;
+        }
+
 
 
 
