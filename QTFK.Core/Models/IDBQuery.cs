@@ -34,23 +34,20 @@ namespace QTFK.Models
         ICollection<JoinTable> Joins { get; set; }
     }
 
-    public interface IDBCrudQuery : IDBQueryWithTableName
+
+    public interface IDBQuerySelect : IDBQueryWithTableName, IDBQuerySelectColumns, IDBQueryWhereClause, IDBQueryJoin
     {
     }
 
-    public interface IDBQuerySelect : IDBCrudQuery, IDBQuerySelectColumns, IDBQueryWhereClause, IDBQueryJoin
+    public interface IDBQueryDelete : IDBQueryWithTableName, IDBQueryWhereClause
     {
     }
 
-    public interface IDBQueryDelete : IDBCrudQuery, IDBQueryWhereClause
+    public interface IDBQueryInsert : IDBQueryWithTableName, IDBQueryWriteColumns
     {
     }
 
-    public interface IDBQueryInsert : IDBCrudQuery, IDBQueryWriteColumns
-    {
-    }
-
-    public interface IDBQueryUpdate : IDBCrudQuery, IDBQueryWriteColumns, IDBQueryWhereClause
+    public interface IDBQueryUpdate : IDBQueryWithTableName, IDBQueryWriteColumns, IDBQueryWhereClause
     {
     }
 
