@@ -17,7 +17,7 @@ using QTFK.Extensions.Collections.Dictionaries;
 using QTFK.Models.DBIO;
 using QTFK.Extensions.DBIO.DBQueries;
 using QTFK.Extensions.Mapping.AutoMapping;
-using QTFK.Extensions.DBIO.CRUDFactory;
+using QTFK.Extensions.DBIO.QueryFactory;
 
 namespace QTFK.Services.DBIO.SQLServer.Tests
 {
@@ -492,7 +492,7 @@ namespace QTFK.Services.DBIO.SQLServer.Tests
         [TestCategory("DB OleDB")]
         public void QueryBuilder_SQL_CrudFactory_tests_1()
         {
-            var factory = new SqlServerCrudFactory(_db);
+            var factory = new SQLServerQueryFactory(_db);
 
             var insert = factory.NewInsert()
                 .SetPrefix("qtfk.dbo.")

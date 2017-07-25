@@ -50,7 +50,7 @@
     <Compile Include="DataReader\DataReaderExtension.cs" />
     <Compile Include="DataSets\DataSetExtension.cs" />
     <Compile Include="DBCommand\DBCommandExtension.cs" />
-    <Compile Include="DBIO\CRUDFactory\CRUDFactoryExtension.cs" />
+    <Compile Include="DBIO\QueryFactory\QueryFactoryExtension.cs" />
     <Compile Include="DBIO\DBIOExtension.cs" />
     <Compile Include="DBIO\DBIOMigrationExtensions\DBMigrationExtension.cs" />
     <Compile Include="DBIO\DBQueries\DBQueryExtension.cs" />
