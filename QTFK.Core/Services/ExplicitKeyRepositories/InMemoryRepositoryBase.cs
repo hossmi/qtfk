@@ -4,15 +4,15 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace QTFK.Services.CRUDRepositories
+namespace QTFK.Services.ExplicitKeyRepositories
 {
-    public abstract class InMemoryCRUDRepositoryBase<TKey, TItem> : ICRUDRepository<TKey, TItem> where TItem : new()
+    public abstract class InMemoryRepositoryBase<TKey, TItem> : IExplicitKeyRepository<TKey, TItem> where TItem : new()
     {
         protected readonly IDictionary<TKey, TItem> _items;
 
         public bool UsesAutoID { get; protected set; }
 
-        public InMemoryCRUDRepositoryBase(
+        public InMemoryRepositoryBase(
             IDictionary<TKey, TItem> items
             )
         {

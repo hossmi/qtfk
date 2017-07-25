@@ -4,7 +4,7 @@ using QTFK.Models;
 using System.Collections.Generic;
 using QTFK.Core.Tests.Models;
 using QTFK.Services;
-using QTFK.Services.CRUDRepositories;
+using QTFK.Services.ExplicitKeyRepositories;
 using System.Linq;
 
 namespace QTFK.Core.Tests
@@ -16,7 +16,7 @@ namespace QTFK.Core.Tests
         [TestCategory("Repository")]
         public void CRUDRepository_test_1()
         {
-            ICRUDRepository<string, SimpleTestClass> repo = new InMemoryLambdaCRUDRepository<string, SimpleTestClass>(
+            IExplicitKeyRepository<string, SimpleTestClass> repo = new InMemoryInlineRepository<string, SimpleTestClass>(
                 new Dictionary<string,SimpleTestClass>()
                 , item => item.LastName
                 , item => !string.IsNullOrWhiteSpace(item.LastName)
@@ -65,7 +65,7 @@ namespace QTFK.Core.Tests
         [TestCategory("Repository")]
         public void CRUDRepository_test_2()
         {
-            ICRUDRepository<decimal, SimpleTestClass> repo = new InMemoryLambdaCRUDRepository<decimal, SimpleTestClass>(
+            IExplicitKeyRepository<decimal, SimpleTestClass> repo = new InMemoryInlineRepository<decimal, SimpleTestClass>(
                 new Dictionary<decimal, SimpleTestClass>()
                 , item => item.DecimalNumber
                 , item => item.DecimalNumber > 0
