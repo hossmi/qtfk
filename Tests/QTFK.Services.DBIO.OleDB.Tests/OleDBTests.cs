@@ -479,12 +479,15 @@ namespace QTFK.Services.DBIO.OleDB.Tests
             Assert.AreEqual("Sanchez López", testItem.Apellidos);
             Assert.AreEqual(DateTime.MinValue, testItem.BirthDate);
 
+            //filter
+            var filter = new OleDBEqualsToParamFilter("nombre", "@nombre");
+
             var wherePepe = _db
                 .Params()
                 .Set("@nombre", "Pepe")
                 ;
 
-            select.SetWhere("nombre = @nombre");
+            select.SetFilter(filter);
 
             data = _db
                 .Get<DLPerson>(select, wherePepe)
@@ -500,7 +503,7 @@ namespace QTFK.Services.DBIO.OleDB.Tests
             var update = new OleDBUpdateQuery()
                 .Set("persona", c => c
                     .Column("apellidos", "Ramírez de Villalobos"))
-                .SetWhere("nombre = @nombre")
+                .SetFilter(filter)
                 .SetParam("@nombre", "Pepe")
                 ;
 
@@ -518,7 +521,7 @@ namespace QTFK.Services.DBIO.OleDB.Tests
 
             var delete = new OleDBDeleteQuery()
                 .SetTable("persona")
-                .SetWhere("nombre = @nombre")
+                .SetFilter(filter)
                 ;
 
             _db.Set(delete, wherePepe);

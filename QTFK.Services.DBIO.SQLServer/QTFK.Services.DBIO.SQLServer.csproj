@@ -40,6 +40,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Models\DBIO\Filters\SqlEqualsToParamFilter.cs" />
     <Compile Include="Models\DBIO\SqlDeleteQuery.cs" />
     <Compile Include="Models\DBIO\SqlInsertQuery.cs" />
     <Compile Include="Models\DBIO\SqlSelectQuery.cs" />

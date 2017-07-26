@@ -42,7 +42,11 @@
   <ItemGroup>
     <Compile Include="Extensions\Loggers\LoggerLevelExtension.cs" />
     <Compile Include="Models\DBIOException.cs" />
+    <Compile Include="Models\DBIO\EmptyQueryFilter.cs" />
     <Compile Include="Models\IDBQuery.cs" />
+    <Compile Include="Models\IEqualsToParamFilter.cs" />
+    <Compile Include="Models\IQueryFilter.cs" />
+    <Compile Include="Models\IDBQueryFilterable.cs" />
     <Compile Include="Models\SetColumn.cs" />
     <Compile Include="Models\SelectColumn.cs" />
     <Compile Include="Models\Joins.cs" />
