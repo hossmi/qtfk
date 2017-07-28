@@ -6,21 +6,21 @@ using System.Threading.Tasks;
 
 namespace QTFK.Models.DBIO
 {
-    public class EmptyQueryFilter : IQueryFilter
+    public class NullQueryFilter : IQueryFilter
     {
-        private static EmptyQueryFilter _instance;
+        private static NullQueryFilter _instance;
 
         public static IQueryFilter Instance
         {
             get
             {
                 if (_instance == null)
-                    _instance = new EmptyQueryFilter();
+                    _instance = new NullQueryFilter();
                 return _instance;
             }
         }
 
-        protected EmptyQueryFilter()
+        protected NullQueryFilter()
         {
 
         }
@@ -29,7 +29,5 @@ namespace QTFK.Models.DBIO
         {
             return string.Empty;
         }
-
-
     }
 }

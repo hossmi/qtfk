@@ -23,7 +23,7 @@ namespace QTFK.Models.DBIO
                 .ToList()
                 ;
 
-            string whereSegment = (Filter ?? EmptyQueryFilter.Instance).Compile();
+            string whereSegment = (Filter ?? NullQueryFilter.Instance).Compile();
             whereSegment = string.IsNullOrWhiteSpace(whereSegment) ? "" : $"WHERE ({whereSegment})";
 
             return $@"

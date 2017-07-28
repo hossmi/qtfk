@@ -17,7 +17,7 @@ namespace QTFK.Models.DBIO
 
         public string Compile()
         {
-            string whereSegment = (Filter ?? EmptyQueryFilter.Instance).Compile();
+            string whereSegment = (Filter ?? NullQueryFilter.Instance).Compile();
             whereSegment = string.IsNullOrWhiteSpace(whereSegment) ? "" : $"WHERE ({whereSegment})";
             string prefix = string.IsNullOrWhiteSpace(Prefix) ? "" : Prefix.Trim();
             string fieldValueList = Fields.Stringify(c => $"[{c.Key}] = {c.Value}");

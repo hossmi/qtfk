@@ -283,7 +283,11 @@ namespace QTFK.Services.DBIO.SQLServer.Tests
                 );
 
             //filter
-            var filter = new SqlEqualsToParamFilter("nombre", "@nombre");
+            var filter = new SqlByParamEqualsFilter()
+            {
+                Field = "nombre",
+                Parameter = "@nombre"
+            };
 
             //selects
             var select = new SqlSelectQuery()
@@ -443,7 +447,11 @@ namespace QTFK.Services.DBIO.SQLServer.Tests
             Assert.AreEqual("De la rosa Castaños", testItem.Person.Apellidos);
 
             //filter
-            var filter = new SqlEqualsToParamFilter("nombre", "@nombre");
+            var filter = new SqlByParamEqualsFilter()
+            {
+                Field = "nombre",
+                Parameter = "@nombre"
+            };
 
             //IDBQuery updates
             var update = new SqlUpdateQuery()
@@ -586,7 +594,11 @@ namespace QTFK.Services.DBIO.SQLServer.Tests
             Assert.AreEqual("De la rosa Castaños", testItem.Person.Apellidos);
 
             //filter
-            var filter = new SqlEqualsToParamFilter("nombre", "@nombre");
+            var filter = new SqlByParamEqualsFilter()
+            {
+                Field = "nombre",
+                Parameter = "@nombre"
+            };
 
             //IDBQuery updates
             factory.Update(q => q

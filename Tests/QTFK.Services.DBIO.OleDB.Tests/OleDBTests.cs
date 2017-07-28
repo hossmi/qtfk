@@ -9,6 +9,7 @@ using QTFK.Extensions.DBIO.OleDBIOExtensions;
 using QTFK.Extensions.Mapping.AutoMapping;
 using QTFK.Models;
 using QTFK.Models.DBIO;
+using QTFK.Models.DBIO.Filters;
 using QTFK.Services.DBIO.OleDB.Tests.Models;
 using System;
 using System.Collections.Generic;
@@ -480,7 +481,11 @@ namespace QTFK.Services.DBIO.OleDB.Tests
             Assert.AreEqual(DateTime.MinValue, testItem.BirthDate);
 
             //filter
-            var filter = new OleDBEqualsToParamFilter("nombre", "@nombre");
+            var filter = new OleDBByParamEqualsFilter()
+            {
+                Field = "nombre",
+                Parameter = "@nombre"
+            };
 
             var wherePepe = _db
                 .Params()

@@ -31,7 +31,7 @@ namespace QTFK.Models.DBIO
         public string Compile()
         {
             string prefix = string.IsNullOrWhiteSpace(Prefix) ? "" : Prefix.Trim();
-            string whereSegment = (Filter ?? EmptyQueryFilter.Instance).Compile();
+            string whereSegment = (Filter ?? NullQueryFilter.Instance).Compile();
             whereSegment = string.IsNullOrWhiteSpace(whereSegment) ? "" : $"WHERE ({whereSegment})";
 
             int n = 1;
