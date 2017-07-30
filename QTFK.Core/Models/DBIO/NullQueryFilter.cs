@@ -29,5 +29,9 @@ namespace QTFK.Models.DBIO
         {
             return string.Empty;
         }
+
+        public void SetValues(params object[] args)
+        {
+        }
     }
 }

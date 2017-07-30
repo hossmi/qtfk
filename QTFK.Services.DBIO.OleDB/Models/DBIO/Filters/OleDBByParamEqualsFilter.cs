@@ -12,5 +12,13 @@ namespace QTFK.Models.DBIO.Filters
         {
             return $"{Field} = {Parameter}";
         }
+
+        public void SetValues(params object[] args)
+        {
+            if (args.Length < 1)
+                throw new ArgumentException("Missing argument 1", nameof(Parameter));
+
+            Parameter = args[0].ToString();
+        }
     }
 }
