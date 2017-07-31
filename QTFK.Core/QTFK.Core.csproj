@@ -42,12 +42,18 @@
   <ItemGroup>
     <Compile Include="Extensions\Loggers\LoggerLevelExtension.cs" />
     <Compile Include="Models\DBIOException.cs" />
+    <Compile Include="Models\DBIO\NullQueryFilter.cs" />
     <Compile Include="Models\IDBQuery.cs" />
+    <Compile Include="Models\IByParamBetweenFilter.cs" />
+    <Compile Include="Models\IExpressionQueryFilter.cs" />
+    <Compile Include="Models\IByParamEqualsFilter.cs" />
+    <Compile Include="Models\IQueryFilter.cs" />
+    <Compile Include="Models\IDBQueryFilterable.cs" />
     <Compile Include="Models\SetColumn.cs" />
     <Compile Include="Models\SelectColumn.cs" />
     <Compile Include="Models\Joins.cs" />
-    <Compile Include="Services\CRUDRepositories\InMemoryCRUDRepositoryBase.cs" />
-    <Compile Include="Services\CRUDRepositories\InMemoryLambdaCRUDRepository.cs" />
+    <Compile Include="Services\ExplicitKeyRepositories\InMemoryRepositoryBase.cs" />
+    <Compile Include="Services\ExplicitKeyRepositories\InMemoryInlineRepository.cs" />
     <Compile Include="Services\DBIO\DBMigrationStepProviderBase.cs" />
     <Compile Include="Services\DBIO\DefaultDBMigrationStepProvider.cs" />
     <Compile Include="Services\DBIO\DBMigrationStep.cs" />
@@ -56,8 +62,8 @@
     <Compile Include="Models\Result.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\EntityMappers\DefaultEntityMapper.cs" />
-    <Compile Include="Services\ICRUDRepository.cs" />
-    <Compile Include="Services\ICRUDQueryFactory.cs" />
+    <Compile Include="Services\IExplicitKeyRepository.cs" />
+    <Compile Include="Services\IQueryFactory.cs" />
     <Compile Include="Services\IDBIO.cs" />
     <Compile Include="Services\IDBMigrator.cs" />
     <Compile Include="Services\IEntityMapper.cs" />

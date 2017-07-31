@@ -12,12 +12,13 @@ namespace QTFK.Models.DBIO
         public IDictionary<string, object> Parameters { get; set; } = DictionaryExtension.New();
         public string Prefix { get; set; } = "";
         public string Table { get; set; } = "";
-        public string Where { get; set; } = "";
+        public IQueryFilter Filter { get; set; }
 
         public string Compile()
         {
             string prefix = string.IsNullOrWhiteSpace(Prefix) ? "" : Prefix.Trim();
-            string whereSegment = string.IsNullOrWhiteSpace(Where) ? "" : $"WHERE ({Where})";
+            string whereSegment = (Filter ?? NullQueryFilter.Instance).Compile();
+            whereSegment = string.IsNullOrWhiteSpace(whereSegment) ? "" : $"WHERE ({whereSegment})";
 
             return $@"
                 DELETE FROM {prefix}[{Table}]

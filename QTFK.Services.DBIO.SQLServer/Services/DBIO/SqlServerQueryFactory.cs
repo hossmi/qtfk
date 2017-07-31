@@ -4,9 +4,9 @@ using QTFK.Models.DBIO;
 
 namespace QTFK.Services.DBIO
 {
-    public class OleDBCrudFactory : ICRUDQueryFactory, IOleDB
+    public class SQLServerQueryFactory : IQueryFactory, ISQLServer
     {
-        public OleDBCrudFactory(IDBIO db)
+        public SQLServerQueryFactory(IDBIO db)
         {
             DB = db;
         }
@@ -15,22 +15,22 @@ namespace QTFK.Services.DBIO
 
         public IDBQueryDelete NewDelete()
         {
-            return new OleDBDeleteQuery();
+            return new SqlDeleteQuery();
         }
 
         public IDBQueryInsert NewInsert()
         {
-            return new OleDBInsertQuery();
+            return new SqlInsertQuery();
         }
 
         public IDBQuerySelect NewSelect()
         {
-            return new OleDBSelectQuery();
+            return new SqlSelectQuery();
         }
 
         public IDBQueryUpdate NewUpdate()
         {
-            return new OleDBUpdateQuery();
+            return new SqlUpdateQuery();
         }
     }
 }

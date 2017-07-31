@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace QTFK.Services
 {
-    public interface ICRUDRepository<TKey, TItem> where TItem : new()
+    public interface IExplicitKeyRepository<TKey, TItem> where TItem : new()
     {
         IQueryable<TItem> Get(Func<TItem, bool> filter);
         TItem Get(TKey id);

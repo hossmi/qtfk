@@ -17,7 +17,8 @@ using QTFK.Extensions.Collections.Dictionaries;
 using QTFK.Models.DBIO;
 using QTFK.Extensions.DBIO.DBQueries;
 using QTFK.Extensions.Mapping.AutoMapping;
-using QTFK.Extensions.DBIO.CRUDFactory;
+using QTFK.Extensions.DBIO.QueryFactory;
+using QTFK.Models.DBIO.Filters;
 
 namespace QTFK.Services.DBIO.SQLServer.Tests
 {
@@ -281,6 +282,13 @@ namespace QTFK.Services.DBIO.SQLServer.Tests
                 .Set("@apellidos", "Norton Smith")
                 );
 
+            //filter
+            var filter = new SqlByParamEqualsFilter()
+            {
+                Field = "nombre",
+                Parameter = "@nombre"
+            };
+
             //selects
             var select = new SqlSelectQuery()
                     .SetPrefix("qtfk.dbo.")
@@ -298,7 +306,7 @@ namespace QTFK.Services.DBIO.SQLServer.Tests
             var testItem = data.Single(i => i.Nombre == "Tronco");
             Assert.AreEqual("Sanchez López", testItem.Apellidos);
 
-            select.SetWhere("nombre = @nombre");
+            select.SetFilter(filter);
 
             data = _db
                 .Get<DLPerson>(select, _db.Params().Set("@nombre", "Pepe"))
@@ -314,7 +322,7 @@ namespace QTFK.Services.DBIO.SQLServer.Tests
                 .SetPrefix("qtfk.dbo.")
                 .Set("persona", c => c
                     .Column("apellidos"))
-                .SetWhere("nombre = @nombre")
+                .SetFilter(filter)
                 ;
 
             _db.Set(update, _db.Params()
@@ -335,7 +343,7 @@ namespace QTFK.Services.DBIO.SQLServer.Tests
             var delete = new SqlDeleteQuery()
                 .SetPrefix("qtfk.dbo.")
                 .SetTable("persona")
-                .SetWhere("nombre = @nombre")
+                .SetFilter(filter)
                 ;
 
             _db.Set(delete, _db.Params().Set("@nombre", "Pepe"));
@@ -438,12 +446,19 @@ namespace QTFK.Services.DBIO.SQLServer.Tests
             var testItem = data.Single(i => i.Person.Nombre == "Pepe" && i.Tag.Nombre == "Youtube");
             Assert.AreEqual("De la rosa Castaños", testItem.Person.Apellidos);
 
+            //filter
+            var filter = new SqlByParamEqualsFilter()
+            {
+                Field = "nombre",
+                Parameter = "@nombre"
+            };
+
             //IDBQuery updates
             var update = new SqlUpdateQuery()
                 .SetPrefix("qtfk.dbo.")
                 .Set("persona", c => c
                     .Column("apellidos"))
-                .SetWhere("nombre = @nombre")
+                .SetFilter(filter)
                 ;
 
             _db.Set(update, _db.Params()
@@ -454,7 +469,7 @@ namespace QTFK.Services.DBIO.SQLServer.Tests
             var selectPersons = new SqlSelectQuery()
                 .SetPrefix("qtfk.dbo.")
                 .Select("persona", c => c.Column("*"))
-                .SetWhere("nombre = @nombre")
+                .SetFilter(filter)
                 .SetParam("@nombre", "Pepe")
                 ;
 
@@ -468,7 +483,7 @@ namespace QTFK.Services.DBIO.SQLServer.Tests
             var delete = new SqlDeleteQuery()
                 .SetPrefix("qtfk.dbo.")
                 .SetTable("persona")
-                .SetWhere("nombre = @nombre")
+                .SetFilter(filter)
                 .SetParam("@nombre", "Pepe")
                 ;
 
@@ -492,7 +507,7 @@ namespace QTFK.Services.DBIO.SQLServer.Tests
         [TestCategory("DB OleDB")]
         public void QueryBuilder_SQL_CrudFactory_tests_1()
         {
-            var factory = new SqlServerCrudFactory(_db);
+            var factory = new SQLServerQueryFactory(_db);
 
             var insert = factory.NewInsert()
                 .SetPrefix("qtfk.dbo.")
@@ -578,19 +593,26 @@ namespace QTFK.Services.DBIO.SQLServer.Tests
             var testItem = data.Single(i => i.Person.Nombre == "Pepe" && i.Tag.Nombre == "Youtube");
             Assert.AreEqual("De la rosa Castaños", testItem.Person.Apellidos);
 
+            //filter
+            var filter = new SqlByParamEqualsFilter()
+            {
+                Field = "nombre",
+                Parameter = "@nombre"
+            };
+
             //IDBQuery updates
             factory.Update(q => q
                 .SetPrefix("qtfk.dbo.")
                 .Set("persona", c => c
                     .Column("apellidos", "Ramírez de Villalobos"))
-                .SetWhere("nombre = @nombre")
+                .SetFilter(filter)
                 .SetParam("@nombre", "Pepe")
                 );
 
             var person = factory.Select<DLPerson>(q => q
                 .SetPrefix("qtfk.dbo.")
                 .Select("persona", c => c.Column("*"))
-                .SetWhere("nombre = @nombre")
+                .SetFilter(filter)
                 .SetParam("@nombre", "Pepe")
                 )
                 .Single()
@@ -601,7 +623,7 @@ namespace QTFK.Services.DBIO.SQLServer.Tests
             factory.Delete(q => q
                 .SetPrefix("qtfk.dbo.")
                 .SetTable("persona")
-                .SetWhere("nombre = @nombre")
+                .SetFilter(filter)
                 .SetParam("@nombre", "Pepe")
                 );
 

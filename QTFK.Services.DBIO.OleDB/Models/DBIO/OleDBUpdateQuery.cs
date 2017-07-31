@@ -12,8 +12,8 @@ namespace QTFK.Models.DBIO
         public string Prefix { get; set; } = "";
         public string Table { get; set; } = "";
         public IDictionary<string, object> Fields { get; set; } = DictionaryExtension.New();
-        public string Where { get; set; } = "";
         public IDictionary<string, object> Parameters { get; set; } = DictionaryExtension.New();
+        public IQueryFilter Filter { get ; set ; }
 
         public string Compile()
         {
@@ -23,7 +23,8 @@ namespace QTFK.Models.DBIO
                 .ToList()
                 ;
 
-            string whereSegment = string.IsNullOrWhiteSpace(Where) ? "" : $"WHERE ({Where})";
+            string whereSegment = (Filter ?? NullQueryFilter.Instance).Compile();
+            whereSegment = string.IsNullOrWhiteSpace(whereSegment) ? "" : $"WHERE ({whereSegment})";
 
             return $@"
                 UPDATE {prefix}[{Table}]
