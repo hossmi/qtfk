@@ -507,10 +507,12 @@ namespace QTFK.Services.DBIO.SQLServer.Tests
         [TestCategory("DB OleDB")]
         public void QueryBuilder_SQL_CrudFactory_tests_1()
         {
-            var factory = new SQLServerQueryFactory(_db);
+            var factory = new SQLServerQueryFactory(_db)
+            {
+                Prefix = "qtfk.dbo."
+            };
 
             var insert = factory.NewInsert()
-                .SetPrefix("qtfk.dbo.")
                 .Set("persona", c => c
                     .Column("nombre")
                     .Column("apellidos")
@@ -521,7 +523,6 @@ namespace QTFK.Services.DBIO.SQLServer.Tests
             _db.Set(insert, _db.Params().Set("@nombre", "Louis").Set("@apellidos", "Norton Smith"));
 
             insert = factory.NewInsert()
-                .SetPrefix("qtfk.dbo.")
                 .Set("etiqueta", c => c
                     .Column("nombre")
                 );
@@ -533,7 +534,6 @@ namespace QTFK.Services.DBIO.SQLServer.Tests
 
             var persons = factory
                 .Select<DLPerson>(q => q
-                    .SetPrefix("qtfk.dbo.")
                     .Select("persona", c => c
                         .Column("*")
                     ))
@@ -542,7 +542,6 @@ namespace QTFK.Services.DBIO.SQLServer.Tests
 
             var tags = factory
                 .Select<DLTag>(q => q
-                    .SetPrefix("qtfk.dbo.")
                     .SetTable("etiqueta")
                     .AddColumn("*"))
                 .ToList()
@@ -554,7 +553,6 @@ namespace QTFK.Services.DBIO.SQLServer.Tests
                 ;
 
             insert = factory.NewInsert()
-                .SetPrefix("qtfk.dbo.")
                 .Set("etiquetas_personas", c => c
                     .Column("persona_id")
                     .Column("etiqueta_id")
@@ -564,7 +562,6 @@ namespace QTFK.Services.DBIO.SQLServer.Tests
                 _db.Set(insert, _db.Params().Set("@persona_id", pair.person_ID).Set("@etiqueta_id", pair.tag_ID));
 
             var select = factory.NewSelect()
-                .SetPrefix("qtfk.dbo.")
                 .Select("etiquetas_personas", c => c.Column("*"))
                 .AddJoin(JoinKind.Left, "etiqueta", m => m.Add("etiqueta_id", "id"), c => c
                     .Column("*")
@@ -602,7 +599,6 @@ namespace QTFK.Services.DBIO.SQLServer.Tests
 
             //IDBQuery updates
             factory.Update(q => q
-                .SetPrefix("qtfk.dbo.")
                 .Set("persona", c => c
                     .Column("apellidos", "Ramírez de Villalobos"))
                 .SetFilter(filter)
@@ -610,7 +606,6 @@ namespace QTFK.Services.DBIO.SQLServer.Tests
                 );
 
             var person = factory.Select<DLPerson>(q => q
-                .SetPrefix("qtfk.dbo.")
                 .Select("persona", c => c.Column("*"))
                 .SetFilter(filter)
                 .SetParam("@nombre", "Pepe")
@@ -621,7 +616,6 @@ namespace QTFK.Services.DBIO.SQLServer.Tests
             Assert.AreEqual("Ramírez de Villalobos", person.Apellidos);
 
             factory.Delete(q => q
-                .SetPrefix("qtfk.dbo.")
                 .SetTable("persona")
                 .SetFilter(filter)
                 .SetParam("@nombre", "Pepe")

@@ -15,5 +15,6 @@ namespace QTFK.Services
         IDBQueryInsert NewInsert();
         IDBQueryUpdate NewUpdate();
         IDBQueryDelete NewDelete();
+        string Prefix { get; set; }
     }
 }

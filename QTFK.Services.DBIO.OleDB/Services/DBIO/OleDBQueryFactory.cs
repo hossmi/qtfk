@@ -12,25 +12,26 @@ namespace QTFK.Services.DBIO
         }
 
         public IDBIO DB { get; }
+        public string Prefix { get; set; }
 
         public IDBQueryDelete NewDelete()
         {
-            return new OleDBDeleteQuery();
+            return new OleDBDeleteQuery() { Prefix = this.Prefix };
         }
 
         public IDBQueryInsert NewInsert()
         {
-            return new OleDBInsertQuery();
+            return new OleDBInsertQuery() { Prefix = this.Prefix };
         }
 
         public IDBQuerySelect NewSelect()
         {
-            return new OleDBSelectQuery();
+            return new OleDBSelectQuery() { Prefix = this.Prefix };
         }
 
         public IDBQueryUpdate NewUpdate()
         {
-            return new OleDBUpdateQuery();
+            return new OleDBUpdateQuery() { Prefix = this.Prefix };
         }
     }
 }
