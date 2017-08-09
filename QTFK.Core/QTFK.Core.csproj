@@ -52,6 +52,7 @@
     <Compile Include="Models\SetColumn.cs" />
     <Compile Include="Models\SelectColumn.cs" />
     <Compile Include="Models\Joins.cs" />
+    <Compile Include="Sandbox.cs" />
     <Compile Include="Services\ExplicitKeyRepositories\InMemoryRepositoryBase.cs" />
     <Compile Include="Services\ExplicitKeyRepositories\InMemoryInlineRepository.cs" />
     <Compile Include="Services\DBIO\DBMigrationStepProviderBase.cs" />
