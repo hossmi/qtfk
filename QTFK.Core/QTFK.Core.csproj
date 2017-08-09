@@ -80,6 +80,7 @@
     <Compile Include="Services\Loggers\FileLogger.cs" />
     <Compile Include="Services\Loggers\MultiLogger.cs" />
     <Compile Include="Services\Loggers\NullLogger.cs" />
+    <Compile Include="Services\Sandboxes\SandboxFactory.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Services\QueryFactories\" />

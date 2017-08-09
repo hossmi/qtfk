@@ -61,6 +61,7 @@
     <Compile Include="LoggerTests.cs" />
     <Compile Include="CRUDRepositoryTests.cs" />
     <Compile Include="ResultTests.cs" />
+    <Compile Include="SandBoxTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\QTFK.Core\QTFK.Core.csproj">
