@@ -1,29 +1,34 @@
-﻿using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using QTFK.Services;
 using QTFK.Services.Sandboxes;
-using QTFK.Models;
+using System.Security;
+using QTFK.Core.Tests.Models;
 
 namespace QTFK.Core.Tests
 {
     [TestClass]
     public class SandBoxTests
     {
-        public int SomeMethod(int x)
-        {
-            return 2 * x;
-        }
-
         [TestMethod]
-        public void TestMethod1()
+        [TestCategory("Sandbox")]
+        public void SandBox_core_test()
         {
-            ISandboxFactory factory = new SandboxFactory();
-            ISandbox sandbox = factory.Build(new SandboxConfig());
+            ISandboxFactory factory = new DefaultSandboxFactory();
+            var sandbox = factory.Build<Sandbox>(c => { });
 
-            sandbox.Run(() =>
+            try
             {
-                return SomeMethod(13);
-            });
+                int result = sandbox.Run(() =>
+                {
+                    var x = new SuspiciousTestClass();
+                    return x.SomeMethod(13);
+                });
+                Assert.Fail($"Expected {nameof(SecurityException)}");
+            }
+            catch (SecurityException)
+            {
+                //good!
+            }
         }
     }
 }
