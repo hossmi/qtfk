@@ -53,7 +53,6 @@
     <Compile Include="Models\SetColumn.cs" />
     <Compile Include="Models\SelectColumn.cs" />
     <Compile Include="Models\Joins.cs" />
-    <Compile Include="Sandbox.cs" />
     <Compile Include="Services\ExplicitKeyRepositories\InMemoryRepositoryBase.cs" />
     <Compile Include="Services\ExplicitKeyRepositories\InMemoryInlineRepository.cs" />
     <Compile Include="Services\DBIO\DBMigrationStepProviderBase.cs" />
@@ -73,14 +72,14 @@
     <Compile Include="Services\ILogger.cs" />
     <Compile Include="Services\IDBMigrationStep.cs" />
     <Compile Include="Services\IDBMigrationStepProvider.cs" />
-    <Compile Include="Services\ISandbox.cs" />
     <Compile Include="Services\ISandboxFactory.cs" />
     <Compile Include="Services\Loggers\ConsoleLogger.cs" />
     <Compile Include="Services\Loggers\DebugLogger.cs" />
     <Compile Include="Services\Loggers\FileLogger.cs" />
     <Compile Include="Services\Loggers\MultiLogger.cs" />
     <Compile Include="Services\Loggers\NullLogger.cs" />
-    <Compile Include="Services\Sandboxes\SandboxFactory.cs" />
+    <Compile Include="Services\Sandboxes\Sandbox.cs" />
+    <Compile Include="Services\Sandboxes\DefaultSandboxFactory.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Services\QueryFactories\" />
