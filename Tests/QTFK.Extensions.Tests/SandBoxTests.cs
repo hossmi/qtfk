@@ -56,5 +56,25 @@ namespace QTFK.Extensions.Tests
                     //good!
                 }
         }
+
+        [TestMethod]
+        [TestCategory("Sandbox")]
+        public void SandBox_Extensions_test3()
+        {
+            ISandboxFactory factory = new DefaultSandboxFactory();
+
+            using (var sandboxEnv = factory.Build<MaliciousTestClass>())
+                try
+                {
+                    var sandbox = sandboxEnv.Instance;
+                    int result = sandbox.SomeMethod(13);
+                    Assert.Fail($"Expected {nameof(SecurityException)}");
+                }
+                catch (SecurityException)
+                {
+                    //good!
+                }
+        }
+
     }
 }
