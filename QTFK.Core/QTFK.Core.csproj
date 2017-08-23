@@ -50,6 +50,7 @@
     <Compile Include="Models\IQueryFilter.cs" />
     <Compile Include="Models\IDBQueryFilterable.cs" />
     <Compile Include="Models\SandboxConfig.cs" />
+    <Compile Include="Models\SandboxEnvironment.cs" />
     <Compile Include="Models\SetColumn.cs" />
     <Compile Include="Models\SelectColumn.cs" />
     <Compile Include="Models\Joins.cs" />

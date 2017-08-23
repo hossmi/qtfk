@@ -10,6 +10,6 @@ namespace QTFK.Services
 {
     public interface ISandboxFactory
     {
-        T Build<T>(Action<SandboxConfig> configure) where T : MarshalByRefObject, new();
+        SandboxEnvironment<T> Build<T>(Action<SandboxConfig> configure) where T : MarshalByRefObject, new();
     }
 }

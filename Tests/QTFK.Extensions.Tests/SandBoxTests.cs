@@ -17,21 +17,22 @@ namespace QTFK.Extensions.Tests
         public void SandBox_Extensions_test1()
         {
             ISandboxFactory factory = new DefaultSandboxFactory();
-            var sandbox = factory.Build<Sandbox>();
 
-            try
-            {
-                int result = sandbox.Run(() =>
+            using (var sandboxEnv = factory.Build<Sandbox>())
+                try
                 {
-                    var x = new SuspiciousTestClass();
-                    return x.SomeMethod(13);
-                });
-                Assert.Fail($"Expected {nameof(SecurityException)}");
-            }
-            catch (SecurityException)
-            {
-                //good!
-            }
+                    var sandbox = sandboxEnv.Instance;
+                    int result = sandbox.Run(() =>
+                    {
+                        var x = new SuspiciousTestClass();
+                        return x.SomeMethod(13);
+                    });
+                    Assert.Fail($"Expected {nameof(SecurityException)}");
+                }
+                catch (SecurityException)
+                {
+                    //good!
+                }
         }
 
         [TestMethod]
@@ -39,21 +40,21 @@ namespace QTFK.Extensions.Tests
         public void SandBox_Extensions_test2()
         {
             ISandboxFactory factory = new DefaultSandboxFactory();
-            var sandbox = factory.BuildSandbox();
-
-            try
-            {
-                int result = sandbox.Run(() =>
+            using (var sandboxEnv = factory.BuildSandbox())
+                try
                 {
-                    var x = new SuspiciousTestClass();
-                    return x.SomeMethod(13);
-                });
-                Assert.Fail($"Expected {nameof(SecurityException)}");
-            }
-            catch (SecurityException)
-            {
-                //good!
-            }
+                    var sandbox = sandboxEnv.Instance;
+                    int result = sandbox.Run(() =>
+                    {
+                        var x = new SuspiciousTestClass();
+                        return x.SomeMethod(13);
+                    });
+                    Assert.Fail($"Expected {nameof(SecurityException)}");
+                }
+                catch (SecurityException)
+                {
+                    //good!
+                }
         }
     }
 }

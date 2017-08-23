@@ -14,21 +14,22 @@ namespace QTFK.Core.Tests
         public void SandBox_core_test()
         {
             ISandboxFactory factory = new DefaultSandboxFactory();
-            var sandbox = factory.Build<Sandbox>(c => { });
-
-            try
-            {
-                int result = sandbox.Run(() =>
+            using (var sandboxEnv = factory.Build<Sandbox>(c => { }))
+                try
                 {
-                    var x = new SuspiciousTestClass();
-                    return x.SomeMethod(13);
-                });
-                Assert.Fail($"Expected {nameof(SecurityException)}");
-            }
-            catch (SecurityException)
-            {
-                //good!
-            }
+                    var sandbox = sandboxEnv.Instance;
+                    int result = sandbox.Run(() =>
+                    {
+                        var x = new SuspiciousTestClass();
+                        return x.SomeMethod(13);
+                    });
+                    Assert.Fail($"Expected {nameof(SecurityException)}");
+                }
+                catch (SecurityException)
+                {
+                    //good!
+                }
+
         }
     }
 }

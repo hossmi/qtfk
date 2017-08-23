@@ -11,12 +11,12 @@ namespace QTFK.Extensions.Sandboxing
 {
     public static class SandboxExtension
     {
-        public static T Build<T>(this ISandboxFactory factory) where T : MarshalByRefObject, new()
+        public static SandboxEnvironment<T> Build<T>(this ISandboxFactory factory) where T : MarshalByRefObject, new()
         {
             return factory.Build<T>(c => { });
         }
 
-        public static Sandbox BuildSandbox(this ISandboxFactory factory, Action<SandboxConfig> configure = null)
+        public static SandboxEnvironment<Sandbox> BuildSandbox(this ISandboxFactory factory, Action<SandboxConfig> configure = null)
         {
             return factory.Build<Sandbox>(configure ?? (c => { }));
         }

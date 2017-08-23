@@ -14,7 +14,7 @@ namespace QTFK.Services.Sandboxes
 {
     public class DefaultSandboxFactory : ISandboxFactory
     {
-        public T Build<T>(Action<SandboxConfig> configure) where T : MarshalByRefObject, new()
+        public SandboxEnvironment<T> Build<T>(Action<SandboxConfig> configure) where T : MarshalByRefObject, new()
         {
             var config = new SandboxConfig
             {
@@ -54,9 +54,12 @@ namespace QTFK.Services.Sandboxes
                 typeof(T).FullName
                 );
 
-            T newDomainInstance = (T)handle.Unwrap();
-
-            return newDomainInstance;
+            return new SandboxEnvironment<T>
+            {
+                Domain = newDomain,
+                Handle = handle,
+                Instance = (T)handle.Unwrap(),
+            };
         }
     }
 }
