@@ -8,13 +8,12 @@ using System.Security.Policy;
 using System.IO;
 using System.Runtime.Remoting;
 using System.Collections.Generic;
-using System.Runtime.Serialization;
 
 namespace QTFK.Services.Sandboxes
 {
     public class DefaultSandboxFactory : ISandboxFactory
     {
-        public SandboxEnvironment<T> Build<T>(Action<SandboxConfig> configure) where T : MarshalByRefObject, new()
+        public ISandboxEnvironment<T> Build<T>(Action<SandboxConfig> configure) where T : MarshalByRefObject, new()
         {
             var config = new SandboxConfig
             {
@@ -54,12 +53,7 @@ namespace QTFK.Services.Sandboxes
                 typeof(T).FullName
                 );
 
-            return new SandboxEnvironment<T>
-            {
-                Domain = newDomain,
-                Handle = handle,
-                Instance = (T)handle.Unwrap(),
-            };
+            return new SandboxEnvironment<T>(newDomain, handle, (T)handle.Unwrap());
         }
     }
 }

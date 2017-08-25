@@ -7,14 +7,21 @@ using System.Threading.Tasks;
 
 namespace QTFK.Models
 {
-    public class SandboxEnvironment<T> : IDisposable
+    public class SandboxEnvironment<T> : ISandboxEnvironment<T>
         where T : MarshalByRefObject, new()
     {
         private bool _disposed;
 
-        public AppDomain Domain { get; set; }
-        public ObjectHandle Handle { get; set; }
-        public T Instance { get; set; }
+        public AppDomain Domain { get; private set; }
+        public ObjectHandle Handle { get; private set; }
+        public T Instance { get; private set; }
+
+        public SandboxEnvironment(AppDomain domain, ObjectHandle handle, T instance)
+        {
+            Domain = domain;
+            Handle = handle;
+            Instance = instance;
+        }
 
         public void Dispose()
         {
