@@ -1,10 +1,13 @@
 ﻿using System;
 using QTFK.Models;
 using QTFK.Models.DBIO;
+using QTFK.Models.DBIO.Filters;
 
 namespace QTFK.Services.DBIO
 {
-    public class OleDBQueryFactory : IQueryFactory, IOleDB
+    public class OleDBQueryFactory : IOleDB
+        , ISelectQueryFactory, IInsertQueryFactory, IUpdateQueryFactory, IDeleteQueryFactory
+        , IByParamEqualsFilterFactory
     {
         public OleDBQueryFactory(IDBIO db)
         {
@@ -33,5 +36,11 @@ namespace QTFK.Services.DBIO
         {
             return new OleDBUpdateQuery() { Prefix = this.Prefix };
         }
+
+        public IByParamEqualsFilter NewByParamEqualsFilter()
+        {
+            return new OleDBByParamEqualsFilter();
+        }
+
     }
 }
