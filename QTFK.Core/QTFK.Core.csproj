@@ -74,6 +74,7 @@
     <Compile Include="Services\ILogger.cs" />
     <Compile Include="Services\IDBMigrationStep.cs" />
     <Compile Include="Services\IDBMigrationStepProvider.cs" />
+    <Compile Include="Services\IQueryFilterFactory.cs" />
     <Compile Include="Services\ISandboxFactory.cs" />
     <Compile Include="Services\Loggers\ConsoleLogger.cs" />
     <Compile Include="Services\Loggers\DebugLogger.cs" />

@@ -30,15 +30,4 @@ namespace QTFK.Services
     {
         IDBQueryDelete NewDelete();
     }
-
-    public interface IByParamEqualsFilterFactory : IQueryFactory
-    {
-        IByParamEqualsFilter NewByParamEqualsFilter();
-    }
-
-    public interface IByParamBetweenFilterFactory : IQueryFactory
-    {
-        IByParamBetweenFilter<T> NewByParamBetweenFilter<T>() where T : struct;
-    }
-
 }
