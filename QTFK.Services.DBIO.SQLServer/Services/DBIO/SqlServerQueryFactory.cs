@@ -1,10 +1,13 @@
 ﻿using System;
 using QTFK.Models;
 using QTFK.Models.DBIO;
+using QTFK.Models.DBIO.Filters;
 
 namespace QTFK.Services.DBIO
 {
-    public class SQLServerQueryFactory : IQueryFactory, ISQLServer
+    public class SQLServerQueryFactory : ISQLServer
+        , ISelectQueryFactory, IInsertQueryFactory, IUpdateQueryFactory, IDeleteQueryFactory
+        , IByParamEqualsFilterFactory 
     {
         public SQLServerQueryFactory(IDBIO db)
         {
@@ -33,5 +36,11 @@ namespace QTFK.Services.DBIO
         {
             return new SqlUpdateQuery() { Prefix = this.Prefix };
         }
+
+        public IByParamEqualsFilter NewByParamEqualsFilter()
+        {
+            return new SqlByParamEqualsFilter();
+        }
+
     }
 }

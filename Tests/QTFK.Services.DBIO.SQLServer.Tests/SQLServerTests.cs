@@ -505,7 +505,7 @@ namespace QTFK.Services.DBIO.SQLServer.Tests
 
         [TestMethod]
         [TestCategory("DB OleDB")]
-        public void QueryBuilder_SQL_CrudFactory_tests_1()
+        public void QueryFactory_tests_1()
         {
             var factory = new SQLServerQueryFactory(_db)
             {
@@ -591,11 +591,9 @@ namespace QTFK.Services.DBIO.SQLServer.Tests
             Assert.AreEqual("De la rosa Castaños", testItem.Person.Apellidos);
 
             //filter
-            var filter = new SqlByParamEqualsFilter()
-            {
-                Field = "nombre",
-                Parameter = "@nombre"
-            };
+            var filter = factory.NewByParamEqualsFilter();
+            filter.Field = "nombre";
+            filter.Parameter = "@nombre";
 
             //IDBQuery updates
             factory.Update(q => q
