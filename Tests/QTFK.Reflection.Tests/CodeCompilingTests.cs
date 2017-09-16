@@ -4,6 +4,8 @@ using System.Reflection;
 using QTFK.Services.CompilerWrappers;
 using QTFK.Extensions.Compilers;
 using QTFK.Services;
+using SampleLibrary;
+using QTFK.Extensions.Assemblies;
 
 namespace QTFK.Core.Tests
 {
@@ -91,6 +93,75 @@ namespace QTFK.Core.Tests
             ICompilerWrapper compiler = new CompilerWrapper();
             Assembly assembly = compiler.Build(code);
             Assert.IsNull(assembly);
+        }
+
+        [TestMethod]
+        public void CodeCompiling_Test4()
+        {
+            string code = @"
+    using System;
+    using SampleLibrary;
+
+    namespace First
+    {
+        public class PepeSampleService : ISampleService
+        {
+            public int SomeMethod(decimal a, decimal b)
+            {
+                return (int)((a + b) / 2m);
+            }
+        }
+    }
+";
+            ICompilerWrapper compiler = new CompilerWrapper();
+            Assembly assembly = compiler.Build(code, new string[] { "SampleLibrary.dll" });
+            ISampleService pepeService = assembly.CreateInstance<ISampleService>();
+            Assert.AreEqual(13m, pepeService.SomeMethod(10m, 16m));
+        }
+
+        [TestMethod]
+        public void CodeCompiling_Test5()
+        {
+            string code = @"
+    using System;
+    using SampleLibrary;
+
+    namespace First
+    {
+        public class PepeSampleService : ISampleService
+        {
+            public int SomeMethod(decimal a, decimal b)
+            {
+                return (int)((a + b) / 2m);
+            }
+        }
+
+        public class TroncoSampleService : ISampleService
+        {
+            public int SomeMethod(decimal a, decimal b)
+            {
+                return (int)(a + b);
+            }
+        }
+    }
+";
+            ICompilerWrapper compiler = new CompilerWrapper();
+            Assembly assembly = compiler.Build(code, new string[] { "SampleLibrary.dll" });
+            
+            ISampleService pepeService = assembly.CreateInstance<ISampleService>("First.PepeSampleService");
+            ISampleService troncoService = assembly.CreateInstance<ISampleService>("First.TroncoSampleService");
+
+            Assert.AreEqual(6, pepeService.SomeMethod(4, 8));
+            Assert.AreEqual(12, troncoService.SomeMethod(4, 8));
+
+            try
+            {
+                ISampleService service = assembly.CreateInstance<ISampleService>();
+                Assert.Fail("Expected exception");
+            }
+            catch 
+            {
+            }
         }
     }
 }

@@ -33,6 +33,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QTFK.Reflection", "QTFK.Ref
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QTFK.Reflection.Tests", "Tests\QTFK.Reflection.Tests\QTFK.Reflection.Tests.csproj", "{7A2CAA51-1EC3-4638-9EB6-3B928A2CD8CC}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SampleLibrary", "Samples\SampleLibrary\SampleLibrary.csproj", "{C73B69F8-BA2F-4DCE-83AE-14A6716D96F6}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -91,6 +93,10 @@ Global
 		{7A2CAA51-1EC3-4638-9EB6-3B928A2CD8CC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7A2CAA51-1EC3-4638-9EB6-3B928A2CD8CC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7A2CAA51-1EC3-4638-9EB6-3B928A2CD8CC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C73B69F8-BA2F-4DCE-83AE-14A6716D96F6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C73B69F8-BA2F-4DCE-83AE-14A6716D96F6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C73B69F8-BA2F-4DCE-83AE-14A6716D96F6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C73B69F8-BA2F-4DCE-83AE-14A6716D96F6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -103,5 +109,6 @@ Global
 		{B78ED5CD-310E-4E03-A5F7-91EC3CC48150} = {B71D5F28-8791-4FA3-96AE-130945D9B602}
 		{B4B8505F-9A34-461E-B18F-7CD6985D6107} = {A35075D6-7EBA-45BE-9307-DC8FCA1290C9}
 		{7A2CAA51-1EC3-4638-9EB6-3B928A2CD8CC} = {B71D5F28-8791-4FA3-96AE-130945D9B602}
+		{C73B69F8-BA2F-4DCE-83AE-14A6716D96F6} = {A35075D6-7EBA-45BE-9307-DC8FCA1290C9}
 	EndGlobalSection
 EndGlobal
