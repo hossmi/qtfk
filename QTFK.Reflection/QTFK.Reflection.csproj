@@ -47,4 +47,7 @@
     <Compile Include="Services\ICompilerWrapper.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>xcopy /Y $(TargetPath) $(SolutionDir)\bin\qtfk\</PostBuildEvent>
+  </PropertyGroup>
 </Project>
