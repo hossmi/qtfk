@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 
@@ -32,6 +33,17 @@ namespace QTFK.Extensions.Assemblies
                 ;
 
             return assembly.CreateInstance(type.FullName) as T;
+        }
+
+        public static IEnumerable<T> CreateInstances<T>(this Assembly assembly) where T : class
+        {
+            var superType = typeof(T);
+
+            return assembly
+                .ExportedTypes
+                .Where(t => superType.IsAssignableFrom(t))
+                .Select(t => assembly.CreateInstance(t.FullName) as T)
+                ;
         }
     }
 }

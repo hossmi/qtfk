@@ -6,6 +6,7 @@ using QTFK.Extensions.Compilers;
 using QTFK.Services;
 using SampleLibrary;
 using QTFK.Extensions.Assemblies;
+using System.Linq;
 
 namespace QTFK.Core.Tests
 {
@@ -162,6 +163,12 @@ namespace QTFK.Core.Tests
             catch 
             {
             }
+
+            var instances = assembly.CreateInstances<ISampleService>();
+            Assert.AreEqual(2, instances.Count());
+
+            var noInstances = assembly.CreateInstances<ICompilerWrapper>();
+            Assert.AreEqual(0, noInstances.Count());
         }
     }
 }
