@@ -15,7 +15,7 @@ namespace QTFK.Core.Tests
     public class CodeCompilingTests
     {
         [TestMethod]
-        public void CodeCompiling_Test1()
+        public void Compiling_simple_class()
         {
             string code = @"
     using System;
@@ -49,7 +49,7 @@ namespace QTFK.Core.Tests
         }
 
         [TestMethod]
-        public void CodeCompiling_Test2()
+        public void Compiling_simple_class_with_errors()
         {
             string code = @"
     using System;
@@ -75,7 +75,7 @@ namespace QTFK.Core.Tests
         }
 
         [TestMethod]
-        public void CodeCompiling_Test3()
+        public void Compiling_simple_class_with_errors_checking_null_assembly()
         {
             string code = @"
     using System;
@@ -97,7 +97,7 @@ namespace QTFK.Core.Tests
         }
 
         [TestMethod]
-        public void CodeCompiling_Test4()
+        public void Compiling_implementation_class_with_external_reference()
         {
             string code = @"
     using System;
@@ -117,11 +117,13 @@ namespace QTFK.Core.Tests
             ICompilerWrapper compiler = new CompilerWrapper();
             Assembly assembly = compiler.Build(code, new string[] { "SampleLibrary.dll" });
             ISampleService pepeService = assembly.CreateInstance<ISampleService>();
+            ISampleService samePepeService = (ISampleService)assembly.CreateInstance(typeof(ISampleService));
             Assert.AreEqual(13m, pepeService.SomeMethod(10m, 16m));
+            Assert.AreEqual(13m, samePepeService.SomeMethod(10m, 16m));
         }
 
         [TestMethod]
-        public void CodeCompiling_Test5()
+        public void Compiling_two_classes_with_external_reference()
         {
             string code = @"
     using System;
