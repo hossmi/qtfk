@@ -52,7 +52,7 @@ namespace QTFK
             assert(File.Exists(filePath), exceptionMessageFormat, messageParams);
         }
 
-        public static void IsTrue(bool condition, string exceptionMessageFormat, params object[] messageParams)
+        public static void Check(bool condition, string exceptionMessageFormat, params object[] messageParams)
         {
             assert(condition, exceptionMessageFormat, messageParams);
         }
