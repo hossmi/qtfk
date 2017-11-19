@@ -116,8 +116,8 @@ namespace QTFK.Core.Tests
 ";
             ICompilerWrapper compiler = new CompilerWrapper();
             Assembly assembly = compiler.Build(code, new string[] { "SampleLibrary.dll" });
-            ISampleService pepeService = assembly.CreateInstance<ISampleService>();
-            ISampleService samePepeService = (ISampleService)assembly.CreateInstance(typeof(ISampleService));
+            ISampleService pepeService = assembly.CreateAssignableInstance<ISampleService>();
+            ISampleService samePepeService = (ISampleService)assembly.CreateAssignableInstance(typeof(ISampleService));
             Assert.AreEqual(13m, pepeService.SomeMethod(10m, 16m));
             Assert.AreEqual(13m, samePepeService.SomeMethod(10m, 16m));
         }
@@ -159,8 +159,8 @@ namespace QTFK.Core.Tests
             compiler = new CompilerWrapper();
             assembly = compiler.Build(code, new string[] { "SampleLibrary.dll" });
             constructorParams = new object[] { 2m };
-            pepeService = assembly.CreateInstance<ISampleService>(constructorParams);
-            samePepeService = (ISampleService)assembly.CreateInstance(typeof(ISampleService), constructorParams);
+            pepeService = assembly.CreateAssignableInstance<ISampleService>(constructorParams);
+            samePepeService = (ISampleService)assembly.CreateAssignableInstance(typeof(ISampleService), constructorParams);
 
             Assert.AreEqual(13m, pepeService.SomeMethod(10m, 16m));
             Assert.AreEqual(13m, samePepeService.SomeMethod(10m, 16m));
@@ -203,17 +203,17 @@ namespace QTFK.Core.Tests
 
             try
             {
-                ISampleService service = assembly.CreateInstance<ISampleService>();
+                ISampleService service = assembly.CreateAssignableInstance<ISampleService>();
                 Assert.Fail("Expected exception");
             }
             catch 
             {
             }
 
-            var instances = assembly.CreateInstances<ISampleService>();
+            var instances = assembly.CreateAssignableInstances<ISampleService>();
             Assert.AreEqual(2, instances.Count());
 
-            var noInstances = assembly.CreateInstances<ICompilerWrapper>();
+            var noInstances = assembly.CreateAssignableInstances<ICompilerWrapper>();
             Assert.AreEqual(0, noInstances.Count());
         }
     }
