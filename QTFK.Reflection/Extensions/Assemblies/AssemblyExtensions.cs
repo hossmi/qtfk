@@ -7,6 +7,8 @@ namespace QTFK.Extensions.Assemblies
 {
     public static class AssemblyExtensions
     {
+        private static object[] emptyConstructorParameters = new object[] { };
+
         public static T CreateInstance<T>(this Assembly assembly, string implementationType) where T : class
         {
             Type t = assembly.GetType(implementationType, true, true);
@@ -15,7 +17,7 @@ namespace QTFK.Extensions.Assemblies
 
         public static T CreateAssignableInstance<T>(this Assembly assembly) where T : class
         {
-            return createAssignableInstances(assembly, typeof(T), new object[] { })
+            return createAssignableInstances(assembly, typeof(T), emptyConstructorParameters)
                 .Cast<T>()
                 .Single()
                 ;
@@ -31,7 +33,7 @@ namespace QTFK.Extensions.Assemblies
 
         public static object CreateAssignableInstance(this Assembly assembly, Type baseType)
         {
-            return createAssignableInstances(assembly, baseType, new object[] { })
+            return createAssignableInstances(assembly, baseType, emptyConstructorParameters)
                 .Single()
                 ;
         }
@@ -45,7 +47,7 @@ namespace QTFK.Extensions.Assemblies
 
         public static IEnumerable<T> CreateAssignableInstances<T>(this Assembly assembly) where T : class
         {
-            return createAssignableInstances(assembly, typeof(T), new object[] { })
+            return createAssignableInstances(assembly, typeof(T), emptyConstructorParameters)
                 .Cast<T>()
                 ;
         }
@@ -55,6 +57,16 @@ namespace QTFK.Extensions.Assemblies
             return createAssignableInstances(assembly, typeof(T), constructorParameters)
                 .Cast<T>()
                 ;
+        }
+
+        public static IEnumerable<object> CreateAssignableInstances(this Assembly assembly, Type baseType)
+        {
+            return createAssignableInstances(assembly, baseType, emptyConstructorParameters);
+        }
+
+        public static IEnumerable<object> CreateAssignableInstances(this Assembly assembly, Type baseType, object[] constructorParameters)
+        {
+            return createAssignableInstances(assembly, baseType, constructorParameters);
         }
 
         private static IEnumerable<object> createAssignableInstances(Assembly assembly, Type baseType, object[] constructorParameters)
