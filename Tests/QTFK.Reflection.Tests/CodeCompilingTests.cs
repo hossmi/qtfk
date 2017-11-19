@@ -44,7 +44,7 @@ namespace QTFK.Core.Tests
             Assert.AreNotSame(pepeInstance1, pepeInstance2);
 
             MethodInfo suma = pepeType.GetMethod("Suma");
-            int x = (int)suma.Invoke(pepeInstance1, new object[] { 2,3 });
+            int x = (int)suma.Invoke(pepeInstance1, new object[] { 2, 3 });
             Assert.AreEqual(5, x);
         }
 
@@ -118,6 +118,50 @@ namespace QTFK.Core.Tests
             Assembly assembly = compiler.Build(code, new string[] { "SampleLibrary.dll" });
             ISampleService pepeService = assembly.CreateInstance<ISampleService>();
             ISampleService samePepeService = (ISampleService)assembly.CreateInstance(typeof(ISampleService));
+            Assert.AreEqual(13m, pepeService.SomeMethod(10m, 16m));
+            Assert.AreEqual(13m, samePepeService.SomeMethod(10m, 16m));
+        }
+
+        [TestMethod]
+        public void Compiling_class_with_parametrized_constructor()
+        {
+            string code;
+            ISampleService pepeService, samePepeService;
+            ICompilerWrapper compiler;
+            Assembly assembly;
+            object[] constructorParams;
+
+            code = @"
+    using System;
+    using SampleLibrary;
+
+    namespace First
+    {
+        public class PepeSampleService : ISampleService
+        {
+            private decimal divisor;
+
+            public PepeSampleService(decimal divisor)
+            {
+                if(divisor == 0m)
+                    throw new ArgumentException(""'divisor' cannot be zero"");
+                
+                this.divisor = divisor;
+            }
+
+            public int SomeMethod(decimal a, decimal b)
+            {
+                return (int)((a + b) / this.divisor);
+            }
+        }
+    }
+";
+            compiler = new CompilerWrapper();
+            assembly = compiler.Build(code, new string[] { "SampleLibrary.dll" });
+            constructorParams = new object[] { 2m };
+            pepeService = assembly.CreateInstance<ISampleService>(constructorParams);
+            samePepeService = (ISampleService)assembly.CreateInstance(typeof(ISampleService), constructorParams);
+
             Assert.AreEqual(13m, pepeService.SomeMethod(10m, 16m));
             Assert.AreEqual(13m, samePepeService.SomeMethod(10m, 16m));
         }
