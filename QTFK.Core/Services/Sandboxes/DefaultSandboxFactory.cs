@@ -13,9 +13,21 @@ namespace QTFK.Services.Sandboxes
 {
     public class DefaultSandboxFactory : ISandboxFactory
     {
-        public ISandboxEnvironment<T> Build<T>(Action<SandboxConfig> configure) where T : MarshalByRefObject, new()
+        public ISandboxEnvironment<T> build<T>(Action<SandboxConfig> configure) where T : MarshalByRefObject, new()
         {
-            var config = new SandboxConfig
+            SandboxConfig config;
+            string pathToUntrusted;
+            IEnumerable<IPermission> permissions;
+            PermissionSet permSet;
+            IEnumerable<StrongName> fullTrustAssemblies;
+            AppDomainSetup adSetup;
+            AppDomain newDomain;
+            ObjectHandle handle;
+            ISandboxEnvironment<T> sandboxEnvironment;
+
+            Asserts.isSomething(configure, $"{nameof(configure)} cannot be null.");
+
+            config = new SandboxConfig
             {
                 Permissions = new List<IPermission>(),
                 TrustedAssemblies = new List<Assembly>(),
@@ -26,34 +38,32 @@ namespace QTFK.Services.Sandboxes
 
             configure(config);
 
-            string pathToUntrusted = config.PathToUntrusted ?? Environment.CurrentDirectory;
+            pathToUntrusted = config.PathToUntrusted ?? Environment.CurrentDirectory;
 
-            var permissions = (config.Permissions ?? Enumerable.Empty<IPermission>())
+            permissions = (config.Permissions ?? Enumerable.Empty<IPermission>())
                 .Where(p => p != null)
                 ;
 
-            PermissionSet permSet = new PermissionSet(PermissionState.None);
+            permSet = new PermissionSet(PermissionState.None);
             foreach (var permission in permissions)
                 permSet.AddPermission(permission);
 
-            var fullTrustAssemblies = (config.TrustedAssemblies ?? Enumerable.Empty<Assembly>())
+            fullTrustAssemblies = (config.TrustedAssemblies ?? Enumerable.Empty<Assembly>())
                 .Select(a => a.Evidence.GetHostEvidence<StrongName>())
                 .Where(sn => sn != null)
                 ;
 
-            AppDomainSetup adSetup = new AppDomainSetup()
+            adSetup = new AppDomainSetup()
             {
                 ApplicationBase = Path.GetFullPath(pathToUntrusted)
             };
+            config.DomainName = config.DomainName ?? "QTFK-Sandbox";
 
-            AppDomain newDomain = AppDomain.CreateDomain(config.DomainName ?? "QTFK-Sandbox", null, adSetup, permSet, fullTrustAssemblies.ToArray());
+            newDomain = AppDomain.CreateDomain(config.DomainName, null, adSetup, permSet, fullTrustAssemblies.ToArray());
+            handle = Activator.CreateInstanceFrom(newDomain, typeof(T).Assembly.ManifestModule.FullyQualifiedName, typeof(T).FullName);
+            sandboxEnvironment = new SandboxEnvironment<T>(newDomain, handle, (T)handle.Unwrap());
 
-            ObjectHandle handle = Activator.CreateInstanceFrom(
-                newDomain, typeof(T).Assembly.ManifestModule.FullyQualifiedName,
-                typeof(T).FullName
-                );
-
-            return new SandboxEnvironment<T>(newDomain, handle, (T)handle.Unwrap());
+            return sandboxEnvironment;
         }
     }
 }

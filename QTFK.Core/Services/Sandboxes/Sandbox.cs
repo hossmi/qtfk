@@ -6,30 +6,44 @@ namespace QTFK.Services.Sandboxes
 {
     public class Sandbox : MarshalByRefObject
     {
-        public T Run<T>(Func<T> method)
+        public T run<T>(Func<T> method)
         {
-            return method();
+            T result;
+
+            result = method();
+
+            return result;
         }
 
-        public void Run(Action method)
+        public void run(Action method)
         {
             method();
         }
 
-        public object Run(Type typename, string methodName, params object[] parameters)
+        public object run(Type typename, string methodName, params object[] parameters)
         {
-            return Run(typename.Assembly.FullName, typename.FullName, methodName, parameters);
+            return prv_run(typename.Assembly.FullName, typename.FullName, methodName, parameters);
         }
 
-        public object Run(string assemblyName, string typeName, string methodName, params object[] parameters)
+        public object run(string assemblyName, string typeName, string methodName, params object[] parameters)
         {
-            MethodInfo target = Assembly
+            return prv_run(assemblyName, typeName, methodName, parameters);
+        }
+
+        private object prv_run(string assemblyName, string typeName, string methodName, object[] parameters)
+        {
+            MethodInfo target;
+            object result;
+
+            target = Assembly
                 .Load(assemblyName)
                 .GetType(typeName)
                 .GetMethod(methodName)
                 ;
 
-            return target.Invoke(null, parameters);
+            result = target.Invoke(null, parameters);
+
+            return result;
         }
     }
 }

@@ -14,19 +14,19 @@ namespace QTFK.Extensions.Tests
     {
         [TestMethod]
         [TestCategory("Sandbox")]
-        public void SandBox_Extensions_test1()
+        public void sandBox_Extensions_test1()
         {
-            ISandboxFactory factory = new DefaultSandboxFactory();
+            ISandboxFactory factory;
 
-            using (var sandboxEnv = factory.Build<Sandbox>())
+            factory = new DefaultSandboxFactory();
+            using (var sandboxEnv = factory.build<Sandbox>())
                 try
                 {
-                    var sandbox = sandboxEnv.Instance;
-                    int result = sandbox.Run(() =>
-                    {
-                        var x = new SuspiciousTestClass();
-                        return x.SomeMethod(13);
-                    });
+                    Sandbox sandbox;
+                    int result;
+
+                    sandbox = sandboxEnv.Instance;
+                    result = sandbox.run(prv_suspiciousCode);
                     Assert.Fail($"Expected {nameof(SecurityException)}");
                 }
                 catch (SecurityException)
@@ -37,18 +37,16 @@ namespace QTFK.Extensions.Tests
 
         [TestMethod]
         [TestCategory("Sandbox")]
-        public void SandBox_Extensions_test2()
+        public void sandBox_Extensions_test2()
         {
-            ISandboxFactory factory = new DefaultSandboxFactory();
-            using (var sandboxEnv = factory.BuildSandbox())
+            ISandboxFactory factory;
+
+            factory = new DefaultSandboxFactory();
+            using (var sandboxEnv = factory.buildSandbox())
                 try
                 {
                     var sandbox = sandboxEnv.Instance;
-                    int result = sandbox.Run(() =>
-                    {
-                        var x = new SuspiciousTestClass();
-                        return x.SomeMethod(13);
-                    });
+                    int result = sandbox.run(prv_suspiciousCode);
                     Assert.Fail($"Expected {nameof(SecurityException)}");
                 }
                 catch (SecurityException)
@@ -59,21 +57,33 @@ namespace QTFK.Extensions.Tests
 
         [TestMethod]
         [TestCategory("Sandbox")]
-        public void SandBox_Extensions_test3()
+        public void sandBox_Extensions_test3()
         {
-            ISandboxFactory factory = new DefaultSandboxFactory();
+            ISandboxFactory factory;
 
-            using (var sandboxEnv = factory.Build<MaliciousTestClass>())
+            factory = new DefaultSandboxFactory();
+            using (var sandboxEnv = factory.build<MaliciousTestClass>())
                 try
                 {
                     var sandbox = sandboxEnv.Instance;
-                    int result = sandbox.SomeMethod(13);
+                    int result = sandbox.someMethod(13);
                     Assert.Fail($"Expected {nameof(SecurityException)}");
                 }
                 catch (SecurityException)
                 {
                     //good!
                 }
+        }
+
+        private static int prv_suspiciousCode()
+        {
+            SuspiciousTestClass x;
+            int someMethodResult;
+
+            x = new SuspiciousTestClass();
+            someMethodResult = x.SomeMethod(13);
+
+            return someMethodResult;
         }
 
     }
