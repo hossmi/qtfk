@@ -61,7 +61,6 @@
     <Compile Include="Objects\DictionaryConverter\DictionaryExtension.cs" />
     <Compile Include="Objects\Manipulator\ManipulatorExtension.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Sandboxing\SandboxExtension.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\QTFK.Core\QTFK.Core.csproj">
