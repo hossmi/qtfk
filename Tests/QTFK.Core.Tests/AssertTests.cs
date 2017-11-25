@@ -25,12 +25,12 @@ namespace QTFK.Core.Tests
             someLogLevel = LogLevel.Info;
             someLogLevelAsString = LogLevel.Fatal.ToString();
 
-            Asserts.IsFilled(someString, $"'{nameof(someString)}' cannot be empty.");
-            Asserts.IsGreaterThanZero(number, $"'{nameof(number)}' must be greater than zero.");
-            Asserts.IsInstance(someType, "'{nameof(number)}' cannot be null.");
-            Asserts.IsInstance(someObject, "'{nameof(number)}' cannot be null.");
-            Asserts.IsValidEnum(someLogLevel, "'{nameof(number)}' cannot be null.");
-            Asserts.IsValidEnum<LogLevel>(someLogLevelAsString, "'{nameof(number)}' cannot be null.");
+            Asserts.isFilled(someString, $"'{nameof(someString)}' cannot be empty.");
+            Asserts.check(number > 0, $"'{nameof(number)}' must be greater than zero.");
+            Asserts.isSomething(someType, "'{nameof(number)}' cannot be null.");
+            Asserts.isSomething(someObject, "'{nameof(number)}' cannot be null.");
+            Asserts.isValidEnum<LogLevel>(someLogLevel, "'{nameof(number)}' cannot be null.");
+            Asserts.isValidEnum<LogLevel>(someLogLevelAsString, "'{nameof(number)}' cannot be null.");
         }
 
         [TestCategory("Asserts")]
@@ -53,42 +53,42 @@ namespace QTFK.Core.Tests
 
             try
             {
-                Asserts.IsFilled(someString, $"'{nameof(someString)}' cannot be empty.");
+                Asserts.isFilled(someString, $"'{nameof(someString)}' cannot be empty.");
                 Assert.Fail();
             }
             catch { }
 
             try
             {
-                Asserts.IsGreaterThanZero(number, $"'{nameof(number)}' must be greater than zero.");
+                Asserts.check(number > 0, $"'{nameof(number)}' must be greater than zero.");
                 Assert.Fail();
             }
             catch { }
 
             try
             {
-                Asserts.IsInstance(someType, "'{nameof(number)}' cannot be null.");
+                Asserts.isSomething(someType, "'{nameof(number)}' cannot be null.");
                 Assert.Fail();
             }
             catch { }
 
             try
             {
-                Asserts.IsInstance(someObject, "'{nameof(number)}' cannot be null.");
+                Asserts.isSomething(someObject, "'{nameof(number)}' cannot be null.");
                 Assert.Fail();
             }
             catch { }
 
             try
             {
-                Asserts.IsValidEnum(someLogLevel, "'{nameof(number)}' cannot be null.");
+                Asserts.isValidEnum<LogLevel>(someLogLevel, "'{nameof(number)}' cannot be null.");
                 Assert.Fail();
             }
             catch { }
 
             try
             {
-                Asserts.IsValidEnum<LogLevel>(someLogLevelAsString, "'{nameof(number)}' cannot be null.");
+                Asserts.isValidEnum<LogLevel>(someLogLevelAsString, "'{nameof(number)}' cannot be null.");
                 Assert.Fail();
             }
             catch { }

@@ -5,64 +5,38 @@ namespace QTFK
 {
     public static class Asserts
     {
-        public static void IsFilled(string someString, string exceptionMessageFormat, params object[] messageParams)
+        public static void isFilled(string someString, string exceptionMessageFormat, params object[] messageParams)
         {
-            assertIsFilled(someString, exceptionMessageFormat, messageParams);
+            prv_assertIsFilled(someString, exceptionMessageFormat, messageParams);
         }
 
-        public static void IsInstance<T>(T item, string exceptionMessageFormat, params object[] messageParams) where T : class
+        public static void isSomething(object item, string exceptionMessageFormat, params object[] messageParams)
         {
-            assert(item != null, exceptionMessageFormat, messageParams);
+            prv_assert(item != null, exceptionMessageFormat, messageParams);
         }
 
-        public static void IsValidEnum<T>(T enumValue, string exceptionMessageFormat, params object[] messageParams) where T : struct
+        public static void isValidEnum<T>(object enumValue, string exceptionMessageFormat, params object[] messageParams) where T : struct
         {
-            assert(Enum.IsDefined(typeof(T), enumValue), exceptionMessageFormat, messageParams);
+            prv_assert(Enum.IsDefined(typeof(T), enumValue), exceptionMessageFormat, messageParams);
         }
 
-        public static void IsValidEnum<T>(string enumValue, string exceptionMessageFormat, params object[] messageParams) where T : struct
+        public static void fileExists(string filePath, string exceptionMessageFormat, params object[] messageParams)
         {
-            assertIsFilled(enumValue, exceptionMessageFormat, messageParams);
-            assert(Enum.IsDefined(typeof(T), enumValue), exceptionMessageFormat, messageParams);
+            prv_assertIsFilled(filePath, exceptionMessageFormat, messageParams);
+            prv_assert(File.Exists(filePath), exceptionMessageFormat, messageParams);
         }
 
-        public static void IsGreaterThanZero(int value, string exceptionMessageFormat, params object[] messageParams)
+        public static void check(bool condition, string exceptionMessageFormat, params object[] messageParams)
         {
-            assert(value > 0, exceptionMessageFormat, messageParams);
+            prv_assert(condition, exceptionMessageFormat, messageParams);
         }
 
-        public static void IsGreaterThanZero(long value, string exceptionMessageFormat, params object[] messageParams)
+        private static void prv_assertIsFilled(string someString, string exceptionMessageFormat, params object[] messageParams)
         {
-            assert(value > 0, exceptionMessageFormat, messageParams);
+            prv_assert(string.IsNullOrWhiteSpace(someString) == false, exceptionMessageFormat, messageParams);
         }
 
-        public static void IsGreaterThanZero(double value, string exceptionMessageFormat, params object[] messageParams)
-        {
-            assert(value > 0.0, exceptionMessageFormat, messageParams);
-        }
-
-        public static void IsGreaterThanZero(decimal value, string exceptionMessageFormat, params object[] messageParams)
-        {
-            assert(value > 0m, exceptionMessageFormat, messageParams);
-        }
-
-        public static void FileExists(string filePath, string exceptionMessageFormat, params object[] messageParams)
-        {
-            assertIsFilled(filePath, exceptionMessageFormat, messageParams);
-            assert(File.Exists(filePath), exceptionMessageFormat, messageParams);
-        }
-
-        public static void Check(bool condition, string exceptionMessageFormat, params object[] messageParams)
-        {
-            assert(condition, exceptionMessageFormat, messageParams);
-        }
-
-        private static void assertIsFilled(string someString, string exceptionMessageFormat, params object[] messageParams)
-        {
-            assert(string.IsNullOrWhiteSpace(someString) == false, exceptionMessageFormat, messageParams);
-        }
-
-        private static void assert(bool condition, string exceptionMessageFormat, params object[] messageParams)
+        private static void prv_assert(bool condition, string exceptionMessageFormat, params object[] messageParams)
         {
             if (condition == false)
                 throw new ArgumentException(string.Format(exceptionMessageFormat ?? "", messageParams));
