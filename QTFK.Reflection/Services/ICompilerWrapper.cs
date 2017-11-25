@@ -9,6 +9,6 @@ namespace QTFK.Services
     {
         event Action<CompilerResults> CompilationResult;
 
-        Assembly Build(string code, IEnumerable<string> referencedAssemblies, Action<CompilerParameters> settings);
+        Assembly build(string code, IEnumerable<string> referencedAssemblies, Action<CompilerParameters> settings);
     }
 }

@@ -9,19 +9,19 @@ namespace QTFK.Extensions.Compilers
 {
     public static class CompilerWrapperExtension
     {
-        public static Assembly Build(this ICompilerWrapper compilerWrapper, string code, IEnumerable<string> referencedAssemblies)
+        public static Assembly build(this ICompilerWrapper compilerWrapper, string code, IEnumerable<string> referencedAssemblies)
         {
-            return compilerWrapper.Build(code, referencedAssemblies, p => { });
+            return compilerWrapper.build(code, referencedAssemblies, p => { });
         }
 
-        public static Assembly Build(this ICompilerWrapper compilerWrapper, string code)
+        public static Assembly build(this ICompilerWrapper compilerWrapper, string code)
         {
-            return compilerWrapper.Build(code, Enumerable.Empty<string>(), p => { });
+            return compilerWrapper.build(code, Enumerable.Empty<string>(), p => { });
         }
 
-        public static Assembly Build(this ICompilerWrapper compilerWrapper, string code, Action<CompilerParameters> settings)
+        public static Assembly build(this ICompilerWrapper compilerWrapper, string code, Action<CompilerParameters> settings)
         {
-            return compilerWrapper.Build(code, Enumerable.Empty<string>(), settings);
+            return compilerWrapper.build(code, Enumerable.Empty<string>(), settings);
         }
     }
 }

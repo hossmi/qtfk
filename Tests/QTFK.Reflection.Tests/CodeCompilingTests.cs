@@ -7,6 +7,7 @@ using QTFK.Services;
 using SampleLibrary;
 using QTFK.Extensions.Assemblies;
 using System.Linq;
+using System.Collections.Generic;
 
 namespace QTFK.Core.Tests
 {
@@ -15,9 +16,17 @@ namespace QTFK.Core.Tests
     public class CodeCompilingTests
     {
         [TestMethod]
-        public void Compiling_simple_class()
+        public void compiling_simple_class()
         {
-            string code = @"
+            ICompilerWrapper compiler;
+            string code;
+            Assembly assembly;
+            Type pepeType;
+            object pepeInstance1, pepeInstance2;
+            MethodInfo suma;
+            int sumaResult;
+
+            code = @"
     using System;
 
     namespace First
@@ -31,27 +40,31 @@ namespace QTFK.Core.Tests
         }
     }
 ";
-            ICompilerWrapper compiler = new CompilerWrapper();
-            Assembly assembly = compiler.Build(code);
+            compiler = new CompilerWrapper();
+            assembly = compiler.build(code);
 
-            Type pepeType = assembly.GetType("First.Pepe");
+            pepeType = assembly.GetType("First.Pepe");
 
-            var pepeInstance1 = assembly.CreateInstance("First.Pepe");
-            var pepeInstance2 = Activator.CreateInstance(pepeType);
+            pepeInstance1 = assembly.CreateInstance("First.Pepe");
+            pepeInstance2 = Activator.CreateInstance(pepeType);
 
             Assert.IsInstanceOfType(pepeInstance1, pepeType);
             Assert.IsInstanceOfType(pepeInstance2, pepeType);
             Assert.AreNotSame(pepeInstance1, pepeInstance2);
 
-            MethodInfo suma = pepeType.GetMethod("Suma");
-            int x = (int)suma.Invoke(pepeInstance1, new object[] { 2, 3 });
-            Assert.AreEqual(5, x);
+            suma = pepeType.GetMethod("Suma");
+            sumaResult = (int)suma.Invoke(pepeInstance1, new object[] { 2, 3 });
+            Assert.AreEqual(5, sumaResult);
         }
 
         [TestMethod]
-        public void Compiling_simple_class_with_errors()
+        public void compiling_simple_class_with_errors()
         {
-            string code = @"
+            string code;
+            ICompilerWrapper compiler;
+            Assembly assembly;
+
+            code = @"
     using System;
 
     namespace First
@@ -65,19 +78,23 @@ namespace QTFK.Core.Tests
         }
     }
 ";
-            ICompilerWrapper compiler = new CompilerWrapper();
+            compiler = new CompilerWrapper();
             compiler.CompilationResult += result =>
             {
                 if (!result.Errors.HasErrors)
                     Assert.Fail("Expected compilation error");
             };
-            Assembly assembly = compiler.Build(code);
+            assembly = compiler.build(code);
         }
 
         [TestMethod]
-        public void Compiling_simple_class_with_errors_checking_null_assembly()
+        public void compiling_simple_class_with_errors_checking_null_assembly()
         {
-            string code = @"
+            string code;
+            ICompilerWrapper compiler;
+            Assembly assembly;
+
+            code = @"
     using System;
 
     namespace First
@@ -91,15 +108,20 @@ namespace QTFK.Core.Tests
         }
     }
 ";
-            ICompilerWrapper compiler = new CompilerWrapper();
-            Assembly assembly = compiler.Build(code);
+            compiler = new CompilerWrapper();
+            assembly = compiler.build(code);
             Assert.IsNull(assembly);
         }
 
         [TestMethod]
-        public void Compiling_implementation_class_with_external_reference()
+        public void compiling_implementation_class_with_external_reference()
         {
-            string code = @"
+            string code;
+            ICompilerWrapper compiler;
+            Assembly assembly;
+            ISampleService pepeService, samePepeService;
+
+            code = @"
     using System;
     using SampleLibrary;
 
@@ -114,16 +136,17 @@ namespace QTFK.Core.Tests
         }
     }
 ";
-            ICompilerWrapper compiler = new CompilerWrapper();
-            Assembly assembly = compiler.Build(code, new string[] { "SampleLibrary.dll" });
-            ISampleService pepeService = assembly.CreateAssignableInstance<ISampleService>();
-            ISampleService samePepeService = (ISampleService)assembly.CreateAssignableInstance(typeof(ISampleService));
+            compiler = new CompilerWrapper();
+            assembly = compiler.build(code, new string[] { "SampleLibrary.dll" });
+            pepeService = assembly.createAssignableInstance<ISampleService>();
+            samePepeService = (ISampleService)assembly.createAssignableInstance(typeof(ISampleService));
+
             Assert.AreEqual(13m, pepeService.SomeMethod(10m, 16m));
             Assert.AreEqual(13m, samePepeService.SomeMethod(10m, 16m));
         }
 
         [TestMethod]
-        public void Compiling_class_with_parametrized_constructor()
+        public void compiling_class_with_parametrized_constructor()
         {
             string code;
             ISampleService pepeService, samePepeService;
@@ -157,19 +180,26 @@ namespace QTFK.Core.Tests
     }
 ";
             compiler = new CompilerWrapper();
-            assembly = compiler.Build(code, new string[] { "SampleLibrary.dll" });
+            assembly = compiler.build(code, new string[] { "SampleLibrary.dll" });
             constructorParams = new object[] { 2m };
-            pepeService = assembly.CreateAssignableInstance<ISampleService>(constructorParams);
-            samePepeService = (ISampleService)assembly.CreateAssignableInstance(typeof(ISampleService), constructorParams);
+            pepeService = assembly.createAssignableInstance<ISampleService>(constructorParams);
+            samePepeService = (ISampleService)assembly.createAssignableInstance(typeof(ISampleService), constructorParams);
 
             Assert.AreEqual(13m, pepeService.SomeMethod(10m, 16m));
             Assert.AreEqual(13m, samePepeService.SomeMethod(10m, 16m));
         }
 
         [TestMethod]
-        public void Compiling_two_classes_with_external_reference()
+        public void compiling_two_classes_with_external_reference()
         {
-            string code = @"
+            string code;
+            ICompilerWrapper compiler;
+            Assembly assembly;
+            ISampleService pepeService, troncoService;
+            IEnumerable<ISampleService> instances;
+            IEnumerable<ICompilerWrapper> noInstances;
+
+            code = @"
     using System;
     using SampleLibrary;
 
@@ -192,28 +222,30 @@ namespace QTFK.Core.Tests
         }
     }
 ";
-            ICompilerWrapper compiler = new CompilerWrapper();
-            Assembly assembly = compiler.Build(code, new string[] { "SampleLibrary.dll" });
+            compiler = new CompilerWrapper();
+            assembly = compiler.build(code, new string[] { "SampleLibrary.dll" });
             
-            ISampleService pepeService = assembly.CreateInstance<ISampleService>("First.PepeSampleService");
-            ISampleService troncoService = assembly.CreateInstance<ISampleService>("First.TroncoSampleService");
+            pepeService = assembly.createInstance<ISampleService>("First.PepeSampleService");
+            troncoService = assembly.createInstance<ISampleService>("First.TroncoSampleService");
 
             Assert.AreEqual(6, pepeService.SomeMethod(4, 8));
             Assert.AreEqual(12, troncoService.SomeMethod(4, 8));
 
             try
             {
-                ISampleService service = assembly.CreateAssignableInstance<ISampleService>();
+                ISampleService service;
+
+                service = assembly.createAssignableInstance<ISampleService>();
                 Assert.Fail("Expected exception");
             }
             catch 
             {
             }
 
-            var instances = assembly.CreateAssignableInstances<ISampleService>();
+            instances = assembly.createAssignableInstances<ISampleService>();
             Assert.AreEqual(2, instances.Count());
 
-            var noInstances = assembly.CreateAssignableInstances<ICompilerWrapper>();
+            noInstances = assembly.createAssignableInstances<ICompilerWrapper>();
             Assert.AreEqual(0, noInstances.Count());
         }
     }

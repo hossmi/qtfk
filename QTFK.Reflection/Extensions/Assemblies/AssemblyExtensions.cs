@@ -9,67 +9,67 @@ namespace QTFK.Extensions.Assemblies
     {
         private static object[] emptyConstructorParameters = new object[] { };
 
-        public static T CreateInstance<T>(this Assembly assembly, string implementationType) where T : class
+        public static T createInstance<T>(this Assembly assembly, string implementationType) where T : class
         {
             Type t = assembly.GetType(implementationType, true, true);
             return assembly.CreateInstance(t.FullName) as T;
         }
 
-        public static T CreateAssignableInstance<T>(this Assembly assembly) where T : class
+        public static T createAssignableInstance<T>(this Assembly assembly) where T : class
         {
-            return createAssignableInstances(assembly, typeof(T), emptyConstructorParameters)
+            return prv_createAssignableInstances(assembly, typeof(T), emptyConstructorParameters)
                 .Cast<T>()
                 .Single()
                 ;
         }
 
-        public static T CreateAssignableInstance<T>(this Assembly assembly, object[] constructorParameters) where T : class
+        public static T createAssignableInstance<T>(this Assembly assembly, object[] constructorParameters) where T : class
         {
-            return createAssignableInstances(assembly, typeof(T), constructorParameters)
+            return prv_createAssignableInstances(assembly, typeof(T), constructorParameters)
                 .Cast<T>()
                 .Single()
                 ;
         }
 
-        public static object CreateAssignableInstance(this Assembly assembly, Type baseType)
+        public static object createAssignableInstance(this Assembly assembly, Type baseType)
         {
-            return createAssignableInstances(assembly, baseType, emptyConstructorParameters)
+            return prv_createAssignableInstances(assembly, baseType, emptyConstructorParameters)
                 .Single()
                 ;
         }
 
-        public static object CreateAssignableInstance(this Assembly assembly, Type baseType, object[] constructorParameters)
+        public static object createAssignableInstance(this Assembly assembly, Type baseType, object[] constructorParameters)
         {
-            return createAssignableInstances(assembly, baseType, constructorParameters)
+            return prv_createAssignableInstances(assembly, baseType, constructorParameters)
                 .Single()
                 ;
         }
 
-        public static IEnumerable<T> CreateAssignableInstances<T>(this Assembly assembly) where T : class
+        public static IEnumerable<T> createAssignableInstances<T>(this Assembly assembly) where T : class
         {
-            return createAssignableInstances(assembly, typeof(T), emptyConstructorParameters)
+            return prv_createAssignableInstances(assembly, typeof(T), emptyConstructorParameters)
                 .Cast<T>()
                 ;
         }
 
-        public static IEnumerable<T> CreateAssignableInstances<T>(this Assembly assembly, object[] constructorParameters) where T : class
+        public static IEnumerable<T> createAssignableInstances<T>(this Assembly assembly, object[] constructorParameters) where T : class
         {
-            return createAssignableInstances(assembly, typeof(T), constructorParameters)
+            return prv_createAssignableInstances(assembly, typeof(T), constructorParameters)
                 .Cast<T>()
                 ;
         }
 
-        public static IEnumerable<object> CreateAssignableInstances(this Assembly assembly, Type baseType)
+        public static IEnumerable<object> createAssignableInstances(this Assembly assembly, Type baseType)
         {
-            return createAssignableInstances(assembly, baseType, emptyConstructorParameters);
+            return prv_createAssignableInstances(assembly, baseType, emptyConstructorParameters);
         }
 
-        public static IEnumerable<object> CreateAssignableInstances(this Assembly assembly, Type baseType, object[] constructorParameters)
+        public static IEnumerable<object> createAssignableInstances(this Assembly assembly, Type baseType, object[] constructorParameters)
         {
-            return createAssignableInstances(assembly, baseType, constructorParameters);
+            return prv_createAssignableInstances(assembly, baseType, constructorParameters);
         }
 
-        private static IEnumerable<object> createAssignableInstances(Assembly assembly, Type baseType, object[] constructorParameters)
+        private static IEnumerable<object> prv_createAssignableInstances(Assembly assembly, Type baseType, object[] constructorParameters)
         {
             IEnumerable<object> instances;
 
