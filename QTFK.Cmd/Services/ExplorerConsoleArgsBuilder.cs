@@ -6,61 +6,63 @@ namespace QTFK.Services
 {
     internal class ExplorerConsoleArgsBuilder : IConsoleArgsBuilder
     {
-        private readonly IDictionary<string, ArgumentInfo> _data;
+        private readonly IDictionary<string, ArgumentInfo> data;
 
         public ExplorerConsoleArgsBuilder(IDictionary<string, ArgumentInfo> data)
         {
-            _data = data;
+            Asserts.isSomething(data, $"'{nameof(data)}' cannot be null.");
+
+            this.data = data;
         }
 
         public event ArgsErrorDelegate Error;
 
         public bool Flag(string name, string description)
         {
-            _data.Set(name, new ArgumentInfo
-            {
-                Name = name,
-                Description = description,
-                Default = false.ToString(),
-                IsOptional = true,
-                IsIndexed = false,
-                IsFlag = true,
-            });
+            prv_setOptionData(this.data, name, description, true, false, false.ToString(), true);
             return false;
         }
 
         public string Optional(string name, string description, string defaultValue)
         {
-            return SetOptionData(name, description, true, false, defaultValue);
+            return prv_setOptionData(this.data, name, description, true, false, defaultValue, false);
         }
 
         public string Optional(int index, string name, string description, string defaultValue)
         {
-            return SetOptionData(name, description, true, true, defaultValue);
+            return prv_setOptionData(this.data, name, description, true, true, defaultValue, false);
         }
 
         public string Required(string name, string description)
         {
-            return SetOptionData(name, description, false, false);
+            return prv_setOptionData(this.data, name, description, false, false, string.Empty, false);
         }
 
         public string Required(int index, string name, string description)
         {
-            return SetOptionData(name, description, false, true);
+            return prv_setOptionData(this.data, name, description, false, true, string.Empty, false);
         }
 
-        private string SetOptionData(string name, string description, bool isOptional, bool isIndexed, string defaultValue = null)
+        private static string prv_setOptionData(IDictionary<string, ArgumentInfo> data
+            , string name, string description
+            , bool isOptional, bool isIndexed
+            , string defaultValue
+            , bool isFlag
+            )
         {
-            defaultValue = defaultValue ?? string.Empty;
-            _data.Set(name, new ArgumentInfo
+            ArgumentInfo argumentInfo;
+
+            argumentInfo = new ArgumentInfo
             {
                 Name = name,
                 Description = description,
                 Default = defaultValue,
                 IsOptional = isOptional,
                 IsIndexed = isIndexed,
-                IsFlag = false,
-            });
+                IsFlag = isFlag,
+            };
+            data.Set(name, argumentInfo);
+
             return defaultValue;
         }
     }
