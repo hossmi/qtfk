@@ -7,6 +7,7 @@ using System.Linq;
 using QTFK.Extensions;
 using QTFK.Extensions.Collections.Casting;
 using QTFK.Cmd.Tests.Models;
+using QTFK.Services.ConsoleArgsServices;
 
 namespace QTFK.Cmd.Tests
 {

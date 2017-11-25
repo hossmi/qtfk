@@ -2,7 +2,7 @@
 using QTFK.Models;
 using System.Collections.Generic;
 
-namespace QTFK.Services
+namespace QTFK.Services.ConsoleArgsBuilders
 {
     internal class ExplorerConsoleArgsBuilder : IConsoleArgsBuilder
     {

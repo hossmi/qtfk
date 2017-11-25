@@ -2,10 +2,9 @@
 using System.Collections.Generic;
 using QTFK.Models;
 using System.Linq;
-using QTFK.Extensions.Collections.Strings;
-using QTFK.Extensions.Collections.SwitchCase;
+using QTFK.Services.ConsoleArgsBuilders;
 
-namespace QTFK.Services
+namespace QTFK.Services.ConsoleArgsServices
 {
     public partial class ConsoleArgsService : IConsoleArgsService
     {
@@ -20,7 +19,7 @@ namespace QTFK.Services
 
         public T Parse<T>(IEnumerable<string> args, Func<IConsoleArgsBuilder, T> builder) where T : class
         {
-            Init();
+            prv_init();
 
             var stringComparer = CaseSensitive
                 ? StringComparer.InvariantCulture
@@ -77,7 +76,7 @@ namespace QTFK.Services
             return null;
         }
 
-        private void Init()
+        private void prv_init()
         {
             if (string.IsNullOrWhiteSpace(Prefix))
                 throw new ArgumentNullException(nameof(Prefix), "It is mandatory the use of a prefix for options.");
