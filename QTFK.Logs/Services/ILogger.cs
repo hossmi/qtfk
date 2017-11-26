@@ -10,6 +10,6 @@ namespace QTFK.Services
 
     public interface ILogger<T>
     {
-        void Log(T level, string message);
+        void log(T level, string message);
     }
 }

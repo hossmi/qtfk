@@ -9,7 +9,7 @@ namespace QTFK.Services.Loggers
 {
     public class NullLogger<T> : ILogger<T>
     {
-        protected static NullLogger<T> _instance;
+        protected static NullLogger<T> instance;
 
         protected NullLogger() { }
 
@@ -17,13 +17,13 @@ namespace QTFK.Services.Loggers
         {
             get
             {
-                if (_instance == null)
-                    _instance = new NullLogger<T>();
-                return _instance;
+                if (instance == null)
+                    instance = new NullLogger<T>();
+                return instance;
             }
         }
 
-        public void Log(T level, string message) { }
+        public void log(T level, string message) { }
     }
 
     public class NullLogger : NullLogger<LogLevel>

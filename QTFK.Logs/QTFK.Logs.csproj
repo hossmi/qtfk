@@ -52,7 +52,12 @@
     <Compile Include="Services\Loggers\MultiLogger.cs" />
     <Compile Include="Services\Loggers\NullLogger.cs" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\QTFK.Core\QTFK.Core.csproj">
+      <Project>{8c740adf-e4e1-444a-a9f0-2e40b174260f}</Project>
+      <Name>QTFK.Core</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>xcopy /Y $(TargetPath) $(SolutionDir)\bin\qtfk\</PostBuildEvent>

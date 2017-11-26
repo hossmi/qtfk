@@ -10,25 +10,25 @@ namespace QTFK.Extensions.Loggers
 {
     public static class LoggerLevelExtension
     {
-        public static void Debug(this ILogger<LogLevel> log, string message)
+        public static void debug(this ILogger<LogLevel> log, string message)
         {
-            log.Log(LogLevel.Debug, message);
+            log.log(LogLevel.Debug, message);
         }
-        public static void Info(this ILogger<LogLevel> log, string message)
+        public static void info(this ILogger<LogLevel> log, string message)
         {
-            log.Log(LogLevel.Info, message);
+            log.log(LogLevel.Info, message);
         }
-        public static void Warning(this ILogger<LogLevel> log, string message)
+        public static void warning(this ILogger<LogLevel> log, string message)
         {
-            log.Log(LogLevel.Warning, message);
+            log.log(LogLevel.Warning, message);
         }
-        public static void Error(this ILogger<LogLevel> log, string message)
+        public static void error(this ILogger<LogLevel> log, string message)
         {
-            log.Log(LogLevel.Error, message);
+            log.log(LogLevel.Error, message);
         }
-        public static void Fatal(this ILogger<LogLevel> log, string message)
+        public static void fatal(this ILogger<LogLevel> log, string message)
         {
-            log.Log(LogLevel.Fatal, message);
+            log.log(LogLevel.Fatal, message);
         }
     }
 }

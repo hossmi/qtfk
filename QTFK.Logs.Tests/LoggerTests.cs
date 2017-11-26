@@ -24,11 +24,11 @@ namespace QTFK.Logs.Tests
                 { LogLevel.Fatal, ConsoleColor.Red },
             });
 
-            log.Log(LogLevel.Debug, "loggin debug message");
-            log.Log(LogLevel.Info, "loggin information message");
-            log.Log(LogLevel.Warning, "loggin a warning");
-            log.Log(LogLevel.Error, "Ups! an Error!");
-            log.Log(LogLevel.Fatal, "Booooom!!");
+            log.log(LogLevel.Debug, "loggin debug message");
+            log.log(LogLevel.Info, "loggin information message");
+            log.log(LogLevel.Warning, "loggin a warning");
+            log.log(LogLevel.Error, "Ups! an Error!");
+            log.log(LogLevel.Fatal, "Booooom!!");
 
             buffer.Flush();
             string output = buffer.ToString();
@@ -54,11 +54,11 @@ Booooom!!
                 { LogLevel.Fatal, ConsoleColor.Red },
             });
 
-            log.Log(LogLevel.Debug, "loggin debug message");
-            log.Log(LogLevel.Info, "loggin information message");
-            log.Log(LogLevel.Warning, "loggin a warning");
-            log.Log(LogLevel.Error, "Ups! an Error!");
-            log.Log(LogLevel.Fatal, "Booooom!!");
+            log.log(LogLevel.Debug, "loggin debug message");
+            log.log(LogLevel.Info, "loggin information message");
+            log.log(LogLevel.Warning, "loggin a warning");
+            log.log(LogLevel.Error, "Ups! an Error!");
+            log.log(LogLevel.Fatal, "Booooom!!");
 
             buffer.Flush();
             string output = buffer.ToString();
@@ -84,11 +84,11 @@ Booooom!!
                 { LogLevel.Fatal, ConsoleColor.Red },
             }, l => LogLevel.Warning <= l && l <= LogLevel.Error);
 
-            log.Log(LogLevel.Debug, "loggin debug message");
-            log.Log(LogLevel.Info, "loggin information message");
-            log.Log(LogLevel.Warning, "loggin a warning");
-            log.Log(LogLevel.Error, "Ups! an Error!");
-            log.Log(LogLevel.Fatal, "Booooom!!");
+            log.log(LogLevel.Debug, "loggin debug message");
+            log.log(LogLevel.Info, "loggin information message");
+            log.log(LogLevel.Warning, "loggin a warning");
+            log.log(LogLevel.Error, "Ups! an Error!");
+            log.log(LogLevel.Fatal, "Booooom!!");
 
             buffer.Flush();
             string output = buffer.ToString();
@@ -111,11 +111,11 @@ Ups! an Error!
                 { LogLevel.Fatal, ConsoleColor.Red },
             });
 
-            log.Debug("loggin debug message");
-            log.Info("loggin information message");
-            log.Warning("loggin a warning");
-            log.Error("Ups! an Error!");
-            log.Fatal("Booooom!!");
+            log.debug("loggin debug message");
+            log.info("loggin information message");
+            log.warning("loggin a warning");
+            log.error("Ups! an Error!");
+            log.fatal("Booooom!!");
 
             buffer.Flush();
             string output = buffer.ToString();
@@ -143,11 +143,11 @@ Booooom!!
 
             log = new MultiLogger(new ILogger<LogLevel>[] { log });
 
-            log.Log(LogLevel.Debug, "loggin debug message");
-            log.Log(LogLevel.Info, "loggin information message");
-            log.Log(LogLevel.Warning, "loggin a warning");
-            log.Log(LogLevel.Error, "Ups! an Error!");
-            log.Log(LogLevel.Fatal, "Booooom!!");
+            log.log(LogLevel.Debug, "loggin debug message");
+            log.log(LogLevel.Info, "loggin information message");
+            log.log(LogLevel.Warning, "loggin a warning");
+            log.log(LogLevel.Error, "Ups! an Error!");
+            log.log(LogLevel.Fatal, "Booooom!!");
 
             buffer.Flush();
             string output = buffer.ToString();
@@ -164,24 +164,27 @@ Booooom!!
         [TestCategory("Loggers")]
         public void FileLogger_Tests()
         {
-            string path = "./log.txt";
-            Func<LogLevel, string, string> builder = (LogLevel level, string message) => { return $"{level.ToString()} # {message}"; };
+            string path;
+            ILogger<LogLevel> log;
+            string[] output;
+
+            path = "./log.txt";
 
             if(System.IO.File.Exists(path))
                 System.IO.File.Delete(path);
 
             Assert.IsFalse(System.IO.File.Exists(path), "Test couldn't be prepared. Unable to remove previous file");
 
-            var log = new FileLogger(path, builder);
-            log.Log(LogLevel.Debug, "probando");
-            log.Log(LogLevel.Error, "Boooom!");
+            log = new FileLogger(path, (level, message) => $"{level.ToString()} # {message}");
+            log.log(LogLevel.Debug, "testing...");
+            log.log(LogLevel.Error, "Boooom!");
 
             Assert.IsTrue(System.IO.File.Exists(path), "File was not created");
 
-            var output = System.IO.File.ReadAllLines(path);
+            output = System.IO.File.ReadAllLines(path);
 
             Assert.AreEqual(2, output.Length, "Unexptected number of lines generated");
-            Assert.AreEqual("Debug # probando", output[0]);
+            Assert.AreEqual("Debug # testing...", output[0]);
             Assert.AreEqual("Error # Boooom!", output[1]);
         }
     }

@@ -12,7 +12,7 @@ namespace QTFK.Services.Loggers
 
         public string Category { get; set; }
 
-        public void Log(T level, string message)
+        public void log(T level, string message)
         {
             Debug.WriteLine($"<<{level}>>: {message}", Category);
         }
@@ -20,6 +20,9 @@ namespace QTFK.Services.Loggers
 
     public class DebugLogger : DebugLogger<LogLevel>
     {
-        public DebugLogger(string category = null) : base(category) { }
+        public DebugLogger(string category = null)
+            : base(category)
+        {
+        }
     }
 }
