@@ -55,7 +55,6 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
-    <Compile Include="CRUDRepositoryExtensionsTests.cs" />
     <Compile Include="MappersTests.cs" />
     <Compile Include="Models\InheritedTestClass.cs" />
     <Compile Include="Models\SimpleTestClass.cs" />
