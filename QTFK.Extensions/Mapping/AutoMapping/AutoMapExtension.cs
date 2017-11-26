@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Reflection;
+using QTFK.Extensions.Objects.Properties;
 
 namespace QTFK.Extensions.Mapping.AutoMapping
 {
@@ -12,14 +13,14 @@ namespace QTFK.Extensions.Mapping.AutoMapping
     {
         public static IEnumerable<T> AutoMap<T>(this IEnumerable<DataRow> rows) where T : new()
         {
-            return rows.Select(AutoMap<T>);
+            return rows.Select(prv_autoMap<T>);
         }
 
         public static IEnumerable<T> AutoMap<T>(this IEnumerable<DataRow> rows, Action<DataRow, T> configureDelegate) where T : new()
         {
             return rows.Select(r =>
             {
-                T item = AutoMap<T>(r);
+                T item = prv_autoMap<T>(r);
                 configureDelegate(r, item);
                 return item;
             });
@@ -27,21 +28,29 @@ namespace QTFK.Extensions.Mapping.AutoMapping
 
         public static T AutoMap<T>(this DataRow row) where T : new()
         {
-            return AutoMap<T>(row.ToDictionary());
+            return prv_autoMap<T>(row);
         }
 
         public static IEnumerable<T> AutoMap<T>(this IEnumerable<IDataRecord> records) where T : new()
         {
-            var props = _GetProperties(typeof(T)).ToList();
-            return records.Select(r => _AutoMap<T>(r, props));
+            var props = typeof(T)
+                .getReadWriteProperties()
+                .ToList()
+                ;
+
+            return records.Select(r => prv_autoMap<T>(r, props));
         }
 
         public static IEnumerable<T> AutoMap<T>(this IEnumerable<IDataRecord> records, Action<IDataRecord, T> configureDelegate) where T : new()
         {
-            var props = _GetProperties(typeof(T)).ToList();
+            var props = typeof(T)
+                .getReadWriteProperties()
+                .ToList()
+                ;
+
             return records.Select(r => 
             {
-                T item = _AutoMap<T>(r, props);
+                T item = prv_autoMap<T>(r, props);
                 configureDelegate(r, item);
                 return item;
             });
@@ -49,17 +58,27 @@ namespace QTFK.Extensions.Mapping.AutoMapping
 
         public static T AutoMap<T>(this IDataRecord record) where T : new()
         {
-            return _AutoMap<T>(record, _GetProperties(typeof(T)));
+            return prv_autoMap<T>(record, typeof(T).getReadWriteProperties());
         }
 
         public static T AutoMap<T>(this IDataRecord record, Action<T> configureDelegate) where T : new()
         {
-            T item = _AutoMap<T>(record, _GetProperties(typeof(T)));
+            T item = prv_autoMap<T>(record, typeof(T).getReadWriteProperties());
             configureDelegate(item);
             return item;
         }
 
-        private static T _AutoMap<T>(IDataRecord record, IEnumerable<PropertyInfo> props) where T : new()
+        public static T AutoMap<T>(this IDictionary<string, object> source) where T : new()
+        {
+            return prv_autoMap<T>(source);
+        }
+
+        private static T prv_autoMap<T>(DataRow row) where T : new()
+        {
+            return prv_autoMap<T>(row.ToDictionary());
+        }
+
+        private static T prv_autoMap<T>(IDataRecord record, IEnumerable<PropertyInfo> props) where T : new()
         {
             T item = new T();
 
@@ -73,10 +92,14 @@ namespace QTFK.Extensions.Mapping.AutoMapping
             return item;
         }
 
-        public static T AutoMap<T>(this IDictionary<string, object> source) where T : new()
+        private static T prv_autoMap<T>(IDictionary<string, object> source) where T : new()
         {
             T item = new T();
-            var props = _GetProperties(item.GetType());
+            var props = item
+                .GetType()
+                .getReadWriteProperties()
+                .ToList()
+                ;
             
             foreach (var p in props)
             {
@@ -85,45 +108,6 @@ namespace QTFK.Extensions.Mapping.AutoMapping
             }
 
             return item;
-        }
-
-        private static bool _SkipNothing(PropertyInfo property)
-        {
-            return false;
-        }
-
-        public static void Copy<T>(this T source, T target)
-        {
-            Copy<T>(source, target, _SkipNothing);
-        }
-        public static void Copy<T>(this T source, T target, Func<PropertyInfo, bool> skip)
-        {
-            var props = _GetProperties(source.GetType())
-                .Where(prop => !skip(prop))
-                ;
-
-            foreach (var p in props)
-                p.SetValue(target, p.GetValue(source));
-        }
-
-        public static T Copy<T>(this T source) where T : new()
-        {
-            return Copy<T>(source, _SkipNothing);
-        }
-
-        public static T Copy<T>(this T source, Func<PropertyInfo, bool> skip) where T : new()
-        {
-            T target = new T();
-            Copy<T>(source, target, skip);
-            return target;
-        }
-
-        private static IEnumerable<PropertyInfo> _GetProperties(Type type)
-        {
-            return type
-                .GetProperties()
-                .Where(p => p.CanWrite && p.CanRead)
-                ;
         }
     }
 }
