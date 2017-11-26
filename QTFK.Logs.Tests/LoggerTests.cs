@@ -1,12 +1,12 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System.Collections.Generic;
 using QTFK.Services;
 using QTFK.Models;
 using QTFK.Services.Loggers;
-using System.Collections.Generic;
 using QTFK.Extensions.Loggers;
 
-namespace QTFK.Core.Tests
+namespace QTFK.Logs.Tests
 {
     [TestClass]
     public class LoggerTests

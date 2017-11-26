@@ -41,7 +41,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Asserts.cs" />
-    <Compile Include="Extensions\Loggers\LoggerLevelExtension.cs" />
     <Compile Include="Models\DBIOException.cs" />
     <Compile Include="Models\DBIO\NullQueryFilter.cs" />
     <Compile Include="Models\IDBQuery.cs" />
@@ -58,7 +57,6 @@
     <Compile Include="Services\DBIO\DBMigrationStepProviderBase.cs" />
     <Compile Include="Services\DBIO\DefaultDBMigrationStepProvider.cs" />
     <Compile Include="Services\DBIO\DBMigrationStep.cs" />
-    <Compile Include="Models\LogLevel.cs" />
     <Compile Include="Models\MigrationInfo.cs" />
     <Compile Include="Models\Result.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -69,15 +67,9 @@
     <Compile Include="Services\IDBMigrator.cs" />
     <Compile Include="Services\IEntityMapper.cs" />
     <Compile Include="Services\IFactory.cs" />
-    <Compile Include="Services\ILogger.cs" />
     <Compile Include="Services\IDBMigrationStep.cs" />
     <Compile Include="Services\IDBMigrationStepProvider.cs" />
     <Compile Include="Services\IQueryFilterFactory.cs" />
-    <Compile Include="Services\Loggers\ConsoleLogger.cs" />
-    <Compile Include="Services\Loggers\DebugLogger.cs" />
-    <Compile Include="Services\Loggers\FileLogger.cs" />
-    <Compile Include="Services\Loggers\MultiLogger.cs" />
-    <Compile Include="Services\Loggers\NullLogger.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Services\QueryFactories\" />

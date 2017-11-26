@@ -58,7 +58,6 @@
     <Compile Include="MappersTests.cs" />
     <Compile Include="Models\SimpleTestClass.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="LoggerTests.cs" />
     <Compile Include="CRUDRepositoryTests.cs" />
     <Compile Include="ResultTests.cs" />
     <Compile Include="AssertTests.cs" />

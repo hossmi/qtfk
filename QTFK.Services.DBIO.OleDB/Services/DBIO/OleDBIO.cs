@@ -1,15 +1,12 @@
-﻿using QTFK.Services;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Data;
 using QTFK.Models;
-using QTFK.Services.Loggers;
 using System.Data.OleDb;
 using QTFK.Extensions.DBCommand;
 using QTFK.Extensions.DataReader;
+using QTFK.Services.Loggers;
 
 namespace QTFK.Services.DBIO
 {

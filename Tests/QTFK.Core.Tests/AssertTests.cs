@@ -4,6 +4,13 @@ using QTFK.Models;
 
 namespace QTFK.Core.Tests
 {
+    enum EnumSample
+    {
+        valueMin = 5,
+        valueMed = 8,
+        valueMax = 13,
+    }
+
     [TestClass]
     public class AssertTests
     {
@@ -11,10 +18,10 @@ namespace QTFK.Core.Tests
         [TestMethod]
         public void Asserting_good_values()
         {
-            string someString, someLogLevelAsString;
+            string someString, someEnumSampleAsString;
             int number;
             Type someType;
-            LogLevel someLogLevel;
+            EnumSample someEnumSample;
             object someObject;
 
             someString = "pepe";
@@ -22,25 +29,25 @@ namespace QTFK.Core.Tests
             someType = typeof(AssertTests);
             someObject = someType;
 
-            someLogLevel = LogLevel.Info;
-            someLogLevelAsString = LogLevel.Fatal.ToString();
+            someEnumSample = EnumSample.valueMin;
+            someEnumSampleAsString = EnumSample.valueMax.ToString();
 
             Asserts.isFilled(someString, $"'{nameof(someString)}' cannot be empty.");
             Asserts.check(number > 0, $"'{nameof(number)}' must be greater than zero.");
             Asserts.isSomething(someType, "'{nameof(number)}' cannot be null.");
             Asserts.isSomething(someObject, "'{nameof(number)}' cannot be null.");
-            Asserts.isValidEnum<LogLevel>(someLogLevel, "'{nameof(number)}' cannot be null.");
-            Asserts.isValidEnum<LogLevel>(someLogLevelAsString, "'{nameof(number)}' cannot be null.");
+            Asserts.isValidEnum<EnumSample>(someEnumSample, "'{nameof(number)}' cannot be null.");
+            Asserts.isValidEnum<EnumSample>(someEnumSampleAsString, "'{nameof(number)}' cannot be null.");
         }
 
         [TestCategory("Asserts")]
         [TestMethod]
         public void Asserting_bad_values()
         {
-            string someString, someLogLevelAsString;
+            string someString, someEnumSampleAsString;
             int number;
             Type someType;
-            LogLevel someLogLevel;
+            EnumSample someEnumSample;
             object someObject;
 
             someString = null;
@@ -48,8 +55,8 @@ namespace QTFK.Core.Tests
             someType = null;
             someObject = someType;
 
-            someLogLevel = (LogLevel)1000;
-            someLogLevelAsString = "Uno_que_llega";
+            someEnumSample = (EnumSample)1000;
+            someEnumSampleAsString = "Uno_que_llega";
 
             try
             {
@@ -81,14 +88,14 @@ namespace QTFK.Core.Tests
 
             try
             {
-                Asserts.isValidEnum<LogLevel>(someLogLevel, "'{nameof(number)}' cannot be null.");
+                Asserts.isValidEnum<EnumSample>(someEnumSample, "'{nameof(number)}' cannot be null.");
                 Assert.Fail();
             }
             catch { }
 
             try
             {
-                Asserts.isValidEnum<LogLevel>(someLogLevelAsString, "'{nameof(number)}' cannot be null.");
+                Asserts.isValidEnum<EnumSample>(someEnumSampleAsString, "'{nameof(number)}' cannot be null.");
                 Assert.Fail();
             }
             catch { }
