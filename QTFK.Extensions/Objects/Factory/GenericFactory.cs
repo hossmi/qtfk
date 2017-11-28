@@ -5,7 +5,7 @@ using System.Reflection;
 
 namespace QTFK.Extensions.Objects.Factory
 {
-    public static class GenericFactory
+    public static class CloneExtension
     {
         /// <summary>
         /// Creates a new instance of <typeparamref name="T"/> that receives all public instance properties which can be read and written, from <paramref name="source"/>
