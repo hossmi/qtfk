@@ -21,7 +21,7 @@ namespace QTFK.Extensions.Objects.Factory
             if (source == null)
                 return null;
 
-            var result = New<T>();
+            var result = new T();
 
             foreach (var property in GetPublicInstanceProperties(typeof(T)))
                 if (property.CanRead && property.CanWrite)
@@ -47,7 +47,7 @@ namespace QTFK.Extensions.Objects.Factory
             if (source == null)
                 return null;
 
-            var result = New<T>();
+            var result = new T();
 
             foreach (var property in typeof(T)
                 .GetProperties(bindingAttr)
@@ -56,27 +56,7 @@ namespace QTFK.Extensions.Objects.Factory
 
             return result;
         }
-
-        /// <summary>
-        /// Creates a new instance of <typeparam name="T"/> using its default constructor
-        /// </summary>
-        /// <typeparam name="T">Type of the created instance</typeparam>
-        /// <returns>The created instance</returns>
-        public static T New<T>() where T : class, new()
-        {
-            return Activator.CreateInstance<T>();
-        }
-
-        /// <summary>
-        /// Creates a new instance of <paramref name="type"/>'s type using its default constructor
-        /// </summary>
-        /// <param name="type">Type of the created instance</param>
-        /// <returns>The created instance</returns>
-        public static object New(this Type type)
-        {
-            return Activator.CreateInstance(type);
-        }
-
+        
         private static IEnumerable<PropertyInfo> GetPublicInstanceProperties(Type type)
         {
             return type.GetProperties(BindingFlags.Public | BindingFlags.Instance);
