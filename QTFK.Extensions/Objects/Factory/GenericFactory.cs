@@ -8,7 +8,7 @@ namespace QTFK.Extensions.Objects.Factory
     public static class GenericFactory
     {
         /// <summary>
-        /// Creates a new instance of <typeparamref name="T"/> that receives all public instance properties from <paramref name="source"/>
+        /// Creates a new instance of <typeparamref name="T"/> that receives all public instance properties which can be read and written, from <paramref name="source"/>
         /// </summary>
         /// <typeparam name="T"><paramref name="source"/> and returned type</typeparam>
         /// <param name="source">Instance that contains the original properties that will be carried over the new intance</param>
@@ -18,16 +18,9 @@ namespace QTFK.Extensions.Objects.Factory
         /// Members are NOT cloned, only properties, which may indirectly affect members.</remarks>
         public static T ShallowClone<T>(this T source) where T : class, new()
         {
-            if (source == null)
-                return null;
-
-            var result = new T();
-
-            foreach (var property in GetPublicInstanceProperties(typeof(T)))
-                if (property.CanRead && property.CanWrite)
-                    property.SetValue(result, property.GetValue(source));
-
-            return result;
+            return source.ShallowClone(
+                (property) => property.CanRead && property.CanWrite
+                , BindingFlags.Public | BindingFlags.Instance);            
         }
 
         /// <summary>
