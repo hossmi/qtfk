@@ -59,6 +59,7 @@
     <Compile Include="Mapping\EntityMapperExtension.cs" />
     <Compile Include="Objects\Properties\PropertyExtension.cs" />
     <Compile Include="Objects\DictionaryConverter\DictionaryExtension.cs" />
+    <Compile Include="Objects\Replicator\CloneExtension.cs" />
     <Compile Include="Objects\Manipulator\ManipulatorExtension.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
