@@ -1,19 +1,16 @@
-﻿using QTFK.Services;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Data;
 using QTFK.Models;
-using QTFK.Services.Loggers;
 using System.Data.OleDb;
 using QTFK.Extensions.DBCommand;
 using QTFK.Extensions.DataReader;
+using QTFK.Services.Loggers;
 
 namespace QTFK.Services.DBIO
 {
-    public class OleDBIO : IDBIO
+    public class OleDBIO : IDBIO, IOleDB
     {
         protected readonly string _connectionString;
         protected readonly ILogger<LogLevel> _log;
@@ -49,7 +46,7 @@ namespace QTFK.Services.DBIO
 Exception: {ex.GetType().Name}
 Message: {ex.Message}
 Query: '{query ?? ""}'";
-                    _log.Log(LogLevel.Error, message);
+                    _log.log(LogLevel.Error, message);
                     throw new DBIOException(message, ex);
                 }
                 finally
@@ -89,7 +86,7 @@ Query: '{query ?? ""}'";
 Exception: {ex.GetType().Name}
 Message: {ex.Message}
 Current command: {command?.CommandText ?? ""}";
-                    _log.Log(LogLevel.Error, message);
+                    _log.log(LogLevel.Error, message);
                     throw new DBIOException(message, ex);
                 }
                 finally
@@ -118,7 +115,7 @@ Current command: {command?.CommandText ?? ""}";
 Exception: {ex.GetType().Name}
 Message: {ex.Message}
 Current command: {cmd?.CommandText ?? ""}";
-                _log.Log(LogLevel.Error, message);
+                _log.log(LogLevel.Error, message);
                 throw new DBIOException(message, ex);
             }
         }
@@ -146,7 +143,7 @@ Current command: {cmd?.CommandText ?? ""}";
 Exception: {ex.GetType().Name}
 Message: {ex.Message}
 Current command: {command?.CommandText ?? ""}";
-                    _log.Log(LogLevel.Error, message);
+                    _log.log(LogLevel.Error, message);
                     throw new DBIOException(message, ex);
                 }
                 finally

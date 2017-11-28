@@ -55,8 +55,6 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
-    <Compile Include="CRUDRepositoryExtensionsTests.cs" />
-    <Compile Include="ObjectsTests.cs" />
     <Compile Include="MappersTests.cs" />
     <Compile Include="Models\InheritedTestClass.cs" />
     <Compile Include="Models\SimpleTestClass.cs" />
@@ -66,6 +64,7 @@
     <Compile Include="AutoMapExtensionTests.cs" />
     <Compile Include="DictionariesExtensionTests.cs" />
     <Compile Include="StringExtensionTest.cs" />
+    <Compile Include="CollectionsExtensionTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\QTFK.Core\QTFK.Core.csproj">

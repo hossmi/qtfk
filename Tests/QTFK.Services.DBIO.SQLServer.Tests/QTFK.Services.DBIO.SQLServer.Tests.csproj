@@ -77,6 +77,10 @@
       <Project>{d6db2c2b-d86d-45cf-a756-37ed71c614d3}</Project>
       <Name>QTFK.Extensions</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\QTFK.Logs\QTFK.Logs.csproj">
+      <Project>{277F230C-64C9-4A90-BF71-1D0E83D26658}</Project>
+      <Name>QTFK.Logs</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\QTFK.Services.DBIO.SQLServer\QTFK.Services.DBIO.SQLServer.csproj">
       <Project>{251058ED-EA21-439B-A495-FE43A9669B57}</Project>
       <Name>QTFK.Services.DBIO.SQLServer</Name>

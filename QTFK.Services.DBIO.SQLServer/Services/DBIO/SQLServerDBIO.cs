@@ -13,7 +13,7 @@ using QTFK.Services.Loggers;
 
 namespace QTFK.Services.DBIO
 {
-    public class SQLServerDBIO : IDBIO
+    public class SQLServerDBIO : IDBIO, ISQLServer
     {
         protected readonly string _connectionString;
         protected readonly ILogger<LogLevel> _log;
@@ -49,7 +49,7 @@ namespace QTFK.Services.DBIO
 Exception: {ex.GetType().Name}
 Message: {ex.Message}
 Query: '{query ?? ""}'";
-                    _log.Log(LogLevel.Error, message);
+                    _log.log(LogLevel.Error, message);
                     throw new DBIOException(message, ex);
                 }
                 finally
@@ -89,7 +89,7 @@ Query: '{query ?? ""}'";
 Exception: {ex.GetType().Name}
 Message: {ex.Message}
 Current command: {command?.CommandText ?? ""}";
-                    _log.Log(LogLevel.Error, message);
+                    _log.log(LogLevel.Error, message);
                     throw new DBIOException(message, ex);
                 }
                 finally
@@ -118,7 +118,7 @@ Current command: {command?.CommandText ?? ""}";
 Exception: {ex.GetType().Name}
 Message: {ex.Message}
 Current command: {cmd?.CommandText ?? ""}";
-                _log.Log(LogLevel.Error, message);
+                _log.log(LogLevel.Error, message);
                 throw new DBIOException(message, ex);
             }
         }
@@ -146,7 +146,7 @@ Current command: {cmd?.CommandText ?? ""}";
 Exception: {ex.GetType().Name}
 Message: {ex.Message}
 Current command: {command?.CommandText ?? ""}";
-                    _log.Log(LogLevel.Error, message);
+                    _log.log(LogLevel.Error, message);
                     throw new DBIOException(message, ex);
                 }
                 finally

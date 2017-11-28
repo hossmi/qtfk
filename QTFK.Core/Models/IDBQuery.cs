@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace QTFK.Models
 {
@@ -24,33 +25,25 @@ namespace QTFK.Models
         ICollection<SelectColumn> Columns { get; set; }
     }
 
-    public interface IDBQueryWhereClause : IDBQuery
-    {
-        string Where { get; set; }
-    }
-
     public interface IDBQueryJoin : IDBQuery
     {
         ICollection<JoinTable> Joins { get; set; }
     }
 
-    public interface IDBCrudQuery : IDBQueryWithTableName
+
+    public interface IDBQuerySelect : IDBQueryWithTableName, IDBQuerySelectColumns, IDBQueryJoin, IDBQueryFilterable
     {
     }
 
-    public interface IDBQuerySelect : IDBCrudQuery, IDBQuerySelectColumns, IDBQueryWhereClause, IDBQueryJoin
+    public interface IDBQueryDelete : IDBQueryWithTableName, IDBQueryFilterable
     {
     }
 
-    public interface IDBQueryDelete : IDBCrudQuery, IDBQueryWhereClause
+    public interface IDBQueryInsert : IDBQueryWithTableName, IDBQueryWriteColumns
     {
     }
 
-    public interface IDBQueryInsert : IDBCrudQuery, IDBQueryWriteColumns
-    {
-    }
-
-    public interface IDBQueryUpdate : IDBCrudQuery, IDBQueryWriteColumns, IDBQueryWhereClause
+    public interface IDBQueryUpdate : IDBQueryWithTableName, IDBQueryWriteColumns, IDBQueryFilterable
     {
     }
 

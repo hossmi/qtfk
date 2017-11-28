@@ -44,12 +44,12 @@
     <Compile Include="Collections\Casting\CastExtension.cs" />
     <Compile Include="Collections\Dictionaries\DictionaryExtension.cs" />
     <Compile Include="Collections\Filters\EnumerableFilterExtension.cs" />
-    <Compile Include="Collections\Repositories\CRUDRepositoryExtension.cs" />
     <Compile Include="Collections\Strings\StringExtension.cs" />
+    <Compile Include="Collections\SwitchCase\SwitchCaseExtension.cs" />
     <Compile Include="DataReader\DataReaderExtension.cs" />
     <Compile Include="DataSets\DataSetExtension.cs" />
     <Compile Include="DBCommand\DBCommandExtension.cs" />
-    <Compile Include="DBIO\CRUDDBIO\CRUDDBIOExtension.cs" />
+    <Compile Include="DBIO\QueryFactory\QueryFactoryExtension.cs" />
     <Compile Include="DBIO\DBIOExtension.cs" />
     <Compile Include="DBIO\DBIOMigrationExtensions\DBMigrationExtension.cs" />
     <Compile Include="DBIO\DBQueries\DBQueryExtension.cs" />
@@ -57,6 +57,7 @@
     <Compile Include="FileSystem\FileExtension.cs" />
     <Compile Include="Mapping\AutoMapping\AutoMapExtension.cs" />
     <Compile Include="Mapping\EntityMapperExtension.cs" />
+    <Compile Include="Objects\Properties\PropertyExtension.cs" />
     <Compile Include="Objects\DictionaryConverter\DictionaryExtension.cs" />
     <Compile Include="Objects\Factory\GenericFactory.cs" />
     <Compile Include="Objects\Manipulator\ManipulatorExtension.cs" />
@@ -71,7 +72,7 @@
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>xcopy /Y $(TargetPath) $(SolutionDir)\$(ConfigurationName)\qtfk\</PostBuildEvent>
+    <PostBuildEvent>xcopy /Y $(TargetPath) $(SolutionDir)\bin\qtfk\</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

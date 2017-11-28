@@ -74,9 +74,9 @@ namespace QTFK.Extensions.DBIO.DBQueries
 
 
 
-        public static T SetWhere<T>(this T query, string where) where T : IDBQueryWhereClause
+        public static T SetFilter<T>(this T query, IQueryFilter filter) where T : IDBQueryFilterable
         {
-            query.Where = where;
+            query.Filter = filter;
             return query;
         }
 

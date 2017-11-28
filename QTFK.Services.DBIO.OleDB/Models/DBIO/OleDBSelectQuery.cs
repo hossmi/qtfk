@@ -1,19 +1,20 @@
 ﻿using QTFK.Extensions.Collections.Dictionaries;
 using QTFK.Extensions.Collections.Strings;
+using QTFK.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace QTFK.Models.DBIO
 {
-    public class OleDBSelectQuery : IDBQuerySelect
+    public class OleDBSelectQuery : IDBQuerySelect, IOleDB
     {
         public string Prefix { get; set; } = "";
         public ICollection<SelectColumn> Columns { get; set; } = new List<SelectColumn>();
         public string Table { get; set; } = "";
-        public string Where { get; set; } = "";
         public IDictionary<string, object> Parameters { get; set; } = DictionaryExtension.New();
         public ICollection<JoinTable> Joins { get; set; } = new List<JoinTable>();
+        public IQueryFilter Filter { get ; set ; }
 
         IEnumerable<string> PrepareColumns(string table, IEnumerable<SelectColumn> columns)
         {
@@ -30,7 +31,8 @@ namespace QTFK.Models.DBIO
         public string Compile()
         {
             string prefix = string.IsNullOrWhiteSpace(Prefix) ? "" : Prefix.Trim();
-            string whereSegment = string.IsNullOrWhiteSpace(Where) ? "" : $"WHERE ({Where})";
+            string whereSegment = (Filter ?? NullQueryFilter.Instance).Compile();
+            whereSegment = string.IsNullOrWhiteSpace(whereSegment) ? "" : $"WHERE ({whereSegment})";
 
             int n = 1;
             string t0 = "t0";

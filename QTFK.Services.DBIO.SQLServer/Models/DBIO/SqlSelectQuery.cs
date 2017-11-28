@@ -4,17 +4,18 @@ using QTFK.Extensions.Collections.Strings;
 using System;
 using System.Linq;
 using System.Collections.Generic;
+using QTFK.Services;
 
 namespace QTFK.Models.DBIO
 {
-    public class SqlSelectQuery : IDBQuerySelect
+    public class SqlSelectQuery : IDBQuerySelect, ISQLServer
     {
         public string Prefix { get; set; } = "";
         public string Table { get; set; } = "";
-        public string Where { get; set; } = "";
         public IDictionary<string, object> Parameters { get; set; } = DictionaryExtension.New();
         public ICollection<SelectColumn> Columns { get; set; } = new List<SelectColumn>();
         public ICollection<JoinTable> Joins { get; set; } = new List<JoinTable>();
+        public IQueryFilter Filter { get; set; }
 
         IEnumerable<string> PrepareColumns(string table, IEnumerable<SelectColumn> columns)
         {
@@ -31,7 +32,8 @@ namespace QTFK.Models.DBIO
         public string Compile()
         {
             string prefix = string.IsNullOrWhiteSpace(Prefix) ? "" : Prefix.Trim();
-            string whereSegment = string.IsNullOrWhiteSpace(Where) ? "" : $"WHERE ({Where})";
+            string whereSegment = (Filter ?? NullQueryFilter.Instance).Compile();
+            whereSegment = string.IsNullOrWhiteSpace(whereSegment) ? "" : $"WHERE ({whereSegment})";
             int n = 1;
             string t0 = "t0";
             IList<IEnumerable<string>> allColumns = new List<IEnumerable<string>>();

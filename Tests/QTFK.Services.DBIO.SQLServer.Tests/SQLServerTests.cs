@@ -17,6 +17,8 @@ using QTFK.Extensions.Collections.Dictionaries;
 using QTFK.Models.DBIO;
 using QTFK.Extensions.DBIO.DBQueries;
 using QTFK.Extensions.Mapping.AutoMapping;
+using QTFK.Extensions.DBIO.QueryFactory;
+using QTFK.Models.DBIO.Filters;
 
 namespace QTFK.Services.DBIO.SQLServer.Tests
 {
@@ -280,6 +282,13 @@ namespace QTFK.Services.DBIO.SQLServer.Tests
                 .Set("@apellidos", "Norton Smith")
                 );
 
+            //filter
+            var filter = new SqlByParamEqualsFilter()
+            {
+                Field = "nombre",
+                Parameter = "@nombre"
+            };
+
             //selects
             var select = new SqlSelectQuery()
                     .SetPrefix("qtfk.dbo.")
@@ -297,7 +306,7 @@ namespace QTFK.Services.DBIO.SQLServer.Tests
             var testItem = data.Single(i => i.Nombre == "Tronco");
             Assert.AreEqual("Sanchez López", testItem.Apellidos);
 
-            select.SetWhere("nombre = @nombre");
+            select.SetFilter(filter);
 
             data = _db
                 .Get<DLPerson>(select, _db.Params().Set("@nombre", "Pepe"))
@@ -313,7 +322,7 @@ namespace QTFK.Services.DBIO.SQLServer.Tests
                 .SetPrefix("qtfk.dbo.")
                 .Set("persona", c => c
                     .Column("apellidos"))
-                .SetWhere("nombre = @nombre")
+                .SetFilter(filter)
                 ;
 
             _db.Set(update, _db.Params()
@@ -334,7 +343,7 @@ namespace QTFK.Services.DBIO.SQLServer.Tests
             var delete = new SqlDeleteQuery()
                 .SetPrefix("qtfk.dbo.")
                 .SetTable("persona")
-                .SetWhere("nombre = @nombre")
+                .SetFilter(filter)
                 ;
 
             _db.Set(delete, _db.Params().Set("@nombre", "Pepe"));
@@ -437,12 +446,19 @@ namespace QTFK.Services.DBIO.SQLServer.Tests
             var testItem = data.Single(i => i.Person.Nombre == "Pepe" && i.Tag.Nombre == "Youtube");
             Assert.AreEqual("De la rosa Castaños", testItem.Person.Apellidos);
 
+            //filter
+            var filter = new SqlByParamEqualsFilter()
+            {
+                Field = "nombre",
+                Parameter = "@nombre"
+            };
+
             //IDBQuery updates
             var update = new SqlUpdateQuery()
                 .SetPrefix("qtfk.dbo.")
                 .Set("persona", c => c
                     .Column("apellidos"))
-                .SetWhere("nombre = @nombre")
+                .SetFilter(filter)
                 ;
 
             _db.Set(update, _db.Params()
@@ -453,7 +469,7 @@ namespace QTFK.Services.DBIO.SQLServer.Tests
             var selectPersons = new SqlSelectQuery()
                 .SetPrefix("qtfk.dbo.")
                 .Select("persona", c => c.Column("*"))
-                .SetWhere("nombre = @nombre")
+                .SetFilter(filter)
                 .SetParam("@nombre", "Pepe")
                 ;
 
@@ -467,11 +483,141 @@ namespace QTFK.Services.DBIO.SQLServer.Tests
             var delete = new SqlDeleteQuery()
                 .SetPrefix("qtfk.dbo.")
                 .SetTable("persona")
-                .SetWhere("nombre = @nombre")
+                .SetFilter(filter)
                 .SetParam("@nombre", "Pepe")
                 ;
 
             _db.Set(delete);
+
+            data = _db
+                .Get(select, r => new
+                {
+                    Person = r.AutoMap<DLPerson>(p => p.Nombre = r.Get<string>("persona_nombre")),
+                    Tag = r.AutoMap<DLTag>(t => t.Nombre = r.Get<string>("etiqueta_nombre")),
+                })
+                .ToList()
+                ;
+
+            Assert.AreEqual(8, data.Count());
+            Assert.AreEqual(0, data.Where(r => r.Person.Nombre == "Pepe").Count());
+            Assert.AreEqual(2, data.Where(r => r.Tag.Nombre == "Youtube").Count());
+        }
+
+        [TestMethod]
+        [TestCategory("DB OleDB")]
+        public void QueryFactory_tests_1()
+        {
+            var factory = new SQLServerQueryFactory(_db)
+            {
+                Prefix = "qtfk.dbo."
+            };
+
+            var insert = factory.NewInsert()
+                .Set("persona", c => c
+                    .Column("nombre")
+                    .Column("apellidos")
+                    );
+
+            _db.Set(insert, _db.Params().Set("@nombre", "Pepe").Set("@apellidos", "De la rosa Castaños"));
+            _db.Set(insert, _db.Params().Set("@nombre", "Tronco").Set("@apellidos", "Sanchez López"));
+            _db.Set(insert, _db.Params().Set("@nombre", "Louis").Set("@apellidos", "Norton Smith"));
+
+            insert = factory.NewInsert()
+                .Set("etiqueta", c => c
+                    .Column("nombre")
+                );
+
+            _db.Set(insert, _db.Params().Set("@nombre", "Ciencia"));
+            _db.Set(insert, _db.Params().Set("@nombre", "Humor"));
+            _db.Set(insert, _db.Params().Set("@nombre", "Youtube"));
+            _db.Set(insert, _db.Params().Set("@nombre", "Crash"));
+
+            var persons = factory
+                .Select<DLPerson>(q => q
+                    .Select("persona", c => c
+                        .Column("*")
+                    ))
+                .ToList()
+                ;
+
+            var tags = factory
+                .Select<DLTag>(q => q
+                    .SetTable("etiqueta")
+                    .AddColumn("*"))
+                .ToList()
+                ;
+
+            var pairs = tags
+                .SelectMany(t => persons.Select(p => new { person_ID = p.Id, tag_ID = t.Id }))
+                .ToList()
+                ;
+
+            insert = factory.NewInsert()
+                .Set("etiquetas_personas", c => c
+                    .Column("persona_id")
+                    .Column("etiqueta_id")
+                );
+
+            foreach (var pair in pairs)
+                _db.Set(insert, _db.Params().Set("@persona_id", pair.person_ID).Set("@etiqueta_id", pair.tag_ID));
+
+            var select = factory.NewSelect()
+                .Select("etiquetas_personas", c => c.Column("*"))
+                .AddJoin(JoinKind.Left, "etiqueta", m => m.Add("etiqueta_id", "id"), c => c
+                    .Column("*")
+                    .Column("nombre", "etiqueta_nombre")
+                    )
+                .AddJoin(JoinKind.Left, "persona", "persona_id", "id", c => c
+                    .Column("*")
+                    .Column("nombre", "persona_nombre")
+                    )
+                ;
+
+            string sql = select.Compile();
+
+            var data = _db
+                .Get(select, r => new
+                {
+                    Person = r.AutoMap<DLPerson>(p => p.Nombre = r.Get<string>("persona_nombre")),
+                    Tag = r.AutoMap<DLTag>(t => t.Nombre = r.Get<string>("etiqueta_nombre")),
+                })
+                .ToList()
+                ;
+
+            Assert.AreEqual(12, data.Count());
+            Assert.AreEqual(4, data.Where(r => r.Person.Nombre == "Pepe").Count());
+            Assert.AreEqual(3, data.Where(r => r.Tag.Nombre == "Youtube").Count());
+            var testItem = data.Single(i => i.Person.Nombre == "Pepe" && i.Tag.Nombre == "Youtube");
+            Assert.AreEqual("De la rosa Castaños", testItem.Person.Apellidos);
+
+            //filter
+            var filter = factory.NewByParamEqualsFilter();
+            filter.Field = "nombre";
+            filter.Parameter = "@nombre";
+
+            //IDBQuery updates
+            factory.Update(q => q
+                .Set("persona", c => c
+                    .Column("apellidos", "Ramírez de Villalobos"))
+                .SetFilter(filter)
+                .SetParam("@nombre", "Pepe")
+                );
+
+            var person = factory.Select<DLPerson>(q => q
+                .Select("persona", c => c.Column("*"))
+                .SetFilter(filter)
+                .SetParam("@nombre", "Pepe")
+                )
+                .Single()
+                ;
+
+            Assert.AreEqual("Ramírez de Villalobos", person.Apellidos);
+
+            factory.Delete(q => q
+                .SetTable("persona")
+                .SetFilter(filter)
+                .SetParam("@nombre", "Pepe")
+                );
 
             data = _db
                 .Get(select, r => new

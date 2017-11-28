@@ -40,12 +40,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Models\DBIO\Filters\SqlByParamEqualsFilter.cs" />
     <Compile Include="Models\DBIO\SqlDeleteQuery.cs" />
     <Compile Include="Models\DBIO\SqlInsertQuery.cs" />
     <Compile Include="Models\DBIO\SqlSelectQuery.cs" />
     <Compile Include="Models\DBIO\SqlUpdateQuery.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Services\DBIO\SQLServerCrudDBIO.cs" />
+    <Compile Include="Services\DBIO\SQLServerQueryFactory.cs" />
     <Compile Include="Services\DBIO\SQLServerDBMigrator.cs" />
     <Compile Include="Services\DBIO\SQLServerDBIO.cs" />
   </ItemGroup>
@@ -58,10 +59,14 @@
       <Project>{D6DB2C2B-D86D-45CF-A756-37ED71C614D3}</Project>
       <Name>QTFK.Extensions</Name>
     </ProjectReference>
+    <ProjectReference Include="..\QTFK.Logs\QTFK.Logs.csproj">
+      <Project>{277f230c-64c9-4a90-bf71-1d0e83d26658}</Project>
+      <Name>QTFK.Logs</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>xcopy /Y $(TargetPath) $(SolutionDir)\$(ConfigurationName)\qtfk\</PostBuildEvent>
+    <PostBuildEvent>xcopy /Y $(TargetPath) $(SolutionDir)\bin\qtfk\</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
