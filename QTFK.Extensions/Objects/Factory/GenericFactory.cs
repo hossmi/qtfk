@@ -49,10 +49,5 @@ namespace QTFK.Extensions.Objects.Factory
 
             return result;
         }
-        
-        private static IEnumerable<PropertyInfo> GetPublicInstanceProperties(Type type)
-        {
-            return type.GetProperties(BindingFlags.Public | BindingFlags.Instance);
-        }
     }
 }
