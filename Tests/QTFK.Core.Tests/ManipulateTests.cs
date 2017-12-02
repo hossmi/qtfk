@@ -2,7 +2,7 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using QTFK.Extensions.Objects.Manipulator;
 
-namespace QTFK.Extensions.Tests
+namespace QTFK.Core.Tests
 {
     [TestClass]
     public class ManipulateTests

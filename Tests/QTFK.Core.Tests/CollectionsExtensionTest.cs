@@ -4,7 +4,7 @@ using QTFK.Extensions.Collections.SwitchCase;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace QTFK.Extensions.Tests
+namespace QTFK.Core.Tests
 {
     [TestClass]
     public class CollectionsExtensionTest

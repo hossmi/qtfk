@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace QTFK.Extensions.Tests.Models
+namespace QTFK.Core.Tests.Models
 {
     public class InheritedTestClass : SimpleTestClass
     {

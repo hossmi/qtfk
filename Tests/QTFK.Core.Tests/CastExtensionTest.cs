@@ -1,9 +1,9 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using QTFK.Extensions.Tests.Models;
 using QTFK.Extensions.Collections.Casting;
+using QTFK.Core.Tests.Models;
 
-namespace QTFK.Extensions.Tests
+namespace QTFK.Core.Tests
 {
     [TestClass]
     public class CastExtensionTest

@@ -40,21 +40,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Collections\CollectionExtension.cs" />
-    <Compile Include="Collections\Casting\CastExtension.cs" />
-    <Compile Include="Collections\Dictionaries\DictionaryExtension.cs" />
-    <Compile Include="Collections\Filters\EnumerableFilterExtension.cs" />
-    <Compile Include="Collections\Strings\StringExtension.cs" />
-    <Compile Include="Collections\SwitchCase\SwitchCaseExtension.cs" />
-    <Compile Include="DataReader\DataReaderExtension.cs" />
-    <Compile Include="DataSets\DataSetExtension.cs" />
-    <Compile Include="File.cs" />
-    <Compile Include="FileSystem\FileExtension.cs" />
-    <Compile Include="Mapping\AutoMapping\AutoMapExtension.cs" />
-    <Compile Include="Mapping\EntityMapperExtension.cs" />
-    <Compile Include="Objects\Properties\PropertyExtension.cs" />
-    <Compile Include="Objects\DictionaryConverter\DictionaryExtension.cs" />
-    <Compile Include="Objects\Manipulator\ManipulatorExtension.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

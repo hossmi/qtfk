@@ -2,12 +2,11 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Data;
 using QTFK.Extensions.DataSets;
-using QTFK.Extensions.Tests.Models;
 using System.Linq;
 using QTFK.Extensions.Mapping.AutoMapping;
-using System.Collections.Generic;
+using QTFK.Core.Tests.Models;
 
-namespace QTFK.Extensions.Tests
+namespace QTFK.Core.Tests
 {
     [TestClass]
     public class AutoMapExtensionTests

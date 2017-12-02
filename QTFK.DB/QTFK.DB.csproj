@@ -67,10 +67,6 @@
       <Project>{8c740adf-e4e1-444a-a9f0-2e40b174260f}</Project>
       <Name>QTFK.Core</Name>
     </ProjectReference>
-    <ProjectReference Include="..\QTFK.Extensions\QTFK.Extensions.csproj">
-      <Project>{d6db2c2b-d86d-45cf-a756-37ed71c614d3}</Project>
-      <Name>QTFK.Extensions</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

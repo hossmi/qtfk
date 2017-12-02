@@ -41,6 +41,20 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Asserts.cs" />
+    <Compile Include="Extensions\Collections\Casting\CastExtension.cs" />
+    <Compile Include="Extensions\Collections\CollectionExtension.cs" />
+    <Compile Include="Extensions\Collections\Dictionaries\DictionaryExtension.cs" />
+    <Compile Include="Extensions\Collections\Filters\EnumerableFilterExtension.cs" />
+    <Compile Include="Extensions\Collections\Strings\StringExtension.cs" />
+    <Compile Include="Extensions\Collections\SwitchCase\SwitchCaseExtension.cs" />
+    <Compile Include="Extensions\DataReader\DataReaderExtension.cs" />
+    <Compile Include="Extensions\DataSets\DataSetExtension.cs" />
+    <Compile Include="Extensions\FileSystem\FileExtension.cs" />
+    <Compile Include="Extensions\Mapping\AutoMapping\AutoMapExtension.cs" />
+    <Compile Include="Extensions\Mapping\EntityMapperExtension.cs" />
+    <Compile Include="Extensions\Objects\DictionaryConverter\DictionaryExtension.cs" />
+    <Compile Include="Extensions\Objects\Manipulator\ManipulatorExtension.cs" />
+    <Compile Include="Extensions\Objects\Properties\PropertyExtension.cs" />
     <Compile Include="Models\Result.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\EntityMappers\DefaultEntityMapper.cs" />

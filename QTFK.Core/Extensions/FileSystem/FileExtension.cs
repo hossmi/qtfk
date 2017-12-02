@@ -85,6 +85,42 @@ namespace QTFK.FileSystem
             return prv_removeExtension(filename, extension);
         }
 
+        public static IEnumerable<string> readBlocks(this FileInfo file, string delimiter)
+        {
+            return prv_readBlocks(file.FullName, delimiter);
+        }
+
+        public static IEnumerable<string> readBlocks(string fileName, string delimiter)
+        {
+            return prv_readBlocks(fileName, delimiter);
+        }
+
+        private static IEnumerable<string> prv_readBlocks(string fileName, string delimiter)
+        {
+            delimiter = delimiter.Trim().ToLower();
+            if (string.IsNullOrWhiteSpace(delimiter))
+            {
+                yield return System.IO.File.ReadAllText(fileName);
+                yield break;
+            }
+
+            var sb = new StringBuilder();
+            foreach (string line in System.IO.File
+                .ReadLines(fileName, Encoding.UTF8)
+                )
+            {
+                if (line.Trim().ToLower() == delimiter)
+                {
+                    yield return sb.ToString();
+                    sb.Clear();
+                }
+                else
+                {
+                    sb.AppendLine(line);
+                }
+            }
+        }
+
         private static bool prv_tryMoveTo(FileInfo file, string destFileName, int attempts, FileOperationAttempDelegate onError = null)
         {
             return prv_tryFileOperation(() => file.MoveTo(destFileName), attempts, onError);

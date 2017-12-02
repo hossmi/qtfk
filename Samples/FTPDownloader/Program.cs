@@ -1,12 +1,6 @@
 ﻿using QTFK.Extensions;
-using QTFK.Extensions.Collections.Casting;
-using QTFK.Services;
 using QTFK.Services.Factories;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace FTPDownloader
 {

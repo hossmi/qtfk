@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using QTFK.Extensions.Collections.Strings;
 
-namespace QTFK.Extensions.Tests
+namespace QTFK.Core.Tests
 {
     [TestClass]
     public class StringExtensionTest
