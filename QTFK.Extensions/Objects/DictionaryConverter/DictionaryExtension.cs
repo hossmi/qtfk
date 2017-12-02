@@ -9,12 +9,22 @@ namespace QTFK.Extensions.Objects.DictionaryConverter
 {
     public static class DictionaryExtension
     {
-        public static IDictionary<string, object> ToDictionary(this object model)
+        public static IDictionary<string, object> toDictionary(this object model)
         {
-            return ToDictionary(model, p => true);
+            return prv_toDictionary(model, p => true);
         }
 
-        public static IDictionary<string, object> ToDictionary(this object model, Func<PropertyInfo, bool> where)
+        public static IDictionary<string, object> toDictionary(this object model, Type propertyType)
+        {
+            return prv_toDictionary(model, p => Attribute.IsDefined(p, propertyType));
+        }
+
+        public static IDictionary<string, object> toDictionary(this object model, Func<PropertyInfo, bool> where)
+        {
+            return prv_toDictionary(model, where);
+        }
+
+        private static IDictionary<string, object> prv_toDictionary(object model, Func<PropertyInfo, bool> where)
         {
             return model
                 .GetType()
@@ -23,11 +33,6 @@ namespace QTFK.Extensions.Objects.DictionaryConverter
                 .Select(p => new { K = p.Name, V = p.GetValue(model) })
                 .ToDictionary(item => item.K, item => item.V)
                 ;
-        }
-
-        public static IDictionary<string, object> ToDictionary(this object model, Type propertyType)
-        {
-            return ToDictionary(model, p => Attribute.IsDefined(p, propertyType));
         }
     }
 }
