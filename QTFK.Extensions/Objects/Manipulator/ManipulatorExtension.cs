@@ -7,72 +7,61 @@ namespace QTFK.Extensions.Objects.Manipulator
 {
     public static class ManipulatorExtension
     {
-        public static PropertyCollection Manipulate(this object o)
+        public static PropertyCollection manipulate(this object o)
         {
-            var rProps = o
-                .GetType()
-                .GetProperties()
-                .Where(prop => prop.CanRead)
-                ;
-
-            var wProps = o
-                .GetType()
-                .GetProperties()
-                .Where(prop => prop.CanWrite)
-                ;
-
-            return new PropertyCollection(o, rProps, wProps);
+            return prv_manipulate(o);
         }
 
-        public static void Manipulate(this object o, Action<PropertyCollection> manipulator)
+        public static void manipulate(this object o, Action<PropertyCollection> manipulator)
         {
-            var rProps = o
+            PropertyCollection propertyCollection;
+
+            propertyCollection = prv_manipulate(o);
+            manipulator(propertyCollection);
+        }
+
+        private static PropertyCollection prv_manipulate(object o)
+        {
+            PropertyCollection propertyCollection;
+            IEnumerable<PropertyInfo> rProps, wProps;
+
+            rProps = o
                 .GetType()
                 .GetProperties()
                 .Where(prop => prop.CanRead)
                 ;
 
-            var wProps = o
+            wProps = o
                 .GetType()
                 .GetProperties()
                 .Where(prop => prop.CanWrite)
                 ;
 
-            manipulator(new PropertyCollection(o, rProps, wProps));
+            propertyCollection = new PropertyCollection(o, rProps, wProps);
+
+            return propertyCollection;
         }
 
         public class PropertyCollection
         {
-            private object _object;
-            private readonly IDictionary<string, PropertyInfo> _readableProps;
-            private readonly IDictionary<string, PropertyInfo> _writableProps;
+            private object instance;
+            private readonly IDictionary<string, PropertyInfo> readableProps;
+            private readonly IDictionary<string, PropertyInfo> writableProps;
 
             internal PropertyCollection(object o
                 , IEnumerable<PropertyInfo> readableProps
                 , IEnumerable<PropertyInfo> writableProps)
             {
-                _object = o;
-                _readableProps = readableProps.ToDictionary(p => p.Name);
-                _writableProps = writableProps.ToDictionary(p => p.Name);
+                this.instance = o;
+                this.readableProps = readableProps.ToDictionary(p => p.Name);
+                this.writableProps = writableProps.ToDictionary(p => p.Name);
             }
 
             public PropertyCollection Set<T>(string propertyName, T value)
             {
                 PropertyInfo prop;
-                if (_writableProps.TryGetValue(propertyName, out prop))
-                    prop.SetValue(_object, value);
-
-                return this;
-            }
-            public PropertyCollection Get<T>(string propertyName, out T output)
-            {
-                PropertyInfo prop;
-                output = default(T);
-                if (_readableProps.TryGetValue(propertyName, out prop))
-                {
-                    if (output.GetType().IsAssignableFrom(prop.PropertyType))
-                        output = (T)prop.GetValue(_object);
-                }
+                if (this.writableProps.TryGetValue(propertyName, out prop))
+                    prop.SetValue(this.instance, value);
 
                 return this;
             }
@@ -80,9 +69,31 @@ namespace QTFK.Extensions.Objects.Manipulator
             public T Get<T>(string propertyName)
             {
                 T output;
-                Get<T>(propertyName, out output);
+
+                prv_get<T>(propertyName, out output);
+
                 return output;
             }
+
+            public PropertyCollection Get<T>(string propertyName, out T output)
+            {
+                return prv_get<T>(propertyName, out output);
+            }
+
+            private PropertyCollection prv_get<T>(string propertyName, out T output)
+            {
+                PropertyInfo prop;
+
+                output = default(T);
+                if (this.readableProps.TryGetValue(propertyName, out prop))
+                {
+                    if (output.GetType().IsAssignableFrom(prop.PropertyType))
+                        output = (T)prop.GetValue(this.instance);
+                }
+
+                return this;
+            }
+
         }
     }
 }

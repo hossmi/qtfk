@@ -19,7 +19,7 @@ namespace QTFK.Extensions.Tests
                 DecimalNumber = 0.00034m,
             };
 
-            pepe.Manipulate()
+            pepe.manipulate()
                 .Set("Name", "Chiquito")
                 .Set(nameof(Models.SimpleTestClass.DoubleNumber), Math.PI)
                 ;
@@ -28,7 +28,7 @@ namespace QTFK.Extensions.Tests
             Assert.AreEqual("Chiquito", pepe.Name);
             Assert.AreEqual(Math.PI, pepe.DoubleNumber);
 
-            pepe.Manipulate()
+            pepe.manipulate()
                 .Set("Name", "Chiquito")
                 .Set(nameof(Models.SimpleTestClass.DoubleNumber), Math.PI)
                 .Get(nameof(Models.SimpleTestClass.DecimalNumber), out x)
@@ -39,7 +39,7 @@ namespace QTFK.Extensions.Tests
             Assert.AreEqual(0.00034m, pepe.DecimalNumber);
 
             pepe.DecimalNumber = 101m;
-            pepe.Manipulate(m => m
+            pepe.manipulate(m => m
                 .Set("Name", "George")
                 .Set(nameof(Models.SimpleTestClass.DoubleNumber), Math.E)
                 .Get(nameof(Models.SimpleTestClass.DecimalNumber), out x)
@@ -49,7 +49,7 @@ namespace QTFK.Extensions.Tests
             Assert.AreEqual(Math.E, pepe.DoubleNumber);
             Assert.AreEqual(101m, pepe.DecimalNumber);
 
-            pepe.Manipulate(m =>
+            pepe.manipulate(m =>
             {
                 m.Set(nameof(Models.SimpleTestClass.DecimalNumber), 666m);
                 x = m.Get<decimal>(nameof(Models.SimpleTestClass.DecimalNumber));
