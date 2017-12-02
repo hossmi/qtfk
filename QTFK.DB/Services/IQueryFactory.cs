@@ -12,22 +12,10 @@ namespace QTFK.Services
     {
         IDBIO DB { get; }
         string Prefix { get; set; }
-    }
 
-    public interface ISelectQueryFactory : IQueryFactory
-    {
         IDBQuerySelect NewSelect();
-    }
-    public interface IInsertQueryFactory : IQueryFactory
-    {
         IDBQueryInsert NewInsert();
-    }
-    public interface IUpdateQueryFactory : IQueryFactory
-    {
         IDBQueryUpdate NewUpdate();
-    }
-    public interface IDeleteQueryFactory : IQueryFactory
-    {
         IDBQueryDelete NewDelete();
     }
 }

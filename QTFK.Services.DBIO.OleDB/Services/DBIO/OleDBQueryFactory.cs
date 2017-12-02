@@ -5,9 +5,7 @@ using QTFK.Models.DBIO.Filters;
 
 namespace QTFK.Services.DBIO
 {
-    public class OleDBQueryFactory : IOleDB
-        , ISelectQueryFactory, IInsertQueryFactory, IUpdateQueryFactory, IDeleteQueryFactory
-        , IByParamEqualsFilterFactory
+    public class OleDBQueryFactory : IOleDB, IQueryFactory, IByParamEqualsFilterFactory
     {
         public OleDBQueryFactory(IDBIO db)
         {
