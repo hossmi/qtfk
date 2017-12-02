@@ -8,8 +8,12 @@ using System.Threading.Tasks;
 
 namespace QTFK.FileSystem
 {
+    public delegate void FileOperationAttempDelegate(Exception exception, int attemptIteration, int totalAttempts);
+
     public static class FileExtension
     {
+        private const int DEFAULT_ATTEMPTS = 3;
+
         /// <summary>
         /// Tries to move the file 'attempts' times
         /// </summary>
@@ -18,9 +22,9 @@ namespace QTFK.FileSystem
         /// <param name="attempts">Numbers of times to try moving the file.</param>
         /// <param name="onError">Action to call on each attempt, passing the throwed exception and the attempt number.</param>
         /// <returns>Return true or false indicating if the file has been moved.</returns>
-        public static bool TryMoveTo(this FileInfo file, string destFileName, Action<Exception, int, int> onError = null)
+        public static bool tryMoveTo(this FileInfo file, string destFileName, FileOperationAttempDelegate onError = null)
         {
-            return TryMoveTo(file, destFileName, 3, onError);
+            return prv_tryMoveTo(file, destFileName, DEFAULT_ATTEMPTS, onError);
         }
 
         /// <summary>
@@ -31,21 +35,9 @@ namespace QTFK.FileSystem
         /// <param name="attempts">Numbers of times to try moving the file.</param>
         /// <param name="onError">Action to call on each attempt, passing the throwed exception and the attempt number.</param>
         /// <returns>Return true or false indicating if the file has been moved.</returns>
-        public static bool TryMoveTo(this FileInfo file, string destFileName, int attempts, Action<Exception, int, int> onError = null)
+        public static bool tryMoveTo(this FileInfo file, string destFileName, int attempts, FileOperationAttempDelegate onError = null)
         {
-            for (int i = 1; i <= attempts; ++i)
-            {
-                try
-                {
-                    file.MoveTo(destFileName);
-                    return true;
-                }
-                catch (Exception ex)
-                {
-                    onError?.Invoke(ex, i, attempts);
-                }
-            }
-            return false;
+            return prv_tryMoveTo(file, destFileName, attempts, onError);
         }
 
         /// <summary>
@@ -56,9 +48,9 @@ namespace QTFK.FileSystem
         /// <param name="attempts">Numbers of times to try moving the file.</param>
         /// <param name="onError">Action to call on each attempt, passing the throwed exception and the attempt number.</param>
         /// <returns>Return true or false indicating if the file has been moved.</returns>
-        public static bool TryCopyTo(this FileInfo file, string destFileName, bool overwrite, Action<Exception, int, int> onError = null)
+        public static bool tryCopyTo(this FileInfo file, string destFileName, bool overwrite, FileOperationAttempDelegate onError = null)
         {
-            return TryCopyTo(file, destFileName, overwrite, 3, onError);
+            return prv_tryCopyTo(file, destFileName, overwrite, DEFAULT_ATTEMPTS, onError);
         }
 
         /// <summary>
@@ -69,13 +61,47 @@ namespace QTFK.FileSystem
         /// <param name="attempts">Numbers of times to try coping the file.</param>
         /// <param name="onError">Action to call on each attempt, passing the throwed exception and the attempt number.</param>
         /// <returns>Return true or false indicating if the file has been moved.</returns>
-        public static bool TryCopyTo(this FileInfo file, string destFileName, bool overwrite, int attempts, Action<Exception, int, int> onError = null)
+        public static bool tryCopyTo(this FileInfo file, string destFileName, bool overwrite, int attempts, FileOperationAttempDelegate onError = null)
+        {
+            return prv_tryCopyTo(file, destFileName, overwrite, attempts, onError);
+        }
+
+        public static string getNameWithoutExtension(this FileInfo info)
+        {
+            string ext, name;
+
+            ext = info.Extension.StartsWith(".")
+                ? info.Extension.Substring(1)
+                : info.Extension
+                ;
+
+            name = prv_removeExtension(info.Name, ext);
+
+            return name;
+        }
+
+        public static string getNameWithoutExtension(this string filename, string extension)
+        {
+            return prv_removeExtension(filename, extension);
+        }
+
+        private static bool prv_tryMoveTo(FileInfo file, string destFileName, int attempts, FileOperationAttempDelegate onError = null)
+        {
+            return prv_tryFileOperation(() => file.MoveTo(destFileName), attempts, onError);
+        }
+
+        private static bool prv_tryCopyTo(FileInfo file, string destFileName, bool overwrite, int attempts, FileOperationAttempDelegate onError = null)
+        {
+            return prv_tryFileOperation(() => file.CopyTo(destFileName, overwrite), attempts, onError);
+        }
+
+        private static bool prv_tryFileOperation(Action fileOperationFunction, int attempts, FileOperationAttempDelegate onError = null)
         {
             for (int i = 1; i <= attempts; ++i)
             {
                 try
                 {
-                    file.CopyTo(destFileName, overwrite);
+                    fileOperationFunction();
                     return true;
                 }
                 catch (Exception ex)
@@ -86,17 +112,18 @@ namespace QTFK.FileSystem
             return false;
         }
 
-        public static string OnlyName(this FileInfo info)
+        private static string prv_removeExtension(string filename, string extension)
         {
-            string ext = info.Extension.StartsWith(".") ? info.Extension.Substring(1) : info.Extension;
-            return info.Name.RemoveExtension(ext);
-        }
+            string resultFileName;
 
-        public static string RemoveExtension(this string filename, string extension)
-        {
-            if (!string.IsNullOrEmpty(filename) && !string.IsNullOrEmpty(extension) && filename.EndsWith(extension))
-                return filename.Substring(0, filename.Length - (extension.Length + 1));
-            return filename;
+            resultFileName = !string.IsNullOrEmpty(filename) 
+                && !string.IsNullOrEmpty(extension) 
+                && filename.EndsWith(extension)
+                ? filename.Substring(0, filename.Length - (extension.Length + 1))
+                : filename
+                ;
+
+            return resultFileName;
         }
 
     }
