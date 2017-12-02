@@ -48,10 +48,6 @@
     <Compile Include="Collections\SwitchCase\SwitchCaseExtension.cs" />
     <Compile Include="DataReader\DataReaderExtension.cs" />
     <Compile Include="DataSets\DataSetExtension.cs" />
-    <Compile Include="DBCommand\DBCommandExtension.cs" />
-    <Compile Include="DBIO\QueryFactory\QueryFactoryExtension.cs" />
-    <Compile Include="DBIO\DBIOExtension.cs" />
-    <Compile Include="DBIO\DBQueries\DBQueryExtension.cs" />
     <Compile Include="File.cs" />
     <Compile Include="FileSystem\FileExtension.cs" />
     <Compile Include="Mapping\AutoMapping\AutoMapExtension.cs" />

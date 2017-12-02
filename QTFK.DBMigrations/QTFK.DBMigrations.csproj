@@ -57,6 +57,10 @@
       <Project>{8c740adf-e4e1-444a-a9f0-2e40b174260f}</Project>
       <Name>QTFK.Core</Name>
     </ProjectReference>
+    <ProjectReference Include="..\QTFK.DB\QTFK.DB.csproj">
+      <Project>{857badf5-36dc-4404-a998-904879300e48}</Project>
+      <Name>QTFK.DB</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

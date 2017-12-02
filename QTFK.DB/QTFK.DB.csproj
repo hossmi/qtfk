@@ -1,16 +1,17 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{ADABC449-C565-4691-A505-E91E137B7F8C}</ProjectGuid>
+    <ProjectGuid>{857BADF5-36DC-4404-A998-904879300E48}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>QTFK</RootNamespace>
-    <AssemblyName>QTFK.Services.DBIO.OleDB</AssemblyName>
+    <AssemblyName>QTFK.DB</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -22,12 +23,13 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
+    <DebugType>none</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
+    <ErrorReport>none</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <GenerateSerializationAssemblies>Off</GenerateSerializationAssemblies>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -40,48 +42,39 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Extensions\DBIO\OleDBIOExtensions\OleDBParameterExtension.cs" />
-    <Compile Include="Models\DBIO\OleDBDeleteQuery.cs" />
-    <Compile Include="Models\DBIO\Filters\OleDBByParamEqualsFilter.cs" />
-    <Compile Include="Models\DBIO\OleDBUpdateQuery.cs" />
-    <Compile Include="Models\DBIO\OleDBInsertQuery.cs" />
-    <Compile Include="Models\DBIO\OleDBSelectQuery.cs" />
+    <Compile Include="Extensions\DBCommand\DBCommandExtension.cs" />
+    <Compile Include="Extensions\DBIO\DBIOExtension.cs" />
+    <Compile Include="Extensions\DBIO\DBQueries\DBQueryExtension.cs" />
+    <Compile Include="Extensions\DBIO\QueryFactory\QueryFactoryExtension.cs" />
+    <Compile Include="Models\DBIOException.cs" />
+    <Compile Include="Models\DBIO\NullQueryFilter.cs" />
+    <Compile Include="Models\IByParamBetweenFilter.cs" />
+    <Compile Include="Models\IByParamEqualsFilter.cs" />
+    <Compile Include="Models\IDBQuery.cs" />
+    <Compile Include="Models\IDBQueryFilterable.cs" />
+    <Compile Include="Models\IExpressionQueryFilter.cs" />
+    <Compile Include="Models\IQueryFilter.cs" />
+    <Compile Include="Models\Joins.cs" />
+    <Compile Include="Models\SelectColumn.cs" />
+    <Compile Include="Models\SetColumn.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Services\DBIO\OleDBQueryFactory.cs" />
-    <Compile Include="Services\DBIO\OleDBIO.cs" />
-    <Compile Include="Services\DBIO\OleDBMigrator.cs" />
+    <Compile Include="Services\IDBIO.cs" />
+    <Compile Include="Services\IQueryFactory.cs" />
+    <Compile Include="Services\IQueryFilterFactory.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\QTFK.Core\QTFK.Core.csproj">
-      <Project>{8C740ADF-E4E1-444A-A9F0-2E40B174260F}</Project>
+      <Project>{8c740adf-e4e1-444a-a9f0-2e40b174260f}</Project>
       <Name>QTFK.Core</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\QTFK.DBMigrations\QTFK.DBMigrations.csproj">
-      <Project>{200f8a2c-e9f3-42a9-b813-339083a77344}</Project>
-      <Name>QTFK.DBMigrations</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\QTFK.DB\QTFK.DB.csproj">
-      <Project>{857badf5-36dc-4404-a998-904879300e48}</Project>
-      <Name>QTFK.DB</Name>
     </ProjectReference>
     <ProjectReference Include="..\QTFK.Extensions\QTFK.Extensions.csproj">
       <Project>{d6db2c2b-d86d-45cf-a756-37ed71c614d3}</Project>
       <Name>QTFK.Extensions</Name>
     </ProjectReference>
-    <ProjectReference Include="..\QTFK.Logs\QTFK.Logs.csproj">
-      <Project>{277f230c-64c9-4a90-bf71-1d0e83d26658}</Project>
-      <Name>QTFK.Logs</Name>
-    </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>xcopy /Y $(TargetPath) $(SolutionDir)\bin\qtfk\</PostBuildEvent>
   </PropertyGroup>
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
 </Project>

@@ -45,6 +45,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QTFK.Logs.Tests", "QTFK.Log
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QTFK.DBMigrations", "QTFK.DBMigrations\QTFK.DBMigrations.csproj", "{200F8A2C-E9F3-42A9-B813-339083A77344}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QTFK.DB", "QTFK.DB\QTFK.DB.csproj", "{857BADF5-36DC-4404-A998-904879300E48}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -127,6 +129,10 @@ Global
 		{200F8A2C-E9F3-42A9-B813-339083A77344}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{200F8A2C-E9F3-42A9-B813-339083A77344}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{200F8A2C-E9F3-42A9-B813-339083A77344}.Release|Any CPU.Build.0 = Release|Any CPU
+		{857BADF5-36DC-4404-A998-904879300E48}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{857BADF5-36DC-4404-A998-904879300E48}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{857BADF5-36DC-4404-A998-904879300E48}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{857BADF5-36DC-4404-A998-904879300E48}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -85,6 +85,10 @@
       <Project>{200f8a2c-e9f3-42a9-b813-339083a77344}</Project>
       <Name>QTFK.DBMigrations</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\QTFK.DB\QTFK.DB.csproj">
+      <Project>{857badf5-36dc-4404-a998-904879300e48}</Project>
+      <Name>QTFK.DB</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\QTFK.Extensions\QTFK.Extensions.csproj">
       <Project>{D6DB2C2B-D86D-45CF-A756-37ED71C614D3}</Project>
       <Name>QTFK.Extensions</Name>
