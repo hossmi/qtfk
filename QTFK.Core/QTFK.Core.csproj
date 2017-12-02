@@ -49,6 +49,7 @@
     <Compile Include="Extensions\Collections\SwitchCase\SwitchCaseExtension.cs" />
     <Compile Include="Extensions\DataReader\DataReaderExtension.cs" />
     <Compile Include="Extensions\DataSets\DataSetExtension.cs" />
+    <Compile Include="Extensions\Exceptions\ExceptionExtension.cs" />
     <Compile Include="Extensions\FileSystem\FileExtension.cs" />
     <Compile Include="Extensions\Mapping\AutoMapping\AutoMapExtension.cs" />
     <Compile Include="Extensions\Mapping\EntityMapperExtension.cs" />
