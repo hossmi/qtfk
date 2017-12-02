@@ -13,47 +13,27 @@ namespace QTFK.Extensions.Mapping.AutoMapping
     {
         public static IEnumerable<T> AutoMap<T>(this IEnumerable<DataRow> rows) where T : new()
         {
-            return rows.Select(prv_autoMap<T>);
+            return prv_autoMap<T>(rows, null);
         }
 
         public static IEnumerable<T> AutoMap<T>(this IEnumerable<DataRow> rows, Action<DataRow, T> configureDelegate) where T : new()
         {
-            return rows.Select(r =>
-            {
-                T item = prv_autoMap<T>(r);
-                configureDelegate(r, item);
-                return item;
-            });
+            return prv_autoMap<T>(rows, configureDelegate);
+        }
+
+        public static IEnumerable<T> AutoMap<T>(this IEnumerable<IDataRecord> records) where T : new()
+        {
+            return prv_autoMap<T>(records, null);
+        }
+
+        public static IEnumerable<T> AutoMap<T>(this IEnumerable<IDataRecord> records, Action<IDataRecord, T> configureDelegate) where T : new()
+        {
+            return prv_autoMap<T>(records, configureDelegate);
         }
 
         public static T AutoMap<T>(this DataRow row) where T : new()
         {
             return prv_autoMap<T>(row);
-        }
-
-        public static IEnumerable<T> AutoMap<T>(this IEnumerable<IDataRecord> records) where T : new()
-        {
-            var props = typeof(T)
-                .getReadWriteProperties()
-                .ToList()
-                ;
-
-            return records.Select(r => prv_autoMap<T>(r, props));
-        }
-
-        public static IEnumerable<T> AutoMap<T>(this IEnumerable<IDataRecord> records, Action<IDataRecord, T> configureDelegate) where T : new()
-        {
-            var props = typeof(T)
-                .getReadWriteProperties()
-                .ToList()
-                ;
-
-            return records.Select(r => 
-            {
-                T item = prv_autoMap<T>(r, props);
-                configureDelegate(r, item);
-                return item;
-            });
         }
 
         public static T AutoMap<T>(this IDataRecord record) where T : new()
@@ -71,6 +51,31 @@ namespace QTFK.Extensions.Mapping.AutoMapping
         public static T AutoMap<T>(this IDictionary<string, object> source) where T : new()
         {
             return prv_autoMap<T>(source);
+        }
+
+        private static IEnumerable<T> prv_autoMap<T>(IEnumerable<IDataRecord> records, Action<IDataRecord, T> configureDelegate) where T : new()
+        {
+            var props = typeof(T)
+                .getReadWriteProperties()
+                .ToList()
+                ;
+
+            return records.Select(r =>
+            {
+                T item = prv_autoMap<T>(r, props);
+                configureDelegate?.Invoke(r, item);
+                return item;
+            });
+        }
+
+        private static IEnumerable<T> prv_autoMap<T>(IEnumerable<DataRow> rows, Action<DataRow, T> configureDelegate) where T : new()
+        {
+            return rows.Select(r =>
+            {
+                T item = prv_autoMap<T>(r);
+                configureDelegate?.Invoke(r, item);
+                return item;
+            });
         }
 
         private static T prv_autoMap<T>(DataRow row) where T : new()
