@@ -1,16 +1,17 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{D6DB2C2B-D86D-45CF-A756-37ED71C614D3}</ProjectGuid>
+    <ProjectGuid>{200F8A2C-E9F3-42A9-B813-339083A77344}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>QTFK.Extensions</RootNamespace>
-    <AssemblyName>QTFK.Extensions</AssemblyName>
+    <RootNamespace>QTFK</RootNamespace>
+    <AssemblyName>QTFK.DBMigrations</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -22,12 +23,13 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
+    <DebugType>none</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
+    <ErrorReport>none</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <GenerateSerializationAssemblies>Off</GenerateSerializationAssemblies>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -40,43 +42,24 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Collections\CollectionExtension.cs" />
-    <Compile Include="Collections\Casting\CastExtension.cs" />
-    <Compile Include="Collections\Dictionaries\DictionaryExtension.cs" />
-    <Compile Include="Collections\Filters\EnumerableFilterExtension.cs" />
-    <Compile Include="Collections\Strings\StringExtension.cs" />
-    <Compile Include="Collections\SwitchCase\SwitchCaseExtension.cs" />
-    <Compile Include="DataReader\DataReaderExtension.cs" />
-    <Compile Include="DataSets\DataSetExtension.cs" />
-    <Compile Include="DBCommand\DBCommandExtension.cs" />
-    <Compile Include="DBIO\QueryFactory\QueryFactoryExtension.cs" />
-    <Compile Include="DBIO\DBIOExtension.cs" />
-    <Compile Include="DBIO\DBQueries\DBQueryExtension.cs" />
-    <Compile Include="File.cs" />
-    <Compile Include="FileSystem\FileExtension.cs" />
-    <Compile Include="Mapping\AutoMapping\AutoMapExtension.cs" />
-    <Compile Include="Mapping\EntityMapperExtension.cs" />
-    <Compile Include="Objects\Properties\PropertyExtension.cs" />
-    <Compile Include="Objects\DictionaryConverter\DictionaryExtension.cs" />
-    <Compile Include="Objects\Manipulator\ManipulatorExtension.cs" />
+    <Compile Include="Extensions\DBIO\DBIOMigrationExtensions\DBMigrationExtension.cs" />
+    <Compile Include="Models\MigrationInfo.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Services\DBIO\DBMigrationStep.cs" />
+    <Compile Include="Services\DBIO\DBMigrationStepProviderBase.cs" />
+    <Compile Include="Services\DBIO\DefaultDBMigrationStepProvider.cs" />
+    <Compile Include="Services\IDBMigrationStep.cs" />
+    <Compile Include="Services\IDBMigrationStepProvider.cs" />
+    <Compile Include="Services\IDBMigrator.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\QTFK.Core\QTFK.Core.csproj">
-      <Project>{8C740ADF-E4E1-444A-A9F0-2E40B174260F}</Project>
+      <Project>{8c740adf-e4e1-444a-a9f0-2e40b174260f}</Project>
       <Name>QTFK.Core</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>xcopy /Y $(TargetPath) $(SolutionDir)\bin\qtfk\</PostBuildEvent>
   </PropertyGroup>
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
 </Project>

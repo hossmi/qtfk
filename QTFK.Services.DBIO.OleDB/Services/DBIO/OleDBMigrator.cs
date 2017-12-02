@@ -5,10 +5,7 @@ using QTFK.Models;
 using QTFK.Extensions.DBIO;
 using QTFK.Extensions.Collections.Dictionaries;
 using QTFK.Extensions.Mapping.AutoMapping;
-using QTFK.Extensions.DBCommand;
 using QTFK.Extensions.DataReader;
-using QTFK.Extensions.DBIO.OleDBIOExtensions;
-using QTFK.Extensions.Mapping;
 using System.Data;
 
 namespace QTFK.Services.DBIO

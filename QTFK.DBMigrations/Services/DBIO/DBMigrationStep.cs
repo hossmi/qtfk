@@ -1,6 +1,4 @@
 ﻿using System;
-using QTFK.Models;
-using QTFK.Services;
 
 namespace QTFK.Services.DBIO
 {
