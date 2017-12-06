@@ -15,16 +15,27 @@ namespace QTFK.Services.DBIO
 {
     public class SQLServerDBIO : IDBIO, ISQLServer
     {
-        protected readonly string _connectionString;
-        protected readonly ILogger<LogLevel> _log;
+        private const string ERROR_MESSAGE_DEFAULT = "Error ocurred executing SQL instructions";
+        private const string ERROR_MESSAGE_GETTING_ID = "Error ocurred getting las ID";
+
+        protected readonly string connectionString;
+        protected readonly ILogger<LogLevel> log;
+
+        public SQLServerDBIO(string connectionString)
+            : this(connectionString, NullLogger.Instance)
+        {
+        }
 
         public SQLServerDBIO(
             string connectionString
-            , ILogger<LogLevel> log = null
+            , ILogger<LogLevel> log
             )
         {
-            _connectionString = connectionString;
-            _log = log ?? NullLogger.Instance;
+            Asserts.isSomething(this.log, "Argument 'log' cannot be null.");
+            Asserts.isFilled(this.connectionString, "Argument 'connectionString' cannot be empty");
+
+            this.connectionString = connectionString;
+            this.log = log;
         }
 
         public void Dispose()
@@ -33,51 +44,65 @@ namespace QTFK.Services.DBIO
 
         public DataSet Get(string query, IDictionary<string, object> parameters)
         {
-            DataSet ds = null;
-            using (SqlConnection conn = new SqlConnection(_connectionString))
+            DataSet ds;
+
+            Asserts.isFilled(query, "Argument 'query' cannot be empty.");
+            Asserts.isSomething(parameters, "Argument 'parameters' cannot be null.");
+
+            ds = null;
+
+            using (SqlConnection conn = new SqlConnection(this.connectionString))
             using (SqlDataAdapter da = new SqlDataAdapter(query, conn))
             {
-                da.SelectCommand.AddParameters(parameters);
                 try
                 {
+                    da.SelectCommand.AddParameters(parameters);
                     ds = new DataSet();
                     da.Fill(ds);
                 }
                 catch (Exception ex)
                 {
-                    string message = $@"Error ocurred executing SQL instructions:
-Exception: {ex.GetType().Name}
-Message: {ex.Message}
-Query: '{query ?? ""}'";
-                    _log.log(LogLevel.Error, message);
-                    throw new DBIOException(message, ex);
+                    throw prv_wrapException(query, ex, this.log, ERROR_MESSAGE_DEFAULT);
                 }
                 finally
                 {
                     conn?.Close();
                 }
             }
+
+            Asserts.isSomething(ds, "Result DataSet is null!");
             return ds;
         }
 
         public IEnumerable<T> Get<T>(string query, IDictionary<string, object> parameters, Func<IDataRecord, T> buildDelegate)
         {
-            using (SqlConnection conn = new SqlConnection(_connectionString))
+            IEnumerable<T> result;
+            SqlTransaction trans;
+            IDataReader reader;
+
+            Asserts.isFilled(query, "Argument 'query' cannot be empty.");
+            Asserts.isSomething(parameters, "Argument 'parameters' cannot be null.");
+            Asserts.isSomething(buildDelegate, "Argument 'buildDelegate' cannot be null.");
+
+            result = null;
+
+            using (SqlConnection conn = new SqlConnection(this.connectionString))
             using (SqlCommand command = new SqlCommand() { Connection = conn })
             {
-                SqlTransaction trans = null;
-                IDataReader reader = null;
+                trans = null;
+                reader = null;
+
                 try
                 {
                     conn.Open();
                     trans = conn.BeginTransaction();
-                    command.Transaction = trans;
 
+                    command.Transaction = trans;
                     command.CommandText = query;
                     command.AddParameters(parameters);
 
                     reader = command.ExecuteReader();
-                    return reader
+                    result = reader
                         .GetRecords()
                         .Select(buildDelegate)
                         .ToList()
@@ -85,21 +110,19 @@ Query: '{query ?? ""}'";
                 }
                 catch (Exception ex)
                 {
-                    string message = $@"Error ocurred executing SQL instruction:
-Exception: {ex.GetType().Name}
-Message: {ex.Message}
-Current command: {command?.CommandText ?? ""}";
-                    _log.log(LogLevel.Error, message);
-                    throw new DBIOException(message, ex);
+                    throw prv_wrapException(command, ex, this.log, ERROR_MESSAGE_DEFAULT);
                 }
                 finally
                 {
-                    if(reader != null && !reader.IsClosed)
+                    if (reader != null && !reader.IsClosed)
                         reader.Close();
                     trans?.Rollback();
                     conn?.Close();
                 }
             }
+
+            Asserts.isSomething(result, $"Output '{nameof(IEnumerable<T>)}' is null!");
+            return result;
         }
 
         public object GetLastID(IDbCommand cmd)
@@ -114,22 +137,24 @@ Current command: {command?.CommandText ?? ""}";
             }
             catch (Exception ex)
             {
-                string message = $@"Error ocurred getting las ID:
-Exception: {ex.GetType().Name}
-Message: {ex.Message}
-Current command: {cmd?.CommandText ?? ""}";
-                _log.log(LogLevel.Error, message);
-                throw new DBIOException(message, ex);
+                throw prv_wrapException(cmd, ex, this.log, ERROR_MESSAGE_GETTING_ID);
             }
         }
 
         public int Set(Func<IDbCommand, int> instructions)
         {
-            int affectedRows = 0;
-            using (SqlConnection conn = new SqlConnection(_connectionString))
+            int affectedRows;
+            SqlTransaction trans ;
+
+            Asserts.isSomething(instructions, "Argument 'instructions' cannot be null.");
+
+            affectedRows = 0;
+
+            using (SqlConnection conn = new SqlConnection(this.connectionString))
             using (SqlCommand command = new SqlCommand() { Connection = conn })
             {
-                SqlTransaction trans = null;
+                trans = null;
+
                 try
                 {
                     conn.Open();
@@ -141,21 +166,31 @@ Current command: {cmd?.CommandText ?? ""}";
                 catch (Exception ex)
                 {
                     trans?.Rollback();
-
-                    string message = $@"Error ocurred executing SQL instructions:
-Exception: {ex.GetType().Name}
-Message: {ex.Message}
-Current command: {command?.CommandText ?? ""}";
-                    _log.log(LogLevel.Error, message);
-                    throw new DBIOException(message, ex);
+                    throw prv_wrapException(command, ex, this.log, ERROR_MESSAGE_DEFAULT);
                 }
                 finally
                 {
                     conn?.Close();
                 }
-
             }
             return affectedRows;
+        }
+
+        private static DBIOException prv_wrapException(IDbCommand cmd, Exception ex, ILogger<LogLevel> logger, string subject)
+        {
+            return prv_wrapException(cmd?.CommandText ?? "", ex, logger, subject);
+        }
+
+        private static DBIOException prv_wrapException(string query, Exception ex, ILogger<LogLevel> logger, string subject)
+        {
+            string message = $@"{subject}:
+Exception: {ex.GetType().Name}
+Message: {ex.Message}
+Command: '{query}'";
+
+            logger.log(LogLevel.Error, message);
+
+            return new DBIOException(message, ex);
         }
     }
 }
