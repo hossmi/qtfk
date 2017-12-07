@@ -7,11 +7,8 @@ using System.Linq;
 
 namespace QTFK.Services.DBIO
 {
-    public class SQLServerQueryFactory : ISQLServer, IQueryFactory
+    public class SQLServerQueryFactory : AbstractQueryFactory, ISQLServer
     {
-        private readonly List<Type> filterTypes;
-        private readonly string queryFilterInterfaceTypeFullName;
-
         public static SQLServerQueryFactory buildDefault()
         {
             return new SQLServerQueryFactory(new Type[]
@@ -20,54 +17,29 @@ namespace QTFK.Services.DBIO
             });
         }
 
-        public SQLServerQueryFactory(IEnumerable<Type> filterTypes)
+        public SQLServerQueryFactory(IEnumerable<Type> filterTypes) 
+            : base(filterTypes)
         {
-            this.queryFilterInterfaceTypeFullName = typeof(IQueryFilter).FullName;
-            this.filterTypes = filterTypes.ToList();
-
-            foreach (Type t in this.filterTypes)
-            {
-                Asserts.isSomething(t, $"Type element at parameter 'filterTypes' is null!");
-                Asserts.check(t.IsInterface == false, $"Type '{t.FullName}' at parameter 'filterTypes' cannot be interface.");
-                Asserts.check(t.GetInterface(this.queryFilterInterfaceTypeFullName) != null, $"Type '{t.FullName}' at parameter 'filterTypes' does not implements '{this.queryFilterInterfaceTypeFullName}'.");
-            }
         }
 
-        public string Prefix { get; set; }
-
-        public IDBQueryDelete newDelete()
+        protected override IDBQueryDelete prv_newDelete()
         {
-            return new SqlDeleteQuery() { Prefix = this.Prefix };
+            return new SqlDeleteQuery();
         }
 
-        public IDBQueryInsert newInsert()
+        protected override IDBQueryInsert prv_newInsert()
         {
-            return new SqlInsertQuery() { Prefix = this.Prefix };
+            return new SqlInsertQuery();
         }
 
-        public IDBQuerySelect newSelect()
+        protected override IDBQuerySelect prv_newSelect()
         {
-            return new SqlSelectQuery() { Prefix = this.Prefix };
+            return new SqlSelectQuery();
         }
 
-        public IDBQueryUpdate newUpdate()
+        protected override IDBQueryUpdate prv_newUpdate()
         {
-            return new SqlUpdateQuery() { Prefix = this.Prefix };
-        }
-
-        public IQueryFilter buildFilter(Type type)
-        {
-            Type filterType;
-            object instance;
-
-            Asserts.check(type.IsInterface, $"Type '{type.FullName}' is not an interface.");
-            Asserts.check(type.GetInterface(this.queryFilterInterfaceTypeFullName) != null, $"Type '{type.FullName}' does not inherits from '{this.queryFilterInterfaceTypeFullName}'.");
-
-            filterType = this.filterTypes
-                .Single(t => t.IsAssignableFrom(type));
-
-            instance = Activator.CreateInstance(filterType);
-            return (IQueryFilter)instance;
+            return new SqlUpdateQuery();
         }
     }
 }

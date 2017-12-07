@@ -25,10 +25,30 @@ namespace QTFK.Services.DBIO
 
         public string Prefix { get; set; }
 
-        public abstract IDBQueryDelete newDelete();
-        public abstract IDBQueryInsert newInsert();
-        public abstract IDBQuerySelect newSelect();
-        public abstract IDBQueryUpdate newUpdate();
+        protected abstract IDBQueryDelete prv_newDelete();
+        protected abstract IDBQueryInsert prv_newInsert();
+        protected abstract IDBQuerySelect prv_newSelect();
+        protected abstract IDBQueryUpdate prv_newUpdate();
+
+        public IDBQueryDelete newDelete()
+        {
+            return prv_newQuery(this.Prefix, prv_newDelete);
+        }
+
+        public IDBQueryInsert newInsert()
+        {
+            return prv_newQuery(this.Prefix, prv_newInsert);
+        }
+
+        public IDBQuerySelect newSelect()
+        {
+            return prv_newQuery(this.Prefix, prv_newSelect);
+        }
+
+        public IDBQueryUpdate newUpdate()
+        {
+            return prv_newQuery(this.Prefix, prv_newUpdate);
+        }
 
         public IQueryFilter buildFilter(Type type)
         {
@@ -43,6 +63,16 @@ namespace QTFK.Services.DBIO
 
             instance = Activator.CreateInstance(filterType);
             return (IQueryFilter)instance;
+        }
+
+        private static T prv_newQuery<T>(string prefix, Func<T> builder) where T: IDBQuery
+        {
+            T query;
+
+            query = builder();
+            query.Prefix = prefix;
+
+            return query;
         }
     }
 }
