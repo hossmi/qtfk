@@ -1,26 +1,16 @@
 ﻿using System;
 using QTFK.Models;
-using QTFK.Models.DBIO;
-using QTFK.Models.DBIO.Filters;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace QTFK.Services.DBIO
 {
-    public class SQLServerQueryFactory : ISQLServer, IQueryFactory
+    public abstract class AbstractQueryFactory : IQueryFactory
     {
-        private readonly List<Type> filterTypes;
-        private readonly string queryFilterInterfaceTypeFullName;
+        protected readonly List<Type> filterTypes;
+        protected readonly string queryFilterInterfaceTypeFullName;
 
-        public static SQLServerQueryFactory buildDefault()
-        {
-            return new SQLServerQueryFactory(new Type[]
-            {
-                typeof(SqlByParamEqualsFilter),
-            });
-        }
-
-        public SQLServerQueryFactory(IEnumerable<Type> filterTypes)
+        public AbstractQueryFactory(IEnumerable<Type> filterTypes)
         {
             this.queryFilterInterfaceTypeFullName = typeof(IQueryFilter).FullName;
             this.filterTypes = filterTypes.ToList();
@@ -35,25 +25,10 @@ namespace QTFK.Services.DBIO
 
         public string Prefix { get; set; }
 
-        public IDBQueryDelete newDelete()
-        {
-            return new SqlDeleteQuery() { Prefix = this.Prefix };
-        }
-
-        public IDBQueryInsert newInsert()
-        {
-            return new SqlInsertQuery() { Prefix = this.Prefix };
-        }
-
-        public IDBQuerySelect newSelect()
-        {
-            return new SqlSelectQuery() { Prefix = this.Prefix };
-        }
-
-        public IDBQueryUpdate newUpdate()
-        {
-            return new SqlUpdateQuery() { Prefix = this.Prefix };
-        }
+        public abstract IDBQueryDelete newDelete();
+        public abstract IDBQueryInsert newInsert();
+        public abstract IDBQuerySelect newSelect();
+        public abstract IDBQueryUpdate newUpdate();
 
         public IQueryFilter buildFilter(Type type)
         {
