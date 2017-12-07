@@ -24,27 +24,22 @@ namespace QTFK.Extensions.DBIO
 
         public static int Set(this IDBIO dbio, IDBQuery query)
         {
-            return Set(dbio, query.Compile(), query.Parameters);
+            return prv_set(dbio, query.Compile(), query.Parameters);
         }
 
         public static int Set(this IDBIO dbio, IDBQuery query, IDictionary<string, object> parameters)
         {
-            return Set(dbio, query.Compile(), parameters);
+            return prv_set(dbio, query.Compile(), parameters);
         }
 
         public static int Set(this IDBIO dbio, string query)
         {
-            return Set(dbio, query, dbio.Params());
+            return prv_set(dbio, query, prv_buildParams());
         }
 
         public static int Set(this IDBIO dbio, string query, IDictionary<string, object> parameters)
         {
-            return dbio.Set(cmd =>
-            {
-                cmd.CommandText = query;
-                cmd.AddParameters(parameters);
-                return cmd.ExecuteNonQuery();
-            });
+            return prv_set(dbio, query, parameters);
         }
 
         public static int Set(this IDBIO dbio, IEnumerable<string> queries, bool throwOnException = true)
@@ -64,58 +59,70 @@ namespace QTFK.Extensions.DBIO
                 return affectedRows;
             });
         }
-
-
-
+        
         public static DataSet Get(this IDBIO dbio, string query)
         {
-            return dbio.Get(query, dbio.Params());
+            return dbio.Get(query, prv_buildParams());
         }
-
-
-
+        
         public static IEnumerable<T> Get<T>(this IDBIO dbio, string query, Func<IDataRecord, T> buildDelegate)
         {
-            return dbio.Get<T>(query, dbio.Params(), buildDelegate);
+            return prv_get<T>(dbio, query, prv_buildParams(), buildDelegate);
         }
 
         public static IEnumerable<T> Get<T>(this IDBIO dbio, string query) where T : new()
         {
-            return dbio.Get<T>(query, AutoMapExtension.AutoMap<T>);
+            return prv_get<T>(dbio, query, prv_buildParams(), AutoMapExtension.AutoMap<T>);
         }
 
         public static IEnumerable<T> Get<T>(this IDBIO dbio, string query, IDictionary<string, object> parameters) where T : new()
         {
-            return dbio.Get<T>(query, parameters, AutoMapExtension.AutoMap<T>);
+            return prv_get<T>(dbio, query, parameters, AutoMapExtension.AutoMap<T>);
         }
-
-
-
+        
         public static IEnumerable<T> Get<T>(this IDBIO dbio, IDBQuery query) where T : new()
         {
-            return dbio.Get<T>(query.Compile(), query.Parameters);
+            return prv_get<T>(dbio, query.Compile(), query.Parameters, AutoMapExtension.AutoMap<T>);
         }
 
         public static IEnumerable<T> Get<T>(this IDBIO dbio, IDBQuery query, IDictionary<string, object> parameters) where T : new()
         {
-            return dbio.Get<T>(query.Compile(), parameters);
+            return prv_get<T>(dbio, query.Compile(), parameters, AutoMapExtension.AutoMap<T>);
         }
 
         public static IEnumerable<T> Get<T>(this IDBIO dbio, IDBQuery query, Func<IDataRecord, T> buildDelegate)
         {
-            return dbio.Get<T>(query.Compile(), query.Parameters, buildDelegate);
+            return prv_get<T>(dbio, query.Compile(), query.Parameters, buildDelegate);
         }
 
         public static IEnumerable<T> Get<T>(this IDBIO dbio, IDBQuery query, IDictionary<string, object> parameters, Func<IDataRecord, T> buildDelegate)
         {
-            return dbio.Get<T>(query.Compile(), parameters, buildDelegate);
+            return prv_get<T>(dbio, query.Compile(), parameters, buildDelegate);
         }
-
-
 
         public static IDictionary<string, object> Params(this IDBIO dbio)
         {
+            return prv_buildParams();
+        }
+
+        private static IDictionary<string, object> prv_buildParams()
+        {
             return DictionaryExtension.New<string, object>();
+        }
+
+        private static IEnumerable<T> prv_get<T>(IDBIO dbio, string query, IDictionary<string, object> parameters, Func<IDataRecord, T> buildDelegate)
+        {
+            return dbio.Get<T>(query, parameters, buildDelegate);
+        }
+
+        private static int prv_set(IDBIO dbio, string query, IDictionary<string, object> parameters)
+        {
+            return dbio.Set(cmd =>
+            {
+                cmd.CommandText = query;
+                cmd.AddParameters(parameters);
+                return cmd.ExecuteNonQuery();
+            });
         }
     }
 }
