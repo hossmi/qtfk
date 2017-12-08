@@ -12,23 +12,31 @@ namespace QTFK.Reflection.Tests
         [TestMethod]
         public void Type_extension_tests()
         {
-            Type concreteType;
-            Type[] implementedInterfaces;
+            Type concreteType, concreteFromAbstract;
 
             concreteType = typeof(ConcreteExtendedSampleService);
-            implementedInterfaces = concreteType.GetInterfaces();
+            concreteFromAbstract = typeof(ConcreteForAbstractExtendedSampleService);
 
-            //Assert.IsTrue(concreteType.implementsInterface(typeof(IExtendedSampleService).FullName));
             Assert.IsTrue(concreteType.implementsInterface(typeof(IExtendedSampleService)));
             Assert.IsTrue(concreteType.implementsInterface<IExtendedSampleService>());
 
-            //Assert.IsFalse(concreteType.implementsInterface(typeof(IOtherSampleService).FullName));
             Assert.IsFalse(concreteType.implementsInterface(typeof(IOtherSampleService)));
             Assert.IsFalse(concreteType.implementsInterface<IOtherSampleService>());
 
-            //Assert.IsTrue(concreteType.implementsInterface(typeof(ISampleService).FullName));
             Assert.IsTrue(concreteType.implementsInterface(typeof(ISampleService)));
             Assert.IsTrue(concreteType.implementsInterface<ISampleService>());
+
+            Assert.IsFalse(concreteType.extends(typeof(AbstractSampleService)));
+            Assert.IsFalse(concreteType.extends<AbstractSampleService>());
+
+            Assert.IsTrue(concreteFromAbstract.extends(typeof(AbstractSampleService)));
+            Assert.IsTrue(concreteFromAbstract.extends<AbstractSampleService>());
+
+            Assert.IsTrue(typeof(IOtherSampleService).extends<ISampleService>());
+            Assert.IsFalse(typeof(ISampleService).extends<IOtherSampleService>());
+
+            try { Assert.IsTrue(typeof(IOtherSampleService).extends<AbstractSampleService>()); Assert.Fail(); } catch { }
+            try { Assert.IsTrue(typeof(ConcreteExtendedSampleService).extends<ISampleService>()); Assert.Fail(); } catch { }
         }
     }
 }

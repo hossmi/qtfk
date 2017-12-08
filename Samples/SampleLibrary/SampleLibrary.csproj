@@ -37,6 +37,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AbstractSampleService.cs" />
+    <Compile Include="ConcreteForAbstractExtendedSampleService.cs" />
     <Compile Include="ConcreteExtendedSampleService.cs" />
     <Compile Include="IOtherSampleService.cs" />
     <Compile Include="IExtendedSampleService.cs" />
