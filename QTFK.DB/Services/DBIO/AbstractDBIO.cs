@@ -31,8 +31,8 @@ namespace QTFK.Services.DBIO
             , ILogger<LogLevel> log
             )
         {
-            Asserts.isSomething(this.log, "Argument 'log' cannot be null.");
-            Asserts.isFilled(this.connectionString, "Argument 'connectionString' cannot be empty");
+            Asserts.isSomething(log, "Argument 'log' cannot be null.");
+            Asserts.isFilled(connectionString, "Argument 'connectionString' cannot be empty");
 
             this.connectionString = connectionString;
             this.log = log;
