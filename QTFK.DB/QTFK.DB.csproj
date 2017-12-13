@@ -52,6 +52,7 @@
     <Compile Include="Extensions\DBCommand\DBCommandExtension.cs" />
     <Compile Include="Extensions\DBIO\DBIOExtension.cs" />
     <Compile Include="Extensions\DBIO\DBQueries\DBQueryExtension.cs" />
+    <Compile Include="Extensions\DBIO\EngineAttribute\DBAttributeExtension.cs" />
     <Compile Include="Extensions\DBIO\QueryFactory\QueryFactoryExtension.cs" />
     <Compile Include="Models\DBIOException.cs" />
     <Compile Include="Models\DBIO\NullQueryFilter.cs" />
