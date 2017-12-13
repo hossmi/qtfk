@@ -5,10 +5,12 @@ using System;
 using System.Linq;
 using System.Collections.Generic;
 using QTFK.Services;
+using QTFK.Attributes;
 
 namespace QTFK.Models.DBIO
 {
-    public class SqlSelectQuery : IDBQuerySelect, ISQLServer
+    [SqlServer]
+    public class SqlSelectQuery : IDBQuerySelect
     {
         public string Prefix { get; set; } = "";
         public string Table { get; set; } = "";
@@ -16,18 +18,6 @@ namespace QTFK.Models.DBIO
         public ICollection<SelectColumn> Columns { get; set; } = new List<SelectColumn>();
         public ICollection<JoinTable> Joins { get; set; } = new List<JoinTable>();
         public IQueryFilter Filter { get; set; }
-
-        IEnumerable<string> PrepareColumns(string table, IEnumerable<SelectColumn> columns)
-        {
-            return columns
-                .Select(c =>
-                {
-                    if (c.Name.Trim() == "*")
-                        return $"{table}.*";
-
-                    return $"{table}.[{c.Name}] {(string.IsNullOrWhiteSpace(c.Alias) ? "" : $" AS [{c.Alias}]")}";
-                });
-        }
 
         public string Compile()
         {
@@ -38,13 +28,13 @@ namespace QTFK.Models.DBIO
             string t0 = "t0";
             IList<IEnumerable<string>> allColumns = new List<IEnumerable<string>>();
 
-            allColumns.Add(PrepareColumns(t0, Columns));
+            allColumns.Add(prv_prepareColumns(t0, Columns));
 
             string joins = Joins
                 .Stringify(join =>
                 {
                     string alias = $"t{n++}";
-                    allColumns.Add(PrepareColumns(alias, join.Columns));
+                    allColumns.Add(prv_prepareColumns(alias, join.Columns));
 
                     string matches = join.Matches
                         .Stringify(match => $"{t0}.[{match.LeftField}] = {alias}.[{match.RightField}]", " AND ");
@@ -63,6 +53,18 @@ namespace QTFK.Models.DBIO
                 {joins}
                 {whereSegment}
                 ;";
+        }
+
+        private static IEnumerable<string> prv_prepareColumns(string table, IEnumerable<SelectColumn> columns)
+        {
+            return columns
+                .Select(c =>
+                {
+                    if (c.Name.Trim() == "*")
+                        return $"{table}.*";
+
+                    return $"{table}.[{c.Name}] {(string.IsNullOrWhiteSpace(c.Alias) ? "" : $" AS [{c.Alias}]")}";
+                });
         }
     }
 }

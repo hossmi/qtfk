@@ -1,19 +1,11 @@
-﻿using QTFK.Services;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Data;
-using System.Data.SqlClient;
+﻿using System.Data.SqlClient;
 using QTFK.Models;
-using QTFK.Extensions.DBCommand;
-using QTFK.Extensions.DataReader;
-using QTFK.Services.Loggers;
+using QTFK.Attributes;
 
 namespace QTFK.Services.DBIO
 {
-    public class SQLServerDBIO : AbstractDBIO<SqlConnection, SqlCommand, SqlDataAdapter>, IDBIO, ISQLServer
+    [SqlServer]
+    public class SQLServerDBIO : AbstractDBIO<SqlConnection, SqlCommand, SqlDataAdapter>, IDBIO
     {
         public SQLServerDBIO(string connectionString) 
             : base(connectionString)

@@ -1,4 +1,5 @@
-﻿using QTFK.Extensions.Collections.Dictionaries;
+﻿using QTFK.Attributes;
+using QTFK.Extensions.Collections.Dictionaries;
 using QTFK.Extensions.Collections.Strings;
 using QTFK.Services;
 using System;
@@ -7,7 +8,8 @@ using System.Linq;
 
 namespace QTFK.Models.DBIO
 {
-    public class SqlInsertQuery : IDBQueryInsert, ISQLServer
+    [SqlServer]
+    public class SqlInsertQuery : IDBQueryInsert
     {
         public string Prefix { get; set; } = "";
         public string Table { get; set; } = "";

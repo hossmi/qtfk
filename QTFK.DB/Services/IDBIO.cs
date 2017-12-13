@@ -14,8 +14,4 @@ namespace QTFK.Services
         DataSet Get(string query, IDictionary<string, object> parameters);
         object GetLastID(IDbCommand cmd);
     }
-
-    public interface ISQLServer { }
-    public interface IOracle { }
-    public interface IOleDB { }
 }

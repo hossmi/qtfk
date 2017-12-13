@@ -4,10 +4,12 @@ using QTFK.Models.DBIO;
 using QTFK.Models.DBIO.Filters;
 using System.Collections.Generic;
 using System.Linq;
+using QTFK.Attributes;
 
 namespace QTFK.Services.DBIO
 {
-    public class SQLServerQueryFactory : AbstractQueryFactory, ISQLServer
+    [SqlServer]
+    public class SQLServerQueryFactory : AbstractQueryFactory
     {
         public static SQLServerQueryFactory buildDefault()
         {

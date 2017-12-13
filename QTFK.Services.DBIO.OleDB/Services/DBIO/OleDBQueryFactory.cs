@@ -4,10 +4,12 @@ using QTFK.Models.DBIO;
 using QTFK.Models.DBIO.Filters;
 using System.Collections.Generic;
 using System.Linq;
+using QTFK.Attributes;
 
 namespace QTFK.Services.DBIO
 {
-    public class OleDBQueryFactory : AbstractQueryFactory ,IOleDB
+    [OleDB]
+    public class OleDBQueryFactory : AbstractQueryFactory 
     {
         public static OleDBQueryFactory buildDefault()
         {

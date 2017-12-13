@@ -1,13 +1,13 @@
-﻿using QTFK.Extensions.Collections.Dictionaries;
+﻿using QTFK.Attributes;
+using QTFK.Extensions.Collections.Dictionaries;
 using QTFK.Extensions.Collections.Strings;
-using QTFK.Services;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace QTFK.Models.DBIO
 {
-    public class OleDBInsertQuery : IDBQueryInsert, IOleDB
+    [OleDB]
+    public class OleDBInsertQuery : IDBQueryInsert
     {
         public string Prefix { get; set; } = "";
         public string Table { get; set; } = "";

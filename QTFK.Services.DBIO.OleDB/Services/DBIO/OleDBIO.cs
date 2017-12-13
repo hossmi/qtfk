@@ -1,16 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Data;
-using QTFK.Models;
+﻿using QTFK.Models;
 using System.Data.OleDb;
-using QTFK.Extensions.DBCommand;
-using QTFK.Extensions.DataReader;
-using QTFK.Services.Loggers;
+using QTFK.Attributes;
 
 namespace QTFK.Services.DBIO
 {
-    public class OleDBIO : AbstractDBIO<OleDbConnection, OleDbCommand, OleDbDataAdapter>, IDBIO, IOleDB
+    [OleDB]
+    public class OleDBIO : AbstractDBIO<OleDbConnection, OleDbCommand, OleDbDataAdapter>
     {
         public OleDBIO(string connectionString)
             : base(connectionString)
