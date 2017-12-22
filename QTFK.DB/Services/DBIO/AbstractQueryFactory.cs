@@ -2,6 +2,7 @@
 using QTFK.Models;
 using System.Collections.Generic;
 using System.Linq;
+using QTFK.Extensions.Types;
 
 namespace QTFK.Services.DBIO
 {
@@ -50,18 +51,25 @@ namespace QTFK.Services.DBIO
             return prv_newQuery(this.Prefix, prv_newUpdate);
         }
 
-        public IQueryFilter buildFilter(Type type)
+        public IQueryFilter buildFilter(Type interfaceType)
         {
+            Type[] filterTypes;
             Type filterType;
             object instance;
 
-            Asserts.check(type.IsInterface, $"Type '{type.FullName}' is not an interface.");
-            Asserts.check(type.GetInterface(this.queryFilterInterfaceTypeFullName) != null, $"Type '{type.FullName}' does not inherits from '{this.queryFilterInterfaceTypeFullName}'.");
+            Asserts.check(interfaceType.IsInterface, $"Type '{interfaceType.FullName}' is not an interface.");
+            Asserts.check(interfaceType.GetInterface(this.queryFilterInterfaceTypeFullName) != null, $"Type '{interfaceType.FullName}' does not inherits from '{this.queryFilterInterfaceTypeFullName}'.");
 
-            filterType = this.filterTypes
-                .Single(t => t.IsAssignableFrom(type));
+            filterTypes = this.filterTypes
+                .Where(concreteFiltertype => concreteFiltertype.implementsInterface(interfaceType))
+                .ToArray()
+                ;
 
+            Asserts.check(filterTypes.Length == 1, $"There is zero or more than one type implementing {interfaceType.FullName}");
+
+            filterType = filterTypes[0];
             instance = Activator.CreateInstance(filterType);
+
             return (IQueryFilter)instance;
         }
 

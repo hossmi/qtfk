@@ -21,6 +21,8 @@ namespace QTFK.Models.DBIO
 
         public string Compile()
         {
+            Asserts.isFilled(this.Table, $"Property '{nameof(this.Table)}' cannot be empty.");
+
             string prefix = string.IsNullOrWhiteSpace(Prefix) ? "" : Prefix.Trim();
             string whereSegment = (Filter ?? NullQueryFilter.Instance).Compile();
             whereSegment = string.IsNullOrWhiteSpace(whereSegment) ? "" : $"WHERE ({whereSegment})";
@@ -41,6 +43,8 @@ namespace QTFK.Models.DBIO
 
                     return $"{join.Kind} JOIN {prefix}[{join.Table}] AS {alias} ON {matches} ";
                 }, Environment.NewLine);
+
+            Asserts.check(allColumns.Any(), $"Query has no columns.");
 
             string columns = allColumns
                 .SelectMany(c => c)

@@ -18,6 +18,8 @@ namespace QTFK.Models.DBIO
 
         public string Compile()
         {
+            Asserts.isFilled(this.Table, $"Property '{nameof(this.Table)}' cannot be empty.");
+
             string prefix = string.IsNullOrWhiteSpace(Prefix) ? "" : Prefix.Trim();
 
             return $@"

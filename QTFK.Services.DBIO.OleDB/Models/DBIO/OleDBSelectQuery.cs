@@ -17,20 +17,10 @@ namespace QTFK.Models.DBIO
         public ICollection<JoinTable> Joins { get; set; } = new List<JoinTable>();
         public IQueryFilter Filter { get ; set ; }
 
-        IEnumerable<string> PrepareColumns(string table, IEnumerable<SelectColumn> columns)
-        {
-            return columns
-                .Select(c =>
-                {
-                    if (c.Name.Trim() == "*")
-                        return $"{table}.*";
-
-                    return $"{table}.[{c.Name}] {(string.IsNullOrWhiteSpace(c.Alias) ? "" : $" AS [{c.Alias}]")}";
-                });
-        }
-
         public string Compile()
         {
+            Asserts.isFilled(this.Table, $"Property '{nameof(this.Table)}' cannot be empty.");
+
             string prefix = string.IsNullOrWhiteSpace(Prefix) ? "" : Prefix.Trim();
             string whereSegment = (Filter ?? NullQueryFilter.Instance).Compile();
             whereSegment = string.IsNullOrWhiteSpace(whereSegment) ? "" : $"WHERE ({whereSegment})";
@@ -39,13 +29,13 @@ namespace QTFK.Models.DBIO
             string t0 = "t0";
             IList<IEnumerable<string>> allColumns = new List<IEnumerable<string>>();
 
-            allColumns.Add(PrepareColumns(t0, Columns));
+            allColumns.Add(prv_prepareColumns(t0, Columns));
 
             string joins = Joins
                 .Stringify(join =>
                 {
                     string alias = $"t{n++}";
-                    allColumns.Add(PrepareColumns(alias, join.Columns));
+                    allColumns.Add(prv_prepareColumns(alias, join.Columns));
 
                     string matches = join.Matches
                         .Stringify(match => $"{t0}.[{match.LeftField}] = {alias}.[{match.RightField}]", " AND ");
@@ -53,6 +43,7 @@ namespace QTFK.Models.DBIO
                     return $"{join.Kind} JOIN {prefix}[{join.Table}] AS {alias} ON {matches} ";
                 }, Environment.NewLine);
 
+            Asserts.check(allColumns.Any(), $"Query has no columns.");
 
             string columns = allColumns
                 .SelectMany(c => c)
@@ -65,6 +56,18 @@ namespace QTFK.Models.DBIO
                 {joins}
                 {whereSegment}
                 ;";
+        }
+
+        private static IEnumerable<string> prv_prepareColumns(string table, IEnumerable<SelectColumn> columns)
+        {
+            return columns
+                .Select(c =>
+                {
+                    if (c.Name.Trim() == "*")
+                        return $"{table}.*";
+
+                    return $"{table}.[{c.Name}] {(string.IsNullOrWhiteSpace(c.Alias) ? "" : $" AS [{c.Alias}]")}";
+                });
         }
     }
 }
