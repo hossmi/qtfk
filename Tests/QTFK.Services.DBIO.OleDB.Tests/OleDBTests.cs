@@ -411,13 +411,13 @@ namespace QTFK.Services.DBIO.OleDB.Tests
         [TestCategory("DB OleDB")]
         public void QueryBuilder_OleBDInsert_tests()
         {
-            IDBQuery insert = new OleDBInsertQuery
-            {
-                Table = "persona",
-                Fields = _db.Params()
-                    .Set("nombre", "Pepe")
-                    .Set("apellidos", "De la rosa Castaños")
-            };
+            IDBQuery insert;
+
+            insert = new OleDBInsertQuery()
+                .SetTable("persona")
+                .SetColumn("nombre", "Pepe")
+                .SetColumn("apellidos", "De la rosa Castaños")
+                ;
 
             _db.Set(insert);
 

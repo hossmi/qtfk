@@ -6,7 +6,7 @@ namespace QTFK.Models
     public interface IDBQuery
     {
         string Compile();
-        IDictionary<string, object> Parameters { get; set; }
+        IDictionary<string, object> Parameters { get; }
         string Prefix { get; set; }
     }
 
@@ -17,17 +17,17 @@ namespace QTFK.Models
 
     public interface IDBQueryWriteColumns : IDBQueryWithTableName
     {
-        IDictionary<string, object> Fields { get; set; }
+        IDictionary<string, object> Fields { get; }
     }
 
     public interface IDBQuerySelectColumns : IDBQueryWithTableName
     {
-        ICollection<SelectColumn> Columns { get; set; }
+        ICollection<SelectColumn> Columns { get; }
     }
 
     public interface IDBQueryJoin : IDBQuery
     {
-        ICollection<JoinTable> Joins { get; set; }
+        ICollection<JoinTable> Joins { get; }
     }
 
 

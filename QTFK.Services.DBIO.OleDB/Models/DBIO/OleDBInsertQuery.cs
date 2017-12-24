@@ -11,8 +11,8 @@ namespace QTFK.Models.DBIO
     {
         public string Prefix { get; set; } = "";
         public string Table { get; set; } = "";
-        public IDictionary<string, object> Fields { get; set; } = DictionaryExtension.New();
-        public IDictionary<string, object> Parameters { get; set; } = DictionaryExtension.New();
+        public IDictionary<string, object> Fields { get; } = DictionaryExtension.New();
+        public IDictionary<string, object> Parameters { get; } = DictionaryExtension.New();
 
         public string Compile()
         {

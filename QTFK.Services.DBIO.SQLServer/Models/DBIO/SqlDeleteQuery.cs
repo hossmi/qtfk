@@ -11,7 +11,7 @@ namespace QTFK.Models.DBIO
     [SqlServer]
     public class SqlDeleteQuery : IDBQueryDelete
     {
-        public IDictionary<string, object> Parameters { get; set; } = DictionaryExtension.New();
+        public IDictionary<string, object> Parameters { get; } = DictionaryExtension.New();
         public string Prefix { get; set; } = "";
         public string Table { get; set; } = "";
         public IQueryFilter Filter { get; set; }
