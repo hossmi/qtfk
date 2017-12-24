@@ -9,7 +9,7 @@ namespace QTFK.Extensions.DBIO.DBQueries
 {
     public static class DBQueryExtension
     {
-        public static T SetTable<T>(this T query, string tableName) where T : IDBQueryWithTableName
+        public static T SetTable<T>(this T query, string tableName) where T : ICrudDBQuery
         {
             query.Table = tableName;
             return query;
