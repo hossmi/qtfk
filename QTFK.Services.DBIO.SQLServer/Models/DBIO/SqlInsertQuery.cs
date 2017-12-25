@@ -11,20 +11,95 @@ namespace QTFK.Models.DBIO
     [SqlServer]
     public class SqlInsertQuery : IDBQueryInsert
     {
-        public string Prefix { get; set; } = "";
-        public string Table { get; set; } = "";
-        public IDictionary<string, object> Fields { get; } = DictionaryExtension.New();
-        public IDictionary<string, object> Parameters { get; } = DictionaryExtension.New();
+        private string prefix;
+        private string table;
+        private readonly IDictionary<string, SetColumn> fields;
+        private readonly BuildParameterDelegate buildParameterDelegate;
+
+        public SqlInsertQuery(BuildParameterDelegate buildParameterDelegate)
+        {
+            Asserts.isSomething(buildParameterDelegate, $"Constructor parameter '{nameof(buildParameterDelegate)}' cannot be null.");
+
+            this.buildParameterDelegate = buildParameterDelegate;
+            this.prefix = "";
+            this.table = "";
+            this.fields = new Dictionary<string, SetColumn>();
+        }
+
+        public string Prefix
+        {
+            get
+            {
+                return this.prefix;
+            }
+            set
+            {
+                Asserts.isSomething(value, $"Value for property {nameof(Prefix)} cannot be null.");
+                this.prefix = value;
+            }
+        }
+
+        public string Table
+        {
+            get
+            {
+                return this.table;
+            }
+            set
+            {
+                Asserts.isSomething(value, $"Value for property {nameof(Table)} cannot be null.");
+                this.table = value.Trim();
+            }
+        }
+
+        public IEnumerable<string> getFields()
+        {
+            return this.fields.Keys;
+        }
+
+        public IDictionary<string, object> getParameters()
+        {
+            IDictionary<string, object> resultParameters;
+
+            resultParameters = this.fields.Values
+                .ToDictionary(p => p.Parameter, p => p.Value);
+
+            return resultParameters;
+        }
+
+        public void setColumn(string fieldName, object value)
+        {
+            if (this.fields.ContainsKey(fieldName))
+            {
+                this.fields[fieldName].Value = value;
+            }
+            else
+            {
+                SetColumn column;
+
+                column = new SetColumn
+                {
+                    Name = fieldName,
+                    Value = value,
+                    Parameter = this.buildParameterDelegate("insert_" + fieldName),
+                };
+
+                this.fields.Add(fieldName, column);
+            }
+        }
 
         public string Compile()
         {
-            Asserts.isFilled(this.Table, $"Property '{nameof(this.Table)}' cannot be empty.");
+            string columnsSegment, valuesSegment;
 
-            string prefix = string.IsNullOrWhiteSpace(Prefix) ? "" : Prefix.Trim();
+            Asserts.isFilled(this.table, $"Property '{nameof(this.Table)}' cannot be empty.");
+
+            columnsSegment = this.fields.Values.Stringify(f => $" [{f.Name}] ");
+            valuesSegment = this.fields.Values.Stringify(f => $" [{f.Parameter}] ");
 
             return $@"
-                INSERT INTO {prefix}[{Table}] ({Fields.Stringify(c => $"[{c.Key}]")})
-                VALUES ({Fields.Stringify(c => $"{c.Value}")})
+                INSERT INTO {this.prefix}[{this.table}] ({columnsSegment})
+                VALUES ({valuesSegment})
                 ;";
         }
     }

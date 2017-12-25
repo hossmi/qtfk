@@ -20,14 +20,6 @@ namespace QTFK.Models.DBIO
             }
         }
 
-        public IDictionary<string, object> Parameters
-        {
-            get
-            {
-                return new Dictionary<string, object>();
-            }
-        }
-
         protected NullQueryFilter()
         {
         }
@@ -37,5 +29,9 @@ namespace QTFK.Models.DBIO
             return string.Empty;
         }
 
+        public IDictionary<string, object> getParameters()
+        {
+            return new Dictionary<string, object>();
+        }
     }
 }

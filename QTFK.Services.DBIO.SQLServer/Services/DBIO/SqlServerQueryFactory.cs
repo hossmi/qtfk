@@ -1,9 +1,7 @@
 ﻿using System;
 using QTFK.Models;
 using QTFK.Models.DBIO;
-using QTFK.Models.DBIO.Filters;
 using System.Collections.Generic;
-using System.Linq;
 using QTFK.Attributes;
 
 namespace QTFK.Services.DBIO
@@ -15,7 +13,7 @@ namespace QTFK.Services.DBIO
         {
             return new SQLServerQueryFactory(new Type[]
             {
-                typeof(SqlByParamEqualsFilter),
+                //typeof(SqlByParamEqualsFilter),
             });
         }
 
