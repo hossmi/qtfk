@@ -42,10 +42,9 @@
   <ItemGroup>
     <Compile Include="Extensions\DBIO\OleDBIOExtensions\OleDBParameterExtension.cs" />
     <Compile Include="Models\DBIO\OleDBDeleteQuery.cs" />
-    <Compile Include="Models\DBIO\Filters\OleDBByParamEqualsFilter.cs" />
-    <Compile Include="Models\DBIO\OleDBUpdateQuery.cs" />
     <Compile Include="Models\DBIO\OleDBInsertQuery.cs" />
     <Compile Include="Models\DBIO\OleDBSelectQuery.cs" />
+    <Compile Include="Models\DBIO\OleDBUpdateQuery.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\DBIO\OleDBQueryFactory.cs" />
     <Compile Include="Services\DBIO\OleDBIO.cs" />
@@ -68,6 +67,9 @@
       <Project>{277f230c-64c9-4a90-bf71-1d0e83d26658}</Project>
       <Name>QTFK.Logs</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Models\DBIO\Filters\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

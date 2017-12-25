@@ -4,7 +4,7 @@ namespace QTFK.Models
 {
     public interface IQueryFilter
     {
-        IDictionary<string, object> Parameters { get; }
         string Compile();
+        IDictionary<string, object> getParameters();
     }
 }

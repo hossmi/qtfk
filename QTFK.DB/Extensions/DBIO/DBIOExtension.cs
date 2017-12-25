@@ -1,5 +1,4 @@
-﻿
-using QTFK.Extensions.Collections.Filters;
+﻿using QTFK.Extensions.Collections.Filters;
 using QTFK.Extensions.Collections.Dictionaries;
 using QTFK.Extensions.DBCommand;
 using QTFK.Extensions.Mapping.AutoMapping;
@@ -24,12 +23,7 @@ namespace QTFK.Extensions.DBIO
 
         public static int Set(this IDBIO dbio, IDBQuery query)
         {
-            return prv_set(dbio, query.Compile(), query.Parameters);
-        }
-
-        public static int Set(this IDBIO dbio, IDBQuery query, IDictionary<string, object> parameters)
-        {
-            return prv_set(dbio, query.Compile(), parameters);
+            return prv_set(dbio, query.Compile(), query.getParameters());
         }
 
         public static int Set(this IDBIO dbio, string query)
@@ -82,22 +76,12 @@ namespace QTFK.Extensions.DBIO
         
         public static IEnumerable<T> Get<T>(this IDBIO dbio, IDBQuery query) where T : new()
         {
-            return prv_get<T>(dbio, query.Compile(), query.Parameters, AutoMapExtension.AutoMap<T>);
-        }
-
-        public static IEnumerable<T> Get<T>(this IDBIO dbio, IDBQuery query, IDictionary<string, object> parameters) where T : new()
-        {
-            return prv_get<T>(dbio, query.Compile(), parameters, AutoMapExtension.AutoMap<T>);
+            return prv_get<T>(dbio, query.Compile(), query.getParameters(), AutoMapExtension.AutoMap<T>);
         }
 
         public static IEnumerable<T> Get<T>(this IDBIO dbio, IDBQuery query, Func<IDataRecord, T> buildDelegate)
         {
-            return prv_get<T>(dbio, query.Compile(), query.Parameters, buildDelegate);
-        }
-
-        public static IEnumerable<T> Get<T>(this IDBIO dbio, IDBQuery query, IDictionary<string, object> parameters, Func<IDataRecord, T> buildDelegate)
-        {
-            return prv_get<T>(dbio, query.Compile(), parameters, buildDelegate);
+            return prv_get<T>(dbio, query.Compile(), query.getParameters(), buildDelegate);
         }
 
         public static IDictionary<string, object> Params(this IDBIO dbio)

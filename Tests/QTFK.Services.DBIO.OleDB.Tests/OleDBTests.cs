@@ -411,21 +411,43 @@ namespace QTFK.Services.DBIO.OleDB.Tests
         [TestCategory("DB OleDB")]
         public void QueryBuilder_OleBDInsert_tests()
         {
-            IDBQuery insert;
+            IDBQueryInsert insert;
 
             insert = new OleDBInsertQuery()
-                .SetTable("persona")
-                .SetColumn("nombre", "Pepe")
-                .SetColumn("apellidos", "De la rosa Castaños")
+                .setTable("persona")
+                .setColumn("nombre", "Pepe")
+                .setColumn("apellidos", "De la rosa Castaños")
                 ;
 
             _db.Set(insert);
 
             insert = new OleDBInsertQuery()
-                .Set("persona", c => c
-                    .Column("nombre")
-                    .Column("apellidos")
+                .set("persona", c => c
+                    .setColumn("nombre")
+                    .setColumn("apellidos")
                 );
+
+            var insertValuesCollection = new[]
+            {
+                new
+                {
+                    Name = "Rosa",
+                    LastName = "Olmos Robles",
+                },
+                new
+                {
+                    Name = "Narciso",
+                    LastName = "Céspedes De la higuera",
+                },
+            };
+
+            foreach (var item in insertValuesCollection)
+            {
+                this._db.Set(DBQueryExtension.setColumn(DBQueryExtension.setColumn(insert
+, "nombre", item.Name)
+, "apellidos", item.LastName)
+                    );
+            }
 
             var insertValues = _db.Params()
                 .Set("@nombre", "Tronco")
@@ -465,9 +487,9 @@ namespace QTFK.Services.DBIO.OleDB.Tests
 
             //IDBQuery selects
             var select = new OleDBSelectQuery()
-                .Select("persona", c => c
-                    .Column("nombre")
-                    .Column("apellidos")
+                .set("persona", c => c
+                    .addColumn("nombre")
+                    .addColumn("apellidos")
                 );
 
             data = _db
@@ -492,7 +514,7 @@ namespace QTFK.Services.DBIO.OleDB.Tests
                 .Set("@nombre", "Pepe")
                 ;
 
-            select.SetFilter(filter);
+            select.setFilter(filter);
 
             data = _db
                 .Get<DLPerson>(select, wherePepe)
@@ -506,10 +528,10 @@ namespace QTFK.Services.DBIO.OleDB.Tests
 
             //IDBQuery updates
             var update = new OleDBUpdateQuery()
-                .Set("persona", c => c
-                    .Column("apellidos", "Ramírez de Villalobos"))
-                .SetFilter(filter)
-                .SetParam("@nombre", "Pepe")
+                .set("persona", c => c
+                    .setColumn("apellidos", "Ramírez de Villalobos"))
+                .setFilter(filter)
+                .setParam("@nombre", "Pepe")
                 ;
 
             _db.Set(update);
@@ -525,8 +547,8 @@ namespace QTFK.Services.DBIO.OleDB.Tests
             Assert.AreEqual(DateTime.MinValue, testItem.BirthDate);
 
             var delete = new OleDBDeleteQuery()
-                .SetTable("persona")
-                .SetFilter(filter)
+                .setTable("persona")
+                .setFilter(filter)
                 ;
 
             _db.Set(delete, wherePepe);

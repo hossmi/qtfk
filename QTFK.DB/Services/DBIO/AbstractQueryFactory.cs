@@ -31,6 +31,22 @@ namespace QTFK.Services.DBIO
         protected abstract IDBQuerySelect prv_newSelect();
         protected abstract IDBQueryUpdate prv_newUpdate();
 
+        protected virtual string prv_buildParameter(string name)
+        {
+            string result;
+            string parameter;
+            char[] validChars;
+
+            validChars = name
+                .Where(c => c > 32)
+                .ToArray();
+
+            parameter = new string(validChars);
+            result = $"@{parameter}";
+
+            return result;
+        }
+
         public IDBQueryDelete newDelete()
         {
             return prv_newQuery(this.Prefix, prv_newDelete);

@@ -9,84 +9,43 @@ namespace QTFK.Extensions.DBIO.DBQueries
 {
     public static class DBQueryExtension
     {
-        public static T SetTable<T>(this T query, string tableName) where T : ICrudDBQuery
+        public static T setTable<T>(this T query, string tableName) where T : IDBQuery
         {
             query.Table = tableName;
             return query;
         }
 
-
-
-        public static T Set<T>(this T query, string table, Action<ICollection<SetColumn>> columns) where T : IDBQueryWriteColumns 
+        public static T setColumn<T>(this T query, string column, object value) where T : IDBQueryWriteColumns
         {
-            var columnsCollection = new List<SetColumn>();
-            columns(columnsCollection);
-            columnsCollection.ForEach(c => SetColumn<T>(query, c.Name, c.Value, c.Parameter));
-            query.Table = table;
+            query.setColumn(column, value);
             return query;
         }
 
-        public static T SetColumn<T>(this T query, string column, object value, string parameter = null) where T : IDBQueryWriteColumns
+        public static T addColumn<T>(this T query, string column) where T : IDBQuerySelectColumns
         {
-            parameter = string.IsNullOrWhiteSpace(parameter) ? $"@{column}" : parameter;
-            query.Fields.Set(column, parameter);
-            query.Parameters.Set(parameter, value);
+            prv_addColumn<T>(query, column, null);
             return query;
         }
 
-        public static ICollection<SetColumn> Column(this ICollection<SetColumn> columns, string name, object value = null, string parameter = null)
+        public static T addColumn<T>(this T query, string column, string alias) where T : IDBQuerySelectColumns
         {
-            columns.Add(new SetColumn
-            {
-                Name = name,
-                Parameter = parameter,
-                Value = value,
-            });
-            return columns;
-        }
-
-
-
-        public static T Select<T>(this T query, string table, Action<ICollection<SelectColumn>> columns) where T : IDBQuerySelectColumns
-        {
-            var columnsCollection = new List<SelectColumn>();
-            columns(columnsCollection);
-            columnsCollection.ForEach(c => query.Columns.Add(c));
-            query.Table = table;
+            prv_addColumn<T>(query, column, alias);
             return query;
         }
 
-        public static T AddColumn<T>(this T query, string column, string alias = null) where T : IDBQuerySelectColumns
-        {
-            query.Columns.Add(new SelectColumn { Name = column, Alias = alias });
-            return query;
-        }
-
-        public static ICollection<SelectColumn> Column(this ICollection<SelectColumn> columns, string name, string alias = null)
-        {
-            columns.Add(new SelectColumn
-            {
-                Name = name,
-                Alias = alias,
-            });
-            return columns;
-        }
-
-
-
-        public static T SetFilter<T>(this T query, IQueryFilter filter) where T : IDBQueryFilterable
+        public static T setFilter<T>(this T query, IQueryFilter filter) where T : IDBQueryFilterable
         {
             query.Filter = filter;
             return query;
         }
 
-        public static T SetPrefix<T>(this T query, string prefix) where T : IDBQuery
+        public static T setPrefix<T>(this T query, string prefix) where T : IDBQuery
         {
             query.Prefix = prefix;
             return query;
         }
 
-        public static T AddJoin<T>(this T query, JoinKind kind, string rightTable, Action<ICollection<JoinMatch>> matches, Action<ICollection<SelectColumn>> columns) where T : IDBQueryJoin
+        public static T addJoin<T>(this T query, JoinKind kind, string rightTable, Action<ICollection<JoinMatch>> matches, Action<ICollection<SelectColumn>> columns) where T : IDBQueryJoin
         {
             var joinMatches = new List<JoinMatch>();
             matches(joinMatches);
@@ -105,12 +64,12 @@ namespace QTFK.Extensions.DBIO.DBQueries
             return query;
         }
 
-        public static T AddJoin<T>(this T query, JoinKind kind, string rightTable, string leftField, string rightField, Action<ICollection<SelectColumn>> columns) where T : IDBQueryJoin
+        public static T addJoin<T>(this T query, JoinKind kind, string rightTable, string leftField, string rightField, Action<ICollection<SelectColumn>> columns) where T : IDBQueryJoin
         {
-            return AddJoin<T>(query, kind, rightTable, m => m.Add(leftField, rightField), columns);
+            return addJoin<T>(query, kind, rightTable, m => m.addJoin(leftField, rightField), columns);
         }
 
-        public static ICollection<JoinMatch> Add(this ICollection<JoinMatch> matches, string leftField, string rightField)
+        public static ICollection<JoinMatch> addJoin(this ICollection<JoinMatch> matches, string leftField, string rightField)
         {
             matches.Add(new JoinMatch
             {
@@ -120,12 +79,14 @@ namespace QTFK.Extensions.DBIO.DBQueries
             return matches;
         }
 
-
-
-        public static T SetParam<T>(this T query, string parameter, object value) where T : IDBQuery
+        private static void prv_addColumn<T>(T query, string column, string alias) where T : IDBQuerySelectColumns
         {
-            query.Parameters.Set(parameter, value);
-            return query;
+            query.addColumn(new SelectColumn
+            {
+                Name = column,
+                Alias = alias,
+            });
         }
+
     }
 }

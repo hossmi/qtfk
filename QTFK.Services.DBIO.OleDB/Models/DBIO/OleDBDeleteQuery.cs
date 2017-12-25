@@ -13,7 +13,6 @@ namespace QTFK.Models.DBIO
     {
         public string Prefix { get; set; } = "";
         public string Table { get; set; } = "";
-        public IDictionary<string, object> Parameters { get; } = DictionaryExtension.New();
         public IQueryFilter Filter { get; set; }
 
         public string Compile()
@@ -28,6 +27,11 @@ namespace QTFK.Models.DBIO
                 DELETE FROM {prefix}[{Table}]
                 {whereSegment}
                 ;";
+        }
+
+        public IDictionary<string, object> getParameters()
+        {
+            return this.Filter.Parameters;
         }
     }
 }

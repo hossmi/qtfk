@@ -258,10 +258,10 @@ namespace QTFK.Services.DBIO.SQLServer.Tests
             IDBQuery insert;
 
             insert = new SqlInsertQuery()
-                .SetPrefix("qtfk.dbo.")
-                .Set("persona", c => c
-                    .Column("nombre")
-                    .Column("apellidos")
+                .setPrefix("qtfk.dbo.")
+                .set("persona", c => c
+                    .setColumn("nombre")
+                    .setColumn("apellidos")
                 );
 
             this.db.Set(insert, this.db.Params()
@@ -288,9 +288,9 @@ namespace QTFK.Services.DBIO.SQLServer.Tests
 
             //selects
             var select = new SqlSelectQuery()
-                    .SetPrefix("qtfk.dbo.")
-                    .SetTable("persona")
-                    .AddColumn("*")
+                    .setPrefix("qtfk.dbo.")
+                    .setTable("persona")
+                    .addColumn("*")
                     //.SetWhere("nombre = @nombre")
                     ;
 
@@ -303,7 +303,7 @@ namespace QTFK.Services.DBIO.SQLServer.Tests
             var testItem = data.Single(i => i.Nombre == "Tronco");
             Assert.AreEqual("Sanchez López", testItem.Apellidos);
 
-            select.SetFilter(filter);
+            select.setFilter(filter);
 
             data = this.db
                 .Get<DLPerson>(select, this.db.Params().Set("@nombre", "Pepe"))
@@ -316,10 +316,10 @@ namespace QTFK.Services.DBIO.SQLServer.Tests
 
             //IDBQuery updates
             var update = new SqlUpdateQuery()
-                .SetPrefix("qtfk.dbo.")
-                .Set("persona", c => c
-                    .Column("apellidos"))
-                .SetFilter(filter)
+                .setPrefix("qtfk.dbo.")
+                .set("persona", c => c
+                    .setColumn("apellidos"))
+                .setFilter(filter)
                 ;
 
             this.db.Set(update, this.db.Params()
@@ -338,9 +338,9 @@ namespace QTFK.Services.DBIO.SQLServer.Tests
             Assert.AreEqual("Ramírez de Villalobos", testItem.Apellidos);
 
             var delete = new SqlDeleteQuery()
-                .SetPrefix("qtfk.dbo.")
-                .SetTable("persona")
-                .SetFilter(filter)
+                .setPrefix("qtfk.dbo.")
+                .setTable("persona")
+                .setFilter(filter)
                 ;
 
             this.db.Set(delete, this.db.Params().Set("@nombre", "Pepe"));
@@ -360,10 +360,10 @@ namespace QTFK.Services.DBIO.SQLServer.Tests
             IDBQuery insert;
 
             insert = new SqlInsertQuery()
-                .SetPrefix("qtfk.dbo.")
-                .Set("persona", c => c
-                    .Column("nombre")
-                    .Column("apellidos")
+                .setPrefix("qtfk.dbo.")
+                .set("persona", c => c
+                    .setColumn("nombre")
+                    .setColumn("apellidos")
                     );
 
             this.db.Set(insert, this.db.Params().Set("@nombre", "Pepe").Set("@apellidos", "De la rosa Castaños"));
@@ -371,9 +371,9 @@ namespace QTFK.Services.DBIO.SQLServer.Tests
             this.db.Set(insert, this.db.Params().Set("@nombre", "Louis").Set("@apellidos", "Norton Smith"));
 
             insert = new SqlInsertQuery()
-                .SetPrefix("qtfk.dbo.")
-                .Set("etiqueta", c => c
-                    .Column("nombre")
+                .setPrefix("qtfk.dbo.")
+                .set("etiqueta", c => c
+                    .setColumn("nombre")
                 );
 
             this.db.Set(insert, this.db.Params().Set("@nombre", "Ciencia"));
@@ -383,18 +383,18 @@ namespace QTFK.Services.DBIO.SQLServer.Tests
 
             var persons = this.db
                 .Get<DLPerson>(new SqlSelectQuery()
-                    .SetPrefix("qtfk.dbo.")
-                    .Select("persona", c => c
-                        .Column("*")
+                    .setPrefix("qtfk.dbo.")
+                    .set("persona", c => c
+                        .addColumn("*")
                     ))
                 .ToList()
                 ;
 
             var tags = this.db
                 .Get<DLTag>(new SqlSelectQuery()
-                    .SetPrefix("qtfk.dbo.")
-                    .SetTable("etiqueta")
-                    .AddColumn("*"))
+                    .setPrefix("qtfk.dbo.")
+                    .setTable("etiqueta")
+                    .addColumn("*"))
                 .ToList()
                 ;
 
@@ -404,25 +404,25 @@ namespace QTFK.Services.DBIO.SQLServer.Tests
                 ;
 
             insert = new SqlInsertQuery()
-                .SetPrefix("qtfk.dbo.")
-                .Set("etiquetas_personas", c => c
-                    .Column("persona_id")
-                    .Column("etiqueta_id")
+                .setPrefix("qtfk.dbo.")
+                .set("etiquetas_personas", c => c
+                    .setColumn("persona_id")
+                    .setColumn("etiqueta_id")
                 );
 
             foreach (var pair in pairs)
                 this.db.Set(insert, this.db.Params().Set("@persona_id", pair.person_ID).Set("@etiqueta_id", pair.tag_ID));
 
             var select = new SqlSelectQuery()
-                .SetPrefix("qtfk.dbo.")
-                .Select("etiquetas_personas", c => c.Column("*"))
-                .AddJoin(JoinKind.Left, "etiqueta", m => m.Add("etiqueta_id", "id"), c => c
-                    .Column("*")
-                    .Column("nombre", "etiqueta_nombre")
+                .setPrefix("qtfk.dbo.")
+                .set("etiquetas_personas", c => c.addColumn("*"))
+                .addJoin(JoinKind.Left, "etiqueta", m => m.addJoin("etiqueta_id", "id"), c => c
+                    .addColumn("*")
+                    .addColumn("nombre", "etiqueta_nombre")
                     )
-                .AddJoin(JoinKind.Left, "persona", "persona_id", "id", c => c
-                    .Column("*")
-                    .Column("nombre", "persona_nombre")
+                .addJoin(JoinKind.Left, "persona", "persona_id", "id", c => c
+                    .addColumn("*")
+                    .addColumn("nombre", "persona_nombre")
                     )
                 ;
 
@@ -452,10 +452,10 @@ namespace QTFK.Services.DBIO.SQLServer.Tests
 
             //IDBQuery updates
             var update = new SqlUpdateQuery()
-                .SetPrefix("qtfk.dbo.")
-                .Set("persona", c => c
-                    .Column("apellidos"))
-                .SetFilter(filter)
+                .setPrefix("qtfk.dbo.")
+                .set("persona", c => c
+                    .setColumn("apellidos"))
+                .setFilter(filter)
                 ;
 
             this.db.Set(update, this.db.Params()
@@ -464,10 +464,10 @@ namespace QTFK.Services.DBIO.SQLServer.Tests
                 );
 
             var selectPersons = new SqlSelectQuery()
-                .SetPrefix("qtfk.dbo.")
-                .Select("persona", c => c.Column("*"))
-                .SetFilter(filter)
-                .SetParam("@nombre", "Pepe")
+                .setPrefix("qtfk.dbo.")
+                .set("persona", c => c.addColumn("*"))
+                .setFilter(filter)
+                .setParam("@nombre", "Pepe")
                 ;
 
             var person = this.db
@@ -478,10 +478,10 @@ namespace QTFK.Services.DBIO.SQLServer.Tests
             Assert.AreEqual("Ramírez de Villalobos", person.Apellidos);
 
             var delete = new SqlDeleteQuery()
-                .SetPrefix("qtfk.dbo.")
-                .SetTable("persona")
-                .SetFilter(filter)
-                .SetParam("@nombre", "Pepe")
+                .setPrefix("qtfk.dbo.")
+                .setTable("persona")
+                .setFilter(filter)
+                .setParam("@nombre", "Pepe")
                 ;
 
             this.db.Set(delete);
@@ -519,9 +519,9 @@ namespace QTFK.Services.DBIO.SQLServer.Tests
             executor = new DefaultQueryExecutor(this.db, factory);
 
             insert = factory.newInsert()
-                .Set("persona", c => c
-                    .Column("nombre")
-                    .Column("apellidos")
+                .set("persona", c => c
+                    .setColumn("nombre")
+                    .setColumn("apellidos")
                     );
 
             this.db.Set(insert, this.db.Params().Set("@nombre", "Pepe").Set("@apellidos", "De la rosa Castaños"));
@@ -529,8 +529,8 @@ namespace QTFK.Services.DBIO.SQLServer.Tests
             this.db.Set(insert, this.db.Params().Set("@nombre", "Louis").Set("@apellidos", "Norton Smith"));
 
             insert = factory.newInsert()
-                .Set("etiqueta", c => c
-                    .Column("nombre")
+                .set("etiqueta", c => c
+                    .setColumn("nombre")
                 );
 
             this.db.Set(insert, this.db.Params().Set("@nombre", "Ciencia"));
@@ -540,16 +540,16 @@ namespace QTFK.Services.DBIO.SQLServer.Tests
 
             persons = executor
                 .select<DLPerson>(q => q
-                    .Select("persona", c => c
-                        .Column("*")
+                    .set("persona", c => c
+                        .addColumn("*")
                     ))
                 .ToList()
                 ;
 
             tags = executor
                 .select<DLTag>(q => q
-                    .SetTable("etiqueta")
-                    .AddColumn("*"))
+                    .setTable("etiqueta")
+                    .addColumn("*"))
                 .ToList()
                 ;
 
@@ -559,23 +559,23 @@ namespace QTFK.Services.DBIO.SQLServer.Tests
                 ;
 
             insert = factory.newInsert()
-                .Set("etiquetas_personas", c => c
-                    .Column("persona_id")
-                    .Column("etiqueta_id")
+                .set("etiquetas_personas", c => c
+                    .setColumn("persona_id")
+                    .setColumn("etiqueta_id")
                 );
 
             foreach (var pair in pairs)
                 this.db.Set(insert, this.db.Params().Set("@persona_id", pair.person_ID).Set("@etiqueta_id", pair.tag_ID));
 
             select = factory.newSelect()
-                .Select("etiquetas_personas", c => c.Column("*"))
-                .AddJoin(JoinKind.Left, "etiqueta", m => m.Add("etiqueta_id", "id"), c => c
-                    .Column("*")
-                    .Column("nombre", "etiqueta_nombre")
+                .set("etiquetas_personas", c => c.addColumn("*"))
+                .addJoin(JoinKind.Left, "etiqueta", m => m.addJoin("etiqueta_id", "id"), c => c
+                    .addColumn("*")
+                    .addColumn("nombre", "etiqueta_nombre")
                     )
-                .AddJoin(JoinKind.Left, "persona", "persona_id", "id", c => c
-                    .Column("*")
-                    .Column("nombre", "persona_nombre")
+                .addJoin(JoinKind.Left, "persona", "persona_id", "id", c => c
+                    .addColumn("*")
+                    .addColumn("nombre", "persona_nombre")
                     )
                 ;
 
@@ -603,16 +603,16 @@ namespace QTFK.Services.DBIO.SQLServer.Tests
 
             //IDBQuery updates
             executor.update(q => q
-                .Set("persona", c => c
-                    .Column("apellidos", "Ramírez de Villalobos"))
-                .SetFilter(filter)
-                .SetParam("@nombre", "Pepe")
+                .set("persona", c => c
+                    .setColumn("apellidos", "Ramírez de Villalobos"))
+                .setFilter(filter)
+                .setParam("@nombre", "Pepe")
                 );
 
             var person = executor.select<DLPerson>(q => q
-                .Select("persona", c => c.Column("*"))
-                .SetFilter(filter)
-                .SetParam("@nombre", "Pepe")
+                .set("persona", c => c.addColumn("*"))
+                .setFilter(filter)
+                .setParam("@nombre", "Pepe")
                 )
                 .Single()
                 ;
@@ -620,9 +620,9 @@ namespace QTFK.Services.DBIO.SQLServer.Tests
             Assert.AreEqual("Ramírez de Villalobos", person.Apellidos);
 
             executor.delete(q => q
-                .SetTable("persona")
-                .SetFilter(filter)
-                .SetParam("@nombre", "Pepe")
+                .setTable("persona")
+                .setFilter(filter)
+                .setParam("@nombre", "Pepe")
                 );
 
             data = this.db

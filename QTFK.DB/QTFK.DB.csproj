@@ -59,7 +59,6 @@
     <Compile Include="Models\IByParamBetweenFilter.cs" />
     <Compile Include="Models\IByParamEqualsFilter.cs" />
     <Compile Include="Models\IDBQuery.cs" />
-    <Compile Include="Models\IDBQueryFilterable.cs" />
     <Compile Include="Models\IExpressionQueryFilter.cs" />
     <Compile Include="Models\IQueryFilter.cs" />
     <Compile Include="Models\Joins.cs" />

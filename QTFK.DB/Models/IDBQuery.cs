@@ -6,22 +6,21 @@ namespace QTFK.Models
     public interface IDBQuery
     {
         string Compile();
-    }
-
-    public interface ICrudDBQuery : IDBQuery
-    {
+        IDictionary<string, object> getParameters();
         string Table { get; set; }
         string Prefix { get; set; }
     }
 
-    public interface IDBQueryWriteColumns : ICrudDBQuery
+    public interface IDBQueryWriteColumns : IDBQuery
     {
-        ICollection<SetColumn> Fields { get; }
+        void setColumn(string fieldName, object value);
+        IEnumerable<string> getFields();
     }
 
-    public interface IDBQuerySelectColumns : ICrudDBQuery
+    public interface IDBQuerySelectColumns : IDBQuery
     {
-        ICollection<SelectColumn> Columns { get; }
+        void addColumn(SelectColumn column);
+        IEnumerable<SelectColumn> getColumns();
     }
 
     public interface IDBQueryJoin : IDBQuery
@@ -29,20 +28,25 @@ namespace QTFK.Models
         ICollection<JoinTable> Joins { get; }
     }
 
-    public interface IDBQuerySelect : ICrudDBQuery, IDBQuerySelectColumns, IDBQueryJoin, IDBQueryFilterable
+    public interface IDBQuerySelect : IDBQuery, IDBQuerySelectColumns, IDBQueryJoin, IDBQueryFilterable
     {
     }
 
-    public interface IDBQueryDelete : ICrudDBQuery, IDBQueryFilterable
+    public interface IDBQueryDelete : IDBQuery, IDBQueryFilterable
     {
     }
 
-    public interface IDBQueryInsert : ICrudDBQuery, IDBQueryWriteColumns
+    public interface IDBQueryInsert : IDBQuery, IDBQueryWriteColumns
     {
     }
 
-    public interface IDBQueryUpdate : ICrudDBQuery, IDBQueryWriteColumns, IDBQueryFilterable
+    public interface IDBQueryUpdate : IDBQuery, IDBQueryWriteColumns, IDBQueryFilterable
     {
+    }
+
+    public interface IDBQueryFilterable : IDBQuery
+    {
+        IQueryFilter Filter { get; set; }
     }
 
 }

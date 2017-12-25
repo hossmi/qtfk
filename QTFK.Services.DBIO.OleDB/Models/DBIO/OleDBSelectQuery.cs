@@ -1,5 +1,4 @@
 ﻿using QTFK.Attributes;
-using QTFK.Extensions.Collections.Dictionaries;
 using QTFK.Extensions.Collections.Strings;
 using System;
 using System.Collections.Generic;
@@ -13,13 +12,14 @@ namespace QTFK.Models.DBIO
         private string prefix;
         private string table;
         private IQueryFilter filter;
+        private IList<SelectColumn> columns;
+
 
         public OleDBSelectQuery()
         {
             this.prefix = "";
             this.table = "";
-            this.Parameters = DictionaryExtension.New();
-            this.Columns = new List<SelectColumn>();
+            this.columns = new List<SelectColumn>();
             this.Joins = new List<JoinTable>();
             this.filter = NullQueryFilter.Instance;
         }
@@ -50,8 +50,6 @@ namespace QTFK.Models.DBIO
             }
         }
 
-        public IDictionary<string, object> Parameters { get; }
-        public ICollection<SelectColumn> Columns { get; }
         public ICollection<JoinTable> Joins { get; }
 
         public IQueryFilter Filter
@@ -64,6 +62,21 @@ namespace QTFK.Models.DBIO
             {
                 this.filter = value ?? NullQueryFilter.Instance;
             }
+        }
+
+        public void addColumn(SelectColumn column)
+        {
+            this.columns.Add(column);
+        }
+
+        public IEnumerable<SelectColumn> getColumns()
+        {
+            return this.columns;
+        }
+
+        public IDictionary<string, object> getParameters()
+        {
+            return this.filter.Parameters;
         }
 
         public string Compile()
@@ -82,7 +95,7 @@ namespace QTFK.Models.DBIO
             tableIndex = 1;
             mainTable = "t0";
             allColumns = new List<IEnumerable<string>>();
-            tableColumns = prv_prepareColumns(mainTable, Columns);
+            tableColumns = prv_prepareColumns(mainTable, this.columns);
             allColumns.Add(tableColumns);
 
             joinsSegment = Joins
