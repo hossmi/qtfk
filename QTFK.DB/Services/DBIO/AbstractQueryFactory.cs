@@ -10,18 +10,21 @@ namespace QTFK.Services.DBIO
     {
         protected readonly List<Type> filterTypes;
         protected readonly string queryFilterInterfaceTypeFullName;
+        protected readonly IParameterBuilder parameterBuilder;
 
-        public AbstractQueryFactory(IEnumerable<Type> filterTypes)
+        public AbstractQueryFactory(IEnumerable<Type> filterTypes, IParameterBuilder parameterBuilder)
         {
             this.queryFilterInterfaceTypeFullName = typeof(IQueryFilter).FullName;
+            this.parameterBuilder = parameterBuilder;
             this.filterTypes = filterTypes.ToList();
 
             foreach (Type t in this.filterTypes)
             {
-                Asserts.isSomething(t, $"Type element at parameter 'filterTypes' is null!");
-                Asserts.check(t.IsInterface == false, $"Type '{t.FullName}' at parameter 'filterTypes' cannot be interface.");
-                Asserts.check(t.GetInterface(this.queryFilterInterfaceTypeFullName) != null, $"Type '{t.FullName}' at parameter 'filterTypes' does not implements '{this.queryFilterInterfaceTypeFullName}'.");
+                Asserts.isSomething(t, $"Type element at constructor parameter '{nameof(filterTypes)}' cannot be null.");
+                Asserts.check(t.IsInterface == false, $"Type '{t.FullName}' at parameter '{nameof(filterTypes)}' cannot be interface.");
+                Asserts.check(t.GetInterface(this.queryFilterInterfaceTypeFullName) != null, $"Type '{t.FullName}' at parameter '{nameof(filterTypes)}' does not implements '{this.queryFilterInterfaceTypeFullName}'.");
             }
+            Asserts.isSomething(parameterBuilder, $"Constructor parameter '{nameof(parameterBuilder)}' cannot be null.");
         }
 
         public string Prefix { get; set; }
@@ -30,22 +33,6 @@ namespace QTFK.Services.DBIO
         protected abstract IDBQueryInsert prv_newInsert();
         protected abstract IDBQuerySelect prv_newSelect();
         protected abstract IDBQueryUpdate prv_newUpdate();
-
-        protected virtual string prv_buildParameter(string name)
-        {
-            string result;
-            string parameter;
-            char[] validChars;
-
-            validChars = name
-                .Where(c => c > 32)
-                .ToArray();
-
-            parameter = new string(validChars);
-            result = $"@{parameter}";
-
-            return result;
-        }
 
         public IDBQueryDelete newDelete()
         {

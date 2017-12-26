@@ -67,6 +67,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\DBIO\AbstractDBIO.cs" />
     <Compile Include="Services\DBIO\AbstractQueryFactory.cs" />
+    <Compile Include="Services\DBIO\TransactSQLParameterBuilder.cs" />
     <Compile Include="Services\IDBIO.cs" />
     <Compile Include="Services\IParameterBuilder.cs" />
     <Compile Include="Services\IQueryExecutor.cs" />

@@ -15,13 +15,13 @@ namespace QTFK.Models.DBIO
         private string table;
         private IQueryFilter filter;
         private readonly IDictionary<string, SetColumn> fields;
-        private readonly BuildParameterDelegate buildParameterDelegate;
+        private readonly IParameterBuilder parameterBuilder;
 
-        public OleDBUpdateQuery(BuildParameterDelegate buildParameterDelegate)
+        public OleDBUpdateQuery(IParameterBuilder parameterBuilder)
         {
-            Asserts.isSomething(buildParameterDelegate, $"Constructor parameter '{nameof(buildParameterDelegate)}' cannot be null.");
+            Asserts.isSomething(parameterBuilder, $"Constructor parameter '{nameof(parameterBuilder)}' cannot be null.");
 
-            this.buildParameterDelegate = buildParameterDelegate;
+            this.parameterBuilder = parameterBuilder;
             this.prefix = "";
             this.table = "";
             this.filter = NullQueryFilter.Instance;
@@ -85,7 +85,7 @@ namespace QTFK.Models.DBIO
                 {
                     Name = fieldName,
                     Value = value,
-                    Parameter = this.buildParameterDelegate("update_" + fieldName),
+                    Parameter = this.parameterBuilder.buildParameter("update_" + fieldName),
                 };
 
                 this.fields.Add(fieldName, column);
