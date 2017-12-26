@@ -8,8 +8,6 @@ using System.Threading.Tasks;
 
 namespace QTFK.Services
 {
-    public delegate string BuildParameterDelegate(string parameterName);
-
     public interface IQueryFactory 
     {
         string Prefix { get; set; }
