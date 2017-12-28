@@ -58,7 +58,7 @@ namespace QTFK.Services.DBIO
         {
             Type[] filterTypes;
             Type filterType;
-            object instance;
+            IQueryFilter instance;
 
             Asserts.check(interfaceType.IsInterface, $"Type '{interfaceType.FullName}' is not an interface.");
             Asserts.check(interfaceType.GetInterface(this.queryFilterInterfaceTypeFullName) != null, $"Type '{interfaceType.FullName}' does not inherits from '{this.queryFilterInterfaceTypeFullName}'.");
@@ -71,9 +71,9 @@ namespace QTFK.Services.DBIO
             Asserts.check(filterTypes.Length == 1, $"There is zero or more than one type implementing {interfaceType.FullName}");
 
             filterType = filterTypes[0];
-            instance = Activator.CreateInstance(filterType);
+            instance = (IQueryFilter)Activator.CreateInstance(filterType);
 
-            return (IQueryFilter)instance;
+            return instance;
         }
 
         private static T prv_newQuery<T>(string prefix, Func<T> builder) where T: IDBQuery

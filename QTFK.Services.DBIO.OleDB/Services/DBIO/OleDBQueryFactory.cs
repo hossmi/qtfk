@@ -15,11 +15,11 @@ namespace QTFK.Services.DBIO
             return new OleDBQueryFactory(new Type[]
             {
                 //typeof(OleDBByParamEqualsFilter),
-            });
+            }, new TransactSQLParameterBuilder());
         }
 
-        public OleDBQueryFactory(IEnumerable<Type> filterTypes) 
-            : base(filterTypes)
+        public OleDBQueryFactory(IEnumerable<Type> filterTypes, IParameterBuilder parameterBuilder) 
+            : base(filterTypes, parameterBuilder)
         {
         }
 
@@ -30,7 +30,7 @@ namespace QTFK.Services.DBIO
 
         protected override IDBQueryInsert prv_newInsert()
         {
-            return new OleDBInsertQuery();
+            return new OleDBInsertQuery(this.parameterBuilder);
         }
 
         protected override IDBQuerySelect prv_newSelect()
@@ -40,7 +40,7 @@ namespace QTFK.Services.DBIO
 
         protected override IDBQueryUpdate prv_newUpdate()
         {
-            return new OleDBUpdateQuery(prv_buildParameter);
+            return new OleDBUpdateQuery(this.parameterBuilder);
         }
 
 

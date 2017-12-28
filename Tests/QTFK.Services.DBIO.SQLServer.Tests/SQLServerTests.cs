@@ -14,7 +14,6 @@ using QTFK.Models.DBIO;
 using QTFK.Extensions.DBIO.DBQueries;
 using QTFK.Extensions.DBIO.QueryFactory;
 using QTFK.Extensions.Mapping.AutoMapping;
-using QTFK.Models.DBIO.Filters;
 using QTFK.Services.QueryExecutors;
 
 namespace QTFK.Services.DBIO.SQLServer.Tests
