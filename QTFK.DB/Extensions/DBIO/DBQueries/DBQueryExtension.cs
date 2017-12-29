@@ -15,15 +15,15 @@ namespace QTFK.Extensions.DBIO.DBQueries
             return query;
         }
 
-        public static T setColumn<T>(this T query, string column, object value) where T : IDBQueryWriteColumns
+        public static T column<T>(this T query, string columnName, object columnValue) where T : IDBQueryWriteColumns
         {
-            query.setColumn(column, value);
+            query.setColumn(columnName, columnValue);
             return query;
         }
 
-        public static T addColumn<T>(this T query, string column) where T : IDBQuerySelectColumns
+        public static T column<T>(this T query, string columnName) where T : IDBQuerySelectColumns
         {
-            prv_addColumn<T>(query, column, null);
+            prv_addColumn<T>(query, columnName, null);
             return query;
         }
 
@@ -77,6 +77,11 @@ namespace QTFK.Extensions.DBIO.DBQueries
                 RightField = rightField,
             });
             return matches;
+        }
+
+        public static int execute(this IDBQuery query, IDBIO db)
+        {
+            return db.Set(query);
         }
 
         private static void prv_addColumn<T>(T query, string column, string alias) where T : IDBQuerySelectColumns

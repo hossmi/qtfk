@@ -15,6 +15,7 @@ using QTFK.Extensions.DBIO.DBQueries;
 using QTFK.Extensions.DBIO.QueryFactory;
 using QTFK.Extensions.Mapping.AutoMapping;
 using QTFK.Services.QueryExecutors;
+using QTFK.Models.QueryFilters;
 
 namespace QTFK.Services.DBIO.SQLServer.Tests
 {
@@ -254,29 +255,32 @@ namespace QTFK.Services.DBIO.SQLServer.Tests
         [TestCategory("DB OleDB")]
         public void QueryBuilder_SQL_tests_1()
         {
-            IDBQuery insert;
+            IDBQueryInsert insert;
+            IQueryFactory factory;
 
-            insert = new SqlInsertQuery()
+            factory = SQLServerQueryFactory.buildDefault();
+
+            insert = factory
+                .newInsert()
                 .setPrefix("qtfk.dbo.")
-                .set("persona", c => c
-                    .setColumn("nombre")
-                    .setColumn("apellidos")
-                );
+                .setTable("persona")
+                .column("nombre", null)
+                .column("apellidos", null);
 
-            this.db.Set(insert, this.db.Params()
-                .Set("@nombre", "Pepe")
-                .Set("@apellidos", "De la rosa Castaños")
-                );
+            insert
+                .column("nombre", "Pepe")
+                .column("apellidos", "De la rosa Castaños")
+                .execute(this.db);
 
-            this.db.Set(insert, this.db.Params()
-                .Set("@nombre", "Tronco")
-                .Set("@apellidos", "Sanchez López")
-                );
+            insert
+                .column("nombre", "Tronco")
+                .column("apellidos", "Sanchez López")
+                .execute(this.db);
 
-            this.db.Set(insert, this.db.Params()
-                .Set("@nombre", "Louis")
-                .Set("@apellidos", "Norton Smith")
-                );
+            insert
+                .column("nombre", "Louis")
+                .column("apellidos", "Norton Smith")
+                .execute(this.db);
 
             //filter
             var filter = new SqlByParamEqualsFilter()
@@ -289,7 +293,7 @@ namespace QTFK.Services.DBIO.SQLServer.Tests
             var select = new SqlSelectQuery()
                     .setPrefix("qtfk.dbo.")
                     .setTable("persona")
-                    .addColumn("*")
+                    .column("*")
                     //.SetWhere("nombre = @nombre")
                     ;
 
@@ -393,7 +397,7 @@ namespace QTFK.Services.DBIO.SQLServer.Tests
                 .Get<DLTag>(new SqlSelectQuery()
                     .setPrefix("qtfk.dbo.")
                     .setTable("etiqueta")
-                    .addColumn("*"))
+                    .column("*"))
                 .ToList()
                 ;
 
@@ -503,13 +507,15 @@ namespace QTFK.Services.DBIO.SQLServer.Tests
         [TestCategory("DB OleDB")]
         public void QueryFactory_tests_1()
         {
-            IQueryFactory factory;
             IQueryExecutor executor;
+            IQueryFactory factory;
             IDBQueryInsert insert;
             IDBQuerySelect select;
+            IDBQueryUpdate update;
+            IDBQueryDelete delete;
+            IKeyFilter filter;
             IList<DLPerson> persons;
             IList<DLTag> tags;
-            IByParamEqualsFilter filter;
             string sql;
 
             factory = SQLServerQueryFactory.buildDefault();
@@ -517,58 +523,61 @@ namespace QTFK.Services.DBIO.SQLServer.Tests
 
             executor = new DefaultQueryExecutor(this.db, factory);
 
-            insert = factory.newInsert()
-                .set("persona", c => c
-                    .setColumn("nombre")
-                    .setColumn("apellidos")
-                    );
+            insert = factory
+                .newInsert()
+                .setTable("persona")
+                .column("nombre", null)
+                .column("apellidos", null);
 
-            this.db.Set(insert, this.db.Params().Set("@nombre", "Pepe").Set("@apellidos", "De la rosa Castaños"));
-            this.db.Set(insert, this.db.Params().Set("@nombre", "Tronco").Set("@apellidos", "Sanchez López"));
-            this.db.Set(insert, this.db.Params().Set("@nombre", "Louis").Set("@apellidos", "Norton Smith"));
+            insert.column("nombre", "Pepe").column("apellidos", "De la rosa Castaños").execute(this.db);
+            insert.column("nombre", "Pepe").column("apellidos", "De la rosa Castaños").execute(this.db);
+            insert.column("nombre", "Tronco").column("apellidos", "Sanchez López").execute(this.db);
+            insert.column("nombre", "Louis").column("apellidos", "Norton Smith").execute(this.db);
 
-            insert = factory.newInsert()
-                .set("etiqueta", c => c
-                    .setColumn("nombre")
-                );
+            insert = factory
+                .newInsert()
+                .setTable("etiqueta")
+                .column("nombre", null);
 
-            this.db.Set(insert, this.db.Params().Set("@nombre", "Ciencia"));
-            this.db.Set(insert, this.db.Params().Set("@nombre", "Humor"));
-            this.db.Set(insert, this.db.Params().Set("@nombre", "Youtube"));
-            this.db.Set(insert, this.db.Params().Set("@nombre", "Crash"));
+            insert.column("@nombre", "Ciencia").execute(this.db);
+            insert.column("@nombre", "Humor").execute(this.db);
+            insert.column("@nombre", "Youtube").execute(this.db);
+            insert.column("@nombre", "Crash").execute(this.db);
 
             persons = executor
                 .select<DLPerson>(q => q
-                    .set("persona", c => c
-                        .addColumn("*")
-                    ))
-                .ToList()
-                ;
+                    .setTable("persona")
+                    .column("*"))
+                .ToList();
 
             tags = executor
                 .select<DLTag>(q => q
                     .setTable("etiqueta")
-                    .addColumn("*"))
-                .ToList()
-                ;
+                    .column("*"))
+                .ToList();
 
             var pairs = tags
                 .SelectMany(t => persons.Select(p => new { person_ID = p.Id, tag_ID = t.Id }))
                 .ToList()
                 ;
 
-            insert = factory.newInsert()
-                .set("etiquetas_personas", c => c
-                    .setColumn("persona_id")
-                    .setColumn("etiqueta_id")
-                );
+            insert = factory
+                .newInsert()
+                .setTable("etiquetas_personas")
+                .column("persona_id", null)
+                .column("etiqueta_id", null);
 
             foreach (var pair in pairs)
-                this.db.Set(insert, this.db.Params().Set("@persona_id", pair.person_ID).Set("@etiqueta_id", pair.tag_ID));
+                insert
+                .column("persona_id", pair.person_ID)
+                .column("etiqueta_id", pair.tag_ID)
+                .execute(this.db);
 
-            select = factory.newSelect()
-                .set("etiquetas_personas", c => c.addColumn("*"))
-                .addJoin(JoinKind.Left, "etiqueta", m => m.addJoin("etiqueta_id", "id"), c => c
+            select = factory
+                .newSelect()
+                .setTable("etiquetas_personas")
+                .column("*")
+                .addJoin(JoinKind.Left, "etiqueta", m => m.addJoin("etiqueta_id", "id"), c =>
                     .addColumn("*")
                     .addColumn("nombre", "etiqueta_nombre")
                     )
@@ -595,18 +604,22 @@ namespace QTFK.Services.DBIO.SQLServer.Tests
             var testItem = data.Single(i => i.Person.Nombre == "Pepe" && i.Tag.Nombre == "Youtube");
             Assert.AreEqual("De la rosa Castaños", testItem.Person.Apellidos);
 
-            //filter
-            filter = factory.buildFilter<IByParamEqualsFilter>();
-            filter.Field = "nombre";
-            filter.Parameter = "@nombre";
 
-            //IDBQuery updates
-            executor.update(q => q
-                .set("persona", c => c
-                    .setColumn("apellidos", "Ramírez de Villalobos"))
-                .setFilter(filter)
-                .setParam("@nombre", "Pepe")
-                );
+
+            filter = factory.buildFilter<IKeyFilter>();
+            filter.setKey("nombre", null);
+
+
+            update = factory
+                .newUpdate()
+                .setTable("persona")
+                .column("apellidos", "Ramírez de Villalobos")
+                .setFilter(filter);
+
+            filter.setKey("nombre", "Pepe");
+            
+
+
 
             var person = executor.select<DLPerson>(q => q
                 .set("persona", c => c.addColumn("*"))

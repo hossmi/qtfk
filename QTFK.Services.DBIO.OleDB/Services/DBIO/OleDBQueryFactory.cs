@@ -15,7 +15,7 @@ namespace QTFK.Services.DBIO
             return new OleDBQueryFactory(new Type[]
             {
                 //typeof(OleDBByParamEqualsFilter),
-            }, new TransactSQLParameterBuilder());
+            }, ParameterBuilder.TSQL);
         }
 
         public OleDBQueryFactory(IEnumerable<Type> filterTypes, IParameterBuilder parameterBuilder) 

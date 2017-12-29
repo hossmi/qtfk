@@ -14,7 +14,7 @@ namespace QTFK.Services.DBIO
             return new SQLServerQueryFactory(new Type[]
             {
                 //typeof(SqlByParamEqualsFilter),
-            }, new TransactSQLParameterBuilder());
+            }, ParameterBuilder.TSQL);
         }
 
         public SQLServerQueryFactory(IEnumerable<Type> filterTypes, IParameterBuilder parameterBuilder) 

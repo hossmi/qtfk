@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq.Expressions;
 
-namespace QTFK.Models
+namespace QTFK.Models.QueryFilters
 {
     public interface IExpressionQueryFilter : IQueryFilter
     {

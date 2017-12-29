@@ -56,12 +56,11 @@
     <Compile Include="Extensions\DBIO\QueryFactory\QueryFactoryExtension.cs" />
     <Compile Include="Models\DBIOException.cs" />
     <Compile Include="Models\DBIO\NullQueryFilter.cs" />
-    <Compile Include="Models\IByParamBetweenFilter.cs" />
-    <Compile Include="Models\IByParamEqualsFilter.cs" />
     <Compile Include="Models\IDBQuery.cs" />
-    <Compile Include="Models\IExpressionQueryFilter.cs" />
+    <Compile Include="Models\QueryFilters\IExpressionQueryFilter.cs" />
     <Compile Include="Models\IQueryFilter.cs" />
     <Compile Include="Models\Joins.cs" />
+    <Compile Include="Models\QueryFilters\IKeyFilter.cs" />
     <Compile Include="Models\SelectColumn.cs" />
     <Compile Include="Models\SetColumn.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -71,12 +70,11 @@
     <Compile Include="Models\DBIO\AbstractInsertQuery.cs" />
     <Compile Include="Models\DBIO\AbstractSelectQuery.cs" />
     <Compile Include="Models\DBIO\AbstractUpdateQuery.cs" />
-    <Compile Include="Services\DBIO\TransactSQLParameterBuilder.cs" />
+    <Compile Include="Services\DBIO\ParameterBuilder.cs" />
     <Compile Include="Services\IDBIO.cs" />
     <Compile Include="Services\IParameterBuilder.cs" />
     <Compile Include="Services\IQueryExecutor.cs" />
     <Compile Include="Services\IQueryFactory.cs" />
-    <Compile Include="Services\IQueryFilterFactory.cs" />
     <Compile Include="Services\QueryExecutors\DefaultQueryExecutor.cs" />
   </ItemGroup>
   <ItemGroup>
