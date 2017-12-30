@@ -516,6 +516,7 @@ namespace QTFK.Services.DBIO.SQLServer.Tests
             IKeyFilter filter;
             IList<DLPerson> persons;
             IList<DLTag> tags;
+            DLPerson person;
             string sql;
 
             factory = SQLServerQueryFactory.buildDefault();
@@ -576,16 +577,19 @@ namespace QTFK.Services.DBIO.SQLServer.Tests
             select = factory
                 .newSelect()
                 .setTable("etiquetas_personas")
-                .column("*")
-                .addJoin(JoinKind.Left, "etiqueta", m => m.addJoin("etiqueta_id", "id"), c =>
-                    .addColumn("*")
-                    .addColumn("nombre", "etiqueta_nombre")
-                    )
-                .addJoin(JoinKind.Left, "persona", "persona_id", "id", c => c
-                    .addColumn("*")
-                    .addColumn("nombre", "persona_nombre")
-                    )
-                ;
+                .column("*");
+
+            var selectEtiqeta = factory
+                .newSelect()
+                .setTable("etiqueta")
+                .column("*");
+
+            var selectPersona = factory
+                .newSelect()
+                .setTable("persona")
+                .column("*");
+
+            
 
             sql = select.Compile();
 
@@ -617,25 +621,26 @@ namespace QTFK.Services.DBIO.SQLServer.Tests
                 .setFilter(filter);
 
             filter.setKey("nombre", "Pepe");
-            
 
 
 
-            var person = executor.select<DLPerson>(q => q
-                .set("persona", c => c.addColumn("*"))
-                .setFilter(filter)
-                .setParam("@nombre", "Pepe")
-                )
-                .Single()
-                ;
+
+            select = factory
+                .newSelect()
+                .setTable("persona")
+                .column("*")
+                .setFilter(filter);
+
+            person = this.db
+                .Get<DLPerson>(select)
+                .Single();
 
             Assert.AreEqual("Ramírez de Villalobos", person.Apellidos);
 
-            executor.delete(q => q
+            factory.newDelete()
                 .setTable("persona")
                 .setFilter(filter)
-                .setParam("@nombre", "Pepe")
-                );
+                .execute(this.db);
 
             data = this.db
                 .Get(select, r => new
