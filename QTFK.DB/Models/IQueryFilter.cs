@@ -1,8 +1,10 @@
-﻿namespace QTFK.Models
+﻿using System.Collections.Generic;
+
+namespace QTFK.Models
 {
     public interface IQueryFilter
     {
         string Compile();
-        void SetValues(params object[] args);
+        IDictionary<string, object> getParameters();
     }
 }

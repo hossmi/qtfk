@@ -10,18 +10,21 @@ namespace QTFK.Services.DBIO
     {
         protected readonly List<Type> filterTypes;
         protected readonly string queryFilterInterfaceTypeFullName;
+        protected readonly IParameterBuilder parameterBuilder;
 
-        public AbstractQueryFactory(IEnumerable<Type> filterTypes)
+        public AbstractQueryFactory(IEnumerable<Type> filterTypes, IParameterBuilder parameterBuilder)
         {
             this.queryFilterInterfaceTypeFullName = typeof(IQueryFilter).FullName;
+            this.parameterBuilder = parameterBuilder;
             this.filterTypes = filterTypes.ToList();
 
             foreach (Type t in this.filterTypes)
             {
-                Asserts.isSomething(t, $"Type element at parameter 'filterTypes' is null!");
-                Asserts.check(t.IsInterface == false, $"Type '{t.FullName}' at parameter 'filterTypes' cannot be interface.");
-                Asserts.check(t.GetInterface(this.queryFilterInterfaceTypeFullName) != null, $"Type '{t.FullName}' at parameter 'filterTypes' does not implements '{this.queryFilterInterfaceTypeFullName}'.");
+                Asserts.isSomething(t, $"Type element at constructor parameter '{nameof(filterTypes)}' cannot be null.");
+                Asserts.check(t.IsInterface == false, $"Type '{t.FullName}' at parameter '{nameof(filterTypes)}' cannot be interface.");
+                Asserts.check(t.GetInterface(this.queryFilterInterfaceTypeFullName) != null, $"Type '{t.FullName}' at parameter '{nameof(filterTypes)}' does not implements '{this.queryFilterInterfaceTypeFullName}'.");
             }
+            Asserts.isSomething(parameterBuilder, $"Constructor parameter '{nameof(parameterBuilder)}' cannot be null.");
         }
 
         public string Prefix { get; set; }
@@ -55,7 +58,7 @@ namespace QTFK.Services.DBIO
         {
             Type[] filterTypes;
             Type filterType;
-            object instance;
+            IQueryFilter instance;
 
             Asserts.check(interfaceType.IsInterface, $"Type '{interfaceType.FullName}' is not an interface.");
             Asserts.check(interfaceType.GetInterface(this.queryFilterInterfaceTypeFullName) != null, $"Type '{interfaceType.FullName}' does not inherits from '{this.queryFilterInterfaceTypeFullName}'.");
@@ -68,9 +71,9 @@ namespace QTFK.Services.DBIO
             Asserts.check(filterTypes.Length == 1, $"There is zero or more than one type implementing {interfaceType.FullName}");
 
             filterType = filterTypes[0];
-            instance = Activator.CreateInstance(filterType);
+            instance = (IQueryFilter)Activator.CreateInstance(filterType);
 
-            return (IQueryFilter)instance;
+            return instance;
         }
 
         private static T prv_newQuery<T>(string prefix, Func<T> builder) where T: IDBQuery

@@ -40,7 +40,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Models\DBIO\Filters\SqlByParamEqualsFilter.cs" />
     <Compile Include="Models\DBIO\SqlDeleteQuery.cs" />
     <Compile Include="Models\DBIO\SqlInsertQuery.cs" />
     <Compile Include="Models\DBIO\SqlSelectQuery.cs" />
@@ -67,6 +66,9 @@
       <Project>{277f230c-64c9-4a90-bf71-1d0e83d26658}</Project>
       <Name>QTFK.Logs</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Models\DBIO\Filters\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

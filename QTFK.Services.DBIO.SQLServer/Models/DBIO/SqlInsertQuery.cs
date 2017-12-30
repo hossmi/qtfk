@@ -1,31 +1,13 @@
 ﻿using QTFK.Attributes;
-using QTFK.Extensions.Collections.Dictionaries;
-using QTFK.Extensions.Collections.Strings;
 using QTFK.Services;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace QTFK.Models.DBIO
 {
     [SqlServer]
-    public class SqlInsertQuery : IDBQueryInsert
+    internal class SqlInsertQuery : AbstractInsertQuery
     {
-        public string Prefix { get; set; } = "";
-        public string Table { get; set; } = "";
-        public IDictionary<string, object> Fields { get; } = DictionaryExtension.New();
-        public IDictionary<string, object> Parameters { get; } = DictionaryExtension.New();
-
-        public string Compile()
+        public SqlInsertQuery(IParameterBuilder parameterBuilder) : base(parameterBuilder)
         {
-            Asserts.isFilled(this.Table, $"Property '{nameof(this.Table)}' cannot be empty.");
-
-            string prefix = string.IsNullOrWhiteSpace(Prefix) ? "" : Prefix.Trim();
-
-            return $@"
-                INSERT INTO {prefix}[{Table}] ({Fields.Stringify(c => $"[{c.Key}]")})
-                VALUES ({Fields.Stringify(c => $"{c.Value}")})
-                ;";
         }
     }
 }

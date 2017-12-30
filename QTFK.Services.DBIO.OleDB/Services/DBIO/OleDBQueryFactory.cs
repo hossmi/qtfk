@@ -1,7 +1,6 @@
 ﻿using System;
 using QTFK.Models;
 using QTFK.Models.DBIO;
-using QTFK.Models.DBIO.Filters;
 using System.Collections.Generic;
 using System.Linq;
 using QTFK.Attributes;
@@ -15,12 +14,12 @@ namespace QTFK.Services.DBIO
         {
             return new OleDBQueryFactory(new Type[]
             {
-                typeof(OleDBByParamEqualsFilter),
-            });
+                //typeof(OleDBByParamEqualsFilter),
+            }, ParameterBuilder.TSQL);
         }
 
-        public OleDBQueryFactory(IEnumerable<Type> filterTypes) 
-            : base(filterTypes)
+        public OleDBQueryFactory(IEnumerable<Type> filterTypes, IParameterBuilder parameterBuilder) 
+            : base(filterTypes, parameterBuilder)
         {
         }
 
@@ -31,7 +30,7 @@ namespace QTFK.Services.DBIO
 
         protected override IDBQueryInsert prv_newInsert()
         {
-            return new OleDBInsertQuery();
+            return new OleDBInsertQuery(this.parameterBuilder);
         }
 
         protected override IDBQuerySelect prv_newSelect()
@@ -41,7 +40,10 @@ namespace QTFK.Services.DBIO
 
         protected override IDBQueryUpdate prv_newUpdate()
         {
-            return new OleDBUpdateQuery();
+            return new OleDBUpdateQuery(this.parameterBuilder);
         }
+
+
+
     }
 }

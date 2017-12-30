@@ -4,12 +4,9 @@ using QTFK.Extensions.DataReader;
 using QTFK.Extensions.DataSets;
 using QTFK.Extensions.DBCommand;
 using QTFK.Extensions.DBIO;
-using QTFK.Extensions.DBIO.DBQueries;
 using QTFK.Extensions.DBIO.OleDBIOExtensions;
 using QTFK.Extensions.Mapping.AutoMapping;
 using QTFK.Models;
-using QTFK.Models.DBIO;
-using QTFK.Models.DBIO.Filters;
 using QTFK.Services.DBIO.OleDB.Tests.Models;
 using System;
 using System.Collections.Generic;
@@ -21,32 +18,32 @@ namespace QTFK.Services.DBIO.OleDB.Tests
     [TestClass]
     public class OleDBTests
     {
-        private readonly string _connectionString;
-        private readonly CreateDrop _createDrop;
-        private readonly IDBIO _db;
+        private readonly string connectionString;
+        private readonly CreateDrop createDrop;
+        private readonly IDBIO db;
 
         public OleDBTests()
         {
-            _connectionString = System.Configuration.ConfigurationManager.ConnectionStrings["tests"]?.ConnectionString;
-            if (string.IsNullOrWhiteSpace(_connectionString))
+            this.connectionString = System.Configuration.ConfigurationManager.ConnectionStrings["tests"]?.ConnectionString;
+            if (string.IsNullOrWhiteSpace(this.connectionString))
                 throw new ArgumentException($"Empty or invalid 'tests' connection string in app.config", "tests");
 
-            _db = new OleDBIO(_connectionString);
-            _createDrop = new CreateDrop(_connectionString, _db);
+            this.db = new OleDBIO(this.connectionString);
+            this.createDrop = new CreateDrop(this.connectionString, this.db);
         }
 
         [TestInitialize()]
         public void Create()
         {
-            _createDrop.OleDB_Drop_tables();
-            _createDrop.OleDB_Create_tables();
+            this.createDrop.OleDB_Drop_tables();
+            this.createDrop.OleDB_Create_tables();
         }
 
 
         [TestCleanup()]
         public void Drop()
         {
-            _createDrop.OleDB_Drop_tables();
+            this.createDrop.OleDB_Drop_tables();
         }
 
         [TestMethod]
@@ -59,7 +56,7 @@ namespace QTFK.Services.DBIO.OleDB.Tests
                 LastName = "De la rosa Castaños",
             };
 
-            _db.Set(cmd =>
+            this.db.Set(cmd =>
             {
                 cmd.CommandText = $@"
                     INSERT INTO persona (nombre, apellidos)
@@ -73,7 +70,7 @@ namespace QTFK.Services.DBIO.OleDB.Tests
 
                 cmd.ExecuteNonQuery();
 
-                int id = Convert.ToInt32(_db.GetLastID(cmd));
+                int id = Convert.ToInt32(this.db.GetLastID(cmd));
                 Assert.IsTrue(id > 0);
 
                 cmd
@@ -108,7 +105,7 @@ namespace QTFK.Services.DBIO.OleDB.Tests
         {
             try
             {
-                _db.Set(cmd =>
+                this.db.Set(cmd =>
                 {
                     throw new StackOverflowException("Booooom");
                 });
@@ -127,7 +124,7 @@ namespace QTFK.Services.DBIO.OleDB.Tests
                 LastName = "De la rosa Castaños",
             };
 
-            _db.Set($@"
+            this.db.Set($@"
                 INSERT INTO persona (nombre, apellidos)
                 VALUES (@nombre,@apellidos)
                 ;", new Dictionary<string, object>
@@ -136,7 +133,7 @@ namespace QTFK.Services.DBIO.OleDB.Tests
                     { "@apellidos", testPerson.LastName },
                 });
 
-            _db.Set($@"
+            this.db.Set($@"
                 INSERT INTO persona (nombre, apellidos)
                 VALUES (@nombre,@apellidos)
                 ;", new Dictionary<string, object>
@@ -145,8 +142,8 @@ namespace QTFK.Services.DBIO.OleDB.Tests
                     { "@apellidos", "Sanchez López" },
                 });
 
-            var personDB = _db.Get($@" SELECT * FROM persona WHERE nombre = @nombre;",
-                _db.Params().Set("@nombre", testPerson.Name),
+            var personDB = this.db.Get($@" SELECT * FROM persona WHERE nombre = @nombre;",
+                this.db.Params().Set("@nombre", testPerson.Name),
                 r => new Person
                 {
                     Name = r.Get<string>("nombre"),
@@ -177,25 +174,25 @@ namespace QTFK.Services.DBIO.OleDB.Tests
                 Name = "tronco",
             };
 
-            _db.Set($@"
+            this.db.Set($@"
                 INSERT INTO persona (nombre, apellidos, fecha_nacimiento, hora_nacimiento)
                 VALUES (@nombre,@apellidos, @fecha_nacimiento, @hora_nacimiento)
-                ;", _db.Params()
+                ;", this.db.Params()
                     .Set("@nombre", pepePerson.Name)
                     .Set("@apellidos", pepePerson.LastName)
                     .SetDateTime("@fecha_nacimiento", "@hora_nacimiento", pepePerson.BirdhDate)
                 );
 
-            _db.Set($@"
+            this.db.Set($@"
                 INSERT INTO persona (nombre, apellidos, fecha_nacimiento, hora_nacimiento)
                 VALUES (@nombre,@apellidos, @fecha_nacimiento, @hora_nacimiento)
-                ;", _db.Params()
+                ;", this.db.Params()
                     .Set("@nombre", troncoPerson.Name)
                     .Set("@apellidos", troncoPerson.LastName)
                     .SetDateTime("@fecha_nacimiento", "@hora_nacimiento", troncoPerson.DeathDate)
                 );
 
-            var personsDB = _db.Get($@" SELECT * FROM persona;", r => new Person
+            var personsDB = this.db.Get($@" SELECT * FROM persona;", r => new Person
             {
                 Name = r.Get<string>("nombre"),
                 LastName = r.Get<string>("apellidos"),
@@ -217,7 +214,7 @@ namespace QTFK.Services.DBIO.OleDB.Tests
         [TestCategory("DB OleDB")]
         public void OleDB_Get_T_error_test()
         {
-            _db.Set($@"
+            this.db.Set($@"
                 INSERT INTO persona (nombre, apellidos)
                 VALUES (@nombre,@apellidos)
                 ;", new Dictionary<string, object>
@@ -228,14 +225,14 @@ namespace QTFK.Services.DBIO.OleDB.Tests
 
             try
             {
-                var items = _db.Get("This SQl is a bullshit", builder => builder.Get<string>("none"));
+                var items = this.db.Get("This SQl is a bullshit", builder => builder.Get<string>("none"));
                 Assert.Fail("It was not expected to achieve this line!");
             }
             catch (DBIOException) { }
 
             try
             {
-                var items = _db.Get("SELECT * FROM persona", builder => builder.Get<string>("notExistentColumn"));
+                var items = this.db.Get("SELECT * FROM persona", builder => builder.Get<string>("notExistentColumn"));
                 Assert.Fail("It was not expected to achieve this line!");
             }
             catch (DBIOException) { }
@@ -251,7 +248,7 @@ namespace QTFK.Services.DBIO.OleDB.Tests
                 LastName = "De la rosa Castaños",
             };
 
-            _db.Set($@"
+            this.db.Set($@"
                 INSERT INTO persona (nombre, apellidos)
                 VALUES (@nombre,@apellidos)
                 ;", new Dictionary<string, object>
@@ -260,7 +257,7 @@ namespace QTFK.Services.DBIO.OleDB.Tests
                     { "@apellidos", testPerson.LastName },
                 });
 
-            _db.Set($@"
+            this.db.Set($@"
                 INSERT INTO persona (nombre, apellidos)
                 VALUES (@nombre,@apellidos)
                 ;", new Dictionary<string, object>
@@ -269,7 +266,7 @@ namespace QTFK.Services.DBIO.OleDB.Tests
                     { "@apellidos", "Sanchez López" },
                 });
 
-            var data = _db.Get($@" SELECT * FROM persona");
+            var data = this.db.Get($@" SELECT * FROM persona");
             Assert.AreEqual(1, data.Tables.Count);
             Assert.AreEqual(2, data.Tables[0].Rows.Count);
             Assert.IsNotNull(data.AsTable());
@@ -290,7 +287,7 @@ namespace QTFK.Services.DBIO.OleDB.Tests
         {
             try
             {
-                _db.Get("Wrooon SQL statment");
+                this.db.Get("Wroooong SQL statment");
                 Assert.Fail("It was not expected to achieve this line!");
             }
             catch (DBIOException) { }
@@ -300,7 +297,7 @@ namespace QTFK.Services.DBIO.OleDB.Tests
         [TestCategory("Mapping")]
         public void AutoMap_IDataRecord_tests()
         {
-            _db.Set($@"
+            this.db.Set($@"
                 INSERT INTO persona (nombre, apellidos)
                 VALUES (@nombre,@apellidos)
                 ;", new Dictionary<string, object>
@@ -309,7 +306,7 @@ namespace QTFK.Services.DBIO.OleDB.Tests
                     { "@apellidos", "De la rosa Castaños" },
                 });
 
-            _db.Set($@"
+            this.db.Set($@"
                 INSERT INTO persona (nombre, apellidos)
                 VALUES (@nombre,@apellidos)
                 ;", new Dictionary<string, object>
@@ -318,7 +315,7 @@ namespace QTFK.Services.DBIO.OleDB.Tests
                     { "@apellidos", "Sanchez López" },
                 });
 
-            var data = _db
+            var data = this.db
                 .Get($@" SELECT * FROM persona", r => r.AutoMap<DLPerson>())
                 .ToList()
                 ;
@@ -328,7 +325,7 @@ namespace QTFK.Services.DBIO.OleDB.Tests
             Assert.AreEqual("Sanchez López", testItem.Apellidos);
             Assert.AreEqual(DateTime.MinValue, testItem.BirthDate);
 
-            _db.Set(cmd =>
+            this.db.Set(cmd =>
             {
                 data = cmd
                     .SetCommandText($@" SELECT * FROM persona")
@@ -344,7 +341,7 @@ namespace QTFK.Services.DBIO.OleDB.Tests
             Assert.AreEqual("Sanchez López", testItem.Apellidos);
             Assert.AreEqual(DateTime.MinValue, testItem.BirthDate);
 
-            _db.Set(cmd =>
+            this.db.Set(cmd =>
             {
                 data = cmd
                     .SetCommandText($@" SELECT * FROM persona")
@@ -368,7 +365,7 @@ namespace QTFK.Services.DBIO.OleDB.Tests
         [TestCategory("Mapping")]
         public void AutoMap_and_DBIO_IDataRecord_tests()
         {
-            _db.Set($@"
+            this.db.Set($@"
                 INSERT INTO persona (nombre, apellidos)
                 VALUES (@nombre,@apellidos)
                 ;", new Dictionary<string, object>
@@ -377,7 +374,7 @@ namespace QTFK.Services.DBIO.OleDB.Tests
                     { "@apellidos", "De la rosa Castaños" },
                 });
 
-            _db.Set($@"
+            this.db.Set($@"
                 INSERT INTO persona (nombre, apellidos)
                 VALUES (@nombre,@apellidos)
                 ;", new Dictionary<string, object>
@@ -386,7 +383,7 @@ namespace QTFK.Services.DBIO.OleDB.Tests
                     { "@apellidos", "Sanchez López" },
                 });
 
-            var data = _db
+            var data = this.db
                 .Get<DLPerson>($@" SELECT * FROM persona")
                 .ToList()
                 ;
@@ -396,8 +393,8 @@ namespace QTFK.Services.DBIO.OleDB.Tests
             Assert.AreEqual("Sanchez López", testItem.Apellidos);
             Assert.AreEqual(DateTime.MinValue, testItem.BirthDate);
 
-            data = _db
-                .Get<DLPerson>($@" SELECT * FROM persona WHERE nombre = @nombre", _db.Params().Set("@nombre", "Pepe"))
+            data = this.db
+                .Get<DLPerson>($@" SELECT * FROM persona WHERE nombre = @nombre", this.db.Params().Set("@nombre", "Pepe"))
                 .ToList()
                 ;
 
@@ -405,138 +402,6 @@ namespace QTFK.Services.DBIO.OleDB.Tests
             testItem = data.Single(i => i.Nombre == "Pepe");
             Assert.AreEqual("De la rosa Castaños", testItem.Apellidos);
             Assert.AreEqual(DateTime.MinValue, testItem.BirthDate);
-        }
-
-        [TestMethod]
-        [TestCategory("DB OleDB")]
-        public void QueryBuilder_OleBDInsert_tests()
-        {
-            IDBQuery insert;
-
-            insert = new OleDBInsertQuery()
-                .SetTable("persona")
-                .SetColumn("nombre", "Pepe")
-                .SetColumn("apellidos", "De la rosa Castaños")
-                ;
-
-            _db.Set(insert);
-
-            insert = new OleDBInsertQuery()
-                .Set("persona", c => c
-                    .Column("nombre")
-                    .Column("apellidos")
-                );
-
-            var insertValues = _db.Params()
-                .Set("@nombre", "Tronco")
-                .Set("@apellidos", "Sanchez López")
-                ;
-
-            _db.Set(insert, insertValues);
-
-            insertValues = _db.Params()
-                .Set("@nombre", "Louis")
-                .Set("@apellidos", "Norton Smith")
-                ;
-
-            _db.Set(insert, insertValues);
-
-            //inline selects
-            var data = _db
-                .Get<DLPerson>($@" SELECT * FROM persona")
-                .ToList()
-                ;
-
-            Assert.AreEqual(3, data.Count());
-            var testItem = data.Single(i => i.Nombre == "Tronco");
-            Assert.AreEqual("Sanchez López", testItem.Apellidos);
-            Assert.AreEqual(DateTime.MinValue, testItem.BirthDate);
-
-            data = _db
-                .Get<DLPerson>($@" SELECT * FROM persona WHERE nombre = @nombre", _db.Params().Set("@nombre", "Pepe"))
-                .ToList()
-                ;
-
-            Assert.AreEqual(1, data.Count());
-            testItem = data.Single(i => i.Nombre == "Pepe");
-            Assert.AreEqual("De la rosa Castaños", testItem.Apellidos);
-            Assert.AreEqual(DateTime.MinValue, testItem.BirthDate);
-
-
-            //IDBQuery selects
-            var select = new OleDBSelectQuery()
-                .Select("persona", c => c
-                    .Column("nombre")
-                    .Column("apellidos")
-                );
-
-            data = _db
-                .Get<DLPerson>(select)
-                .ToList()
-                ;
-
-            Assert.AreEqual(3, data.Count());
-            testItem = data.Single(i => i.Nombre == "Tronco");
-            Assert.AreEqual("Sanchez López", testItem.Apellidos);
-            Assert.AreEqual(DateTime.MinValue, testItem.BirthDate);
-
-            //filter
-            var filter = new OleDBByParamEqualsFilter()
-            {
-                Field = "nombre",
-                Parameter = "@nombre"
-            };
-
-            var wherePepe = _db
-                .Params()
-                .Set("@nombre", "Pepe")
-                ;
-
-            select.SetFilter(filter);
-
-            data = _db
-                .Get<DLPerson>(select, wherePepe)
-                .ToList()
-                ;
-
-            Assert.AreEqual(1, data.Count());
-            testItem = data.Single(i => i.Nombre == "Pepe");
-            Assert.AreEqual("De la rosa Castaños", testItem.Apellidos);
-            Assert.AreEqual(DateTime.MinValue, testItem.BirthDate);
-
-            //IDBQuery updates
-            var update = new OleDBUpdateQuery()
-                .Set("persona", c => c
-                    .Column("apellidos", "Ramírez de Villalobos"))
-                .SetFilter(filter)
-                .SetParam("@nombre", "Pepe")
-                ;
-
-            _db.Set(update);
-
-            data = _db
-                .Get<DLPerson>(select, wherePepe)
-                .ToList()
-                ;
-
-            Assert.AreEqual(1, data.Count());
-            testItem = data.Single(i => i.Nombre == "Pepe");
-            Assert.AreEqual("Ramírez de Villalobos", testItem.Apellidos);
-            Assert.AreEqual(DateTime.MinValue, testItem.BirthDate);
-
-            var delete = new OleDBDeleteQuery()
-                .SetTable("persona")
-                .SetFilter(filter)
-                ;
-
-            _db.Set(delete, wherePepe);
-
-            data = _db
-                .Get<DLPerson>(select, wherePepe)
-                .ToList()
-                ;
-
-            Assert.AreEqual(0, data.Count());
         }
     }
 }

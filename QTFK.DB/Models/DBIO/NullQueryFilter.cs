@@ -22,7 +22,6 @@ namespace QTFK.Models.DBIO
 
         protected NullQueryFilter()
         {
-
         }
 
         public string Compile()
@@ -30,8 +29,9 @@ namespace QTFK.Models.DBIO
             return string.Empty;
         }
 
-        public void SetValues(params object[] args)
+        public IDictionary<string, object> getParameters()
         {
+            return new Dictionary<string, object>();
         }
     }
 }
