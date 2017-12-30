@@ -3,7 +3,7 @@
 namespace QTFK.Models.DBIO
 {
     [OleDB]
-    public class OleDBSelectQuery : AbstractSelectQuery
+    internal class OleDBSelectQuery : AbstractSelectQuery
     {
         public OleDBSelectQuery() : base()
         {

@@ -4,7 +4,7 @@ using QTFK.Services;
 namespace QTFK.Models.DBIO
 {
     [OleDB]
-    public class OleDBInsertQuery : AbstractInsertQuery
+    internal class OleDBInsertQuery : AbstractInsertQuery
     {
         public OleDBInsertQuery(IParameterBuilder parameterBuilder) : base(parameterBuilder)
         {

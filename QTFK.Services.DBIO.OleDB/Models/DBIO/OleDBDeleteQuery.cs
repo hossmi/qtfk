@@ -3,7 +3,7 @@
 namespace QTFK.Models.DBIO
 {
     [OleDB]
-    public class OleDBDeleteQuery : AbstractDeleteQuery
+    internal class OleDBDeleteQuery : AbstractDeleteQuery
     {
         public OleDBDeleteQuery() : base()
         {

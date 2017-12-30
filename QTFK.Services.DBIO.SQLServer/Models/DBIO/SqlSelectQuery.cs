@@ -3,7 +3,7 @@
 namespace QTFK.Models.DBIO
 {
     [SqlServer]
-    public class SqlSelectQuery : AbstractSelectQuery
+    internal class SqlSelectQuery : AbstractSelectQuery
     {
         public SqlSelectQuery() : base()
         {

@@ -3,7 +3,7 @@
 namespace QTFK.Models.DBIO
 {
     [SqlServer]
-    public class SqlDeleteQuery : AbstractDeleteQuery
+    internal class SqlDeleteQuery : AbstractDeleteQuery
     {
         public SqlDeleteQuery() : base()
         {
