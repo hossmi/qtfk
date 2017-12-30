@@ -18,7 +18,6 @@ namespace QTFK.Models.DBIO
             this.table = "";
             this.filter = NullQueryFilter.Instance;
             this.columns = new List<SelectColumn>();
-            this.Joins = new List<JoinTable>();
         }
 
         public string Prefix
@@ -59,8 +58,6 @@ namespace QTFK.Models.DBIO
             }
         }
 
-        public ICollection<JoinTable> Joins { get; }
-
         public IDictionary<string, object> getParameters()
         {
             return this.filter.getParameters();
@@ -79,8 +76,7 @@ namespace QTFK.Models.DBIO
         public virtual string Compile()
         {
             string compiledResult;
-            string whereSegment, columnsSegment, joinsSegment, mainTable;
-            int tableIndex;
+            string whereSegment, columnsSegment, mainTable;
             IList<IEnumerable<string>> allColumns;
             IEnumerable<string> tableColumns;
 
@@ -89,29 +85,10 @@ namespace QTFK.Models.DBIO
             whereSegment = this.filter.Compile();
             whereSegment = string.IsNullOrWhiteSpace(whereSegment) ? "" : $"WHERE ({whereSegment})";
 
-            tableIndex = 1;
             mainTable = "t0";
             allColumns = new List<IEnumerable<string>>();
             tableColumns = prv_prepareColumns(mainTable, this.columns);
             allColumns.Add(tableColumns);
-
-            joinsSegment = Joins
-                .Stringify(join =>
-                {
-                    string joinResult;
-                    string alias, matches;
-
-                    alias = $"t{tableIndex++}";
-                    tableColumns = prv_prepareColumns(alias, join.Columns);
-                    allColumns.Add(tableColumns);
-
-                    matches = join.Matches
-                        .Stringify(match => $"{mainTable}.[{match.LeftField}] = {alias}.[{match.RightField}]", " AND ");
-
-                    joinResult = $"{join.Kind} JOIN {this.prefix}[{join.Table}] AS {alias} ON {matches} ";
-
-                    return joinResult;
-                }, Environment.NewLine);
 
             Asserts.check(allColumns.Any(), $"Query has no columns.");
 
@@ -123,7 +100,6 @@ namespace QTFK.Models.DBIO
             compiledResult = $@"
                 SELECT {columnsSegment}
                 FROM {this.prefix}[{Table}] as {mainTable}
-                {joinsSegment}
                 {whereSegment}
                 ;";
 

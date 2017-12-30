@@ -4,18 +4,14 @@ using QTFK.Extensions.DataReader;
 using QTFK.Extensions.DataSets;
 using QTFK.Extensions.DBCommand;
 using QTFK.Extensions.DBIO;
-using QTFK.Extensions.DBIO.DBQueries;
 using QTFK.Extensions.DBIO.OleDBIOExtensions;
 using QTFK.Extensions.Mapping.AutoMapping;
 using QTFK.Models;
-using QTFK.Models.DBIO;
 using QTFK.Services.DBIO.OleDB.Tests.Models;
 using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
-using QTFK.Extensions.DBIO.QueryFactory;
-using QTFK.Models.QueryFilters;
 
 namespace QTFK.Services.DBIO.OleDB.Tests
 {
@@ -406,164 +402,6 @@ namespace QTFK.Services.DBIO.OleDB.Tests
             testItem = data.Single(i => i.Nombre == "Pepe");
             Assert.AreEqual("De la rosa Castaños", testItem.Apellidos);
             Assert.AreEqual(DateTime.MinValue, testItem.BirthDate);
-        }
-
-        [TestMethod]
-        [TestCategory("DB OleDB")]
-        public void QueryBuilder_OleBDInsert_tests()
-        {
-            IQueryFactory factory;
-            IDBQueryInsert insert;
-            IDBQuerySelect select;
-            IDBQueryUpdate update;
-            IDBQueryDelete delete;
-            IKeyFilter filter;
-            DLPerson testItem;
-            IEnumerable<DLPerson> data;
-
-            factory = OleDBQueryFactory.buildDefault();
-
-            insert = factory
-                .newInsert()
-                .setTable("persona")
-                .column("nombre", "Pepe")
-                .column("apellidos", "De la rosa Castaños")
-                ;
-
-            this.db.Set(insert);
-
-            insert = factory
-                .newInsert()
-                .setTable("persona")
-                .column("nombre", null)
-                .column("apellidos", null)
-                ;
-
-            var insertValuesCollection = new[]
-            {
-                new
-                {
-                    Name = "Rosa",
-                    LastName = "Olmos Robles",
-                },
-                new
-                {
-                    Name = "Narciso",
-                    LastName = "Céspedes De la higuera",
-                },
-            };
-
-            foreach (var item in insertValuesCollection)
-            {
-                insert
-                    .column("nombre", item.Name)
-                    .column("apellidos", item.LastName);
-                this.db.Set(insert);
-            }
-
-            insert
-                .column("nombre", "Tronco")
-                .column("apellidos", "Sanchez López");
-            this.db.Set(insert);
-
-            insert
-                .column("nombre", "Louis")
-                .column("apellidos", "Norton Smith");
-            this.db.Set(insert);
-
-
-
-            data = this.db
-                .Get<DLPerson>($@" SELECT * FROM persona")
-                .ToList()
-                ;
-
-            Assert.AreEqual(3, data.Count());
-
-            testItem = data.Single(i => i.Nombre == "Tronco");
-            Assert.AreEqual("Sanchez López", testItem.Apellidos);
-            Assert.AreEqual(DateTime.MinValue, testItem.BirthDate);
-
-            data = this.db
-                .Get<DLPerson>($@" SELECT * FROM persona WHERE nombre = @nombre", this.db.Params().Set("@nombre", "Pepe"))
-                .ToList()
-                ;
-
-            Assert.AreEqual(1, data.Count());
-            testItem = data.Single(i => i.Nombre == "Pepe");
-            Assert.AreEqual("De la rosa Castaños", testItem.Apellidos);
-            Assert.AreEqual(DateTime.MinValue, testItem.BirthDate);
-
-
-            //IDBQuery selects
-            select = factory
-                .newSelect()
-                .setTable("persona")
-                .column("nombre")
-                .column("apellidos")
-                ;
-
-            data = this.db
-                .Get<DLPerson>(select)
-                .ToList()
-                ;
-
-            Assert.AreEqual(3, data.Count());
-            testItem = data.Single(i => i.Nombre == "Tronco");
-            Assert.AreEqual("Sanchez López", testItem.Apellidos);
-            Assert.AreEqual(DateTime.MinValue, testItem.BirthDate);
-
-
-
-            filter = factory.buildFilter<IKeyFilter>();
-            filter.setKey("nombre", "Pepe");
-            select.setFilter(filter);
-
-            data = this.db
-                .Get<DLPerson>(select)
-                .ToList()
-                ;
-
-            Assert.AreEqual(1, data.Count());
-            testItem = data.Single(i => i.Nombre == "Pepe");
-
-            Assert.AreEqual("De la rosa Castaños", testItem.Apellidos);
-            Assert.AreEqual(DateTime.MinValue, testItem.BirthDate);
-
-
-
-            update = factory
-                .newUpdate()
-                .setTable("persona")
-                .column("apellidos", "Ramírez de Villalobos")
-                .setFilter(filter);
-
-            filter.setKey("nombre", "Pepe");
-            this.db.Set(update);
-
-            select.Filter = filter;
-            data = this.db
-                .Get<DLPerson>(select)
-                .ToList();
-
-            Assert.AreEqual(1, data.Count());
-            testItem = data.Single(i => i.Nombre == "Pepe");
-
-            Assert.AreEqual("Ramírez de Villalobos", testItem.Apellidos);
-            Assert.AreEqual(DateTime.MinValue, testItem.BirthDate);
-
-            delete = factory
-                .newDelete()
-                .setTable("persona")
-                .setFilter(filter);
-
-            this.db.Set(delete);
-
-            data = this.db
-                .Get<DLPerson>(select)
-                .ToList();
-
-            Assert.AreEqual(0, data.Count());
         }
     }
 }

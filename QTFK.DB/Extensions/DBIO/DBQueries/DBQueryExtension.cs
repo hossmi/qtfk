@@ -45,40 +45,6 @@ namespace QTFK.Extensions.DBIO.DBQueries
             return query;
         }
 
-        public static T addJoin<T>(this T query, JoinKind kind, string rightTable, Action<ICollection<JoinMatch>> matches, Action<ICollection<SelectColumn>> columns) where T : IDBQueryJoin
-        {
-            var joinMatches = new List<JoinMatch>();
-            matches(joinMatches);
-
-            var columnsCollection = new List<SelectColumn>();
-            columns(columnsCollection);
-
-            query.Joins.Add(new JoinTable
-            {
-                Table = rightTable,
-                Kind = kind,
-                Matches = joinMatches,
-                Columns = columnsCollection,
-            });
-
-            return query;
-        }
-
-        public static T addJoin<T>(this T query, JoinKind kind, string rightTable, string leftField, string rightField, Action<ICollection<SelectColumn>> columns) where T : IDBQueryJoin
-        {
-            return addJoin<T>(query, kind, rightTable, m => m.addJoin(leftField, rightField), columns);
-        }
-
-        public static ICollection<JoinMatch> addJoin(this ICollection<JoinMatch> matches, string leftField, string rightField)
-        {
-            matches.Add(new JoinMatch
-            {
-                LeftField = leftField,
-                RightField = rightField,
-            });
-            return matches;
-        }
-
         public static int execute(this IDBQuery query, IDBIO db)
         {
             return db.Set(query);

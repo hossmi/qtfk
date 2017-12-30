@@ -23,12 +23,7 @@ namespace QTFK.Models
         IEnumerable<SelectColumn> getColumns();
     }
 
-    public interface IDBQueryJoin : IDBQuery
-    {
-        ICollection<JoinTable> Joins { get; }
-    }
-
-    public interface IDBQuerySelect : IDBQuery, IDBQuerySelectColumns, IDBQueryJoin, IDBQueryFilterable
+    public interface IDBQuerySelect : IDBQuery, IDBQuerySelectColumns, IDBQueryFilterable
     {
     }
 

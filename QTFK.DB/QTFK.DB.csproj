@@ -57,10 +57,7 @@
     <Compile Include="Models\DBIOException.cs" />
     <Compile Include="Models\DBIO\NullQueryFilter.cs" />
     <Compile Include="Models\IDBQuery.cs" />
-    <Compile Include="Models\QueryFilters\IExpressionQueryFilter.cs" />
     <Compile Include="Models\IQueryFilter.cs" />
-    <Compile Include="Models\Joins.cs" />
-    <Compile Include="Models\QueryFilters\IKeyFilter.cs" />
     <Compile Include="Models\SelectColumn.cs" />
     <Compile Include="Models\SetColumn.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

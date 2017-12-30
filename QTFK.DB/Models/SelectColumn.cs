@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace QTFK.Models
+﻿namespace QTFK.Models
 {
     public class SelectColumn
     {
