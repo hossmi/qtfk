@@ -72,6 +72,7 @@ namespace QTFK.Services.DBIO
 
             filterType = filterTypes[0];
             instance = (IQueryFilter)Activator.CreateInstance(filterType);
+            instance.setParameterBuilder(this.parameterBuilder);
 
             return instance;
         }

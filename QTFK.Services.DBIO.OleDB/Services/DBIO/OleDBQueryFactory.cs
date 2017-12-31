@@ -18,7 +18,12 @@ namespace QTFK.Services.DBIO
             }, ParameterBuilder.TSQL);
         }
 
-        public OleDBQueryFactory(IEnumerable<Type> filterTypes, IParameterBuilder parameterBuilder) 
+        public OleDBQueryFactory(IEnumerable<Type> filterTypes)
+            : base(filterTypes, ParameterBuilder.TSQL)
+        {
+        }
+
+        public OleDBQueryFactory(IEnumerable<Type> filterTypes, IParameterBuilder parameterBuilder)
             : base(filterTypes, parameterBuilder)
         {
         }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using QTFK.Services;
 
 namespace QTFK.Models.DBIO
 {
@@ -32,6 +33,10 @@ namespace QTFK.Models.DBIO
         public IDictionary<string, object> getParameters()
         {
             return new Dictionary<string, object>();
+        }
+
+        public void setParameterBuilder(IParameterBuilder parameterBuilder)
+        {
         }
     }
 }

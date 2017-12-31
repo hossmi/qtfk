@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using QTFK.Services;
+using System.Collections.Generic;
 
 namespace QTFK.Models
 {
@@ -6,5 +7,6 @@ namespace QTFK.Models
     {
         string Compile();
         IDictionary<string, object> getParameters();
+        void setParameterBuilder(IParameterBuilder parameterBuilder);
     }
 }

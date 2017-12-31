@@ -17,6 +17,11 @@ namespace QTFK.Services.DBIO
             }, ParameterBuilder.TSQL);
         }
 
+        public SQLServerQueryFactory(IEnumerable<Type> filterTypes)
+            : this(filterTypes, ParameterBuilder.TSQL)
+        {
+        }
+
         public SQLServerQueryFactory(IEnumerable<Type> filterTypes, IParameterBuilder parameterBuilder) 
             : base(filterTypes, parameterBuilder)
         {
