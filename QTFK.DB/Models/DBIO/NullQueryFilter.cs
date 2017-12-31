@@ -34,9 +34,5 @@ namespace QTFK.Models.DBIO
         {
             return new Dictionary<string, object>();
         }
-
-        public void setParameterBuilder(IParameterBuilder parameterBuilder)
-        {
-        }
     }
 }

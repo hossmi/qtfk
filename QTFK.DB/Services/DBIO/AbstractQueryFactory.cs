@@ -3,6 +3,7 @@ using QTFK.Models;
 using System.Collections.Generic;
 using System.Linq;
 using QTFK.Extensions.Types;
+using System.Reflection;
 
 namespace QTFK.Services.DBIO
 {
@@ -59,6 +60,8 @@ namespace QTFK.Services.DBIO
             Type[] filterTypes;
             Type filterType;
             IQueryFilter instance;
+            ConstructorInfo[] ctors;
+            ConstructorInfo paramBuilderCtor;
 
             Asserts.check(interfaceType.IsInterface, $"Type '{interfaceType.FullName}' is not an interface.");
             Asserts.check(interfaceType.GetInterface(this.queryFilterInterfaceTypeFullName) != null, $"Type '{interfaceType.FullName}' does not inherits from '{this.queryFilterInterfaceTypeFullName}'.");
@@ -71,8 +74,22 @@ namespace QTFK.Services.DBIO
             Asserts.check(filterTypes.Length == 1, $"There is zero or more than one type implementing {interfaceType.FullName}");
 
             filterType = filterTypes[0];
-            instance = (IQueryFilter)Activator.CreateInstance(filterType);
-            instance.setParameterBuilder(this.parameterBuilder);
+            ctors = filterType.GetConstructors();
+            paramBuilderCtor = ctors
+                .FirstOrDefault(c =>
+                {
+                    ParameterInfo[] args;
+
+                    args = c.GetParameters();
+
+                    return args.Length == 1
+                        && args[0].ParameterType == typeof(IParameterBuilder);
+                });
+
+            if (paramBuilderCtor != null)
+                instance = (IQueryFilter)paramBuilderCtor.Invoke(new object[] { this.parameterBuilder });
+            else
+                instance = (IQueryFilter)Activator.CreateInstance(filterType);
 
             return instance;
         }
@@ -82,7 +99,9 @@ namespace QTFK.Services.DBIO
             T query;
 
             query = builder();
-            query.Prefix = prefix;
+
+            if (!string.IsNullOrWhiteSpace(prefix))
+                query.Prefix = prefix;
 
             return query;
         }

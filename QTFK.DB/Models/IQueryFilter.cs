@@ -7,6 +7,5 @@ namespace QTFK.Models
     {
         string Compile();
         IDictionary<string, object> getParameters();
-        void setParameterBuilder(IParameterBuilder parameterBuilder);
     }
 }
