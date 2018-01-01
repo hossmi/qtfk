@@ -6,6 +6,6 @@ namespace QTFK.Models
     public interface IQueryFilter
     {
         string Compile();
-        IDictionary<string, object> getParameters();
+        IEnumerable<QueryParameter> getParameters();
     }
 }

@@ -7,6 +7,7 @@ using QTFK.Services;
 using System;
 using System.Collections.Generic;
 using System.Data;
+using QTFK.Extensions.DBIO.DBQueries;
 
 namespace QTFK.Extensions.DBIO
 {
@@ -23,7 +24,7 @@ namespace QTFK.Extensions.DBIO
 
         public static int Set(this IDBIO dbio, IDBQuery query)
         {
-            return prv_set(dbio, query.Compile(), query.getParameters());
+            return prv_set(dbio, query.Compile(), query.getUniqueParameters());
         }
 
         public static int Set(this IDBIO dbio, string query)
@@ -76,12 +77,12 @@ namespace QTFK.Extensions.DBIO
         
         public static IEnumerable<T> Get<T>(this IDBIO dbio, IDBQuery query) where T : new()
         {
-            return prv_get<T>(dbio, query.Compile(), query.getParameters(), AutoMapExtension.AutoMap<T>);
+            return prv_get<T>(dbio, query.Compile(), query.getUniqueParameters(), AutoMapExtension.AutoMap<T>);
         }
 
         public static IEnumerable<T> Get<T>(this IDBIO dbio, IDBQuery query, Func<IDataRecord, T> buildDelegate)
         {
-            return prv_get<T>(dbio, query.Compile(), query.getParameters(), buildDelegate);
+            return prv_get<T>(dbio, query.Compile(), query.getUniqueParameters(), buildDelegate);
         }
 
         public static IDictionary<string, object> Params(this IDBIO dbio)

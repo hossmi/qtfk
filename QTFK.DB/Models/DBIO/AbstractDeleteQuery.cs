@@ -68,7 +68,7 @@ namespace QTFK.Models.DBIO
                 ;";
         }
 
-        public virtual IDictionary<string, object> getParameters()
+        public virtual IEnumerable<QueryParameter> getParameters()
         {
             return this.filter.getParameters();
         }

@@ -6,7 +6,7 @@ namespace QTFK.Models
     public interface IDBQuery
     {
         string Compile();
-        IDictionary<string, object> getParameters();
+        IEnumerable<QueryParameter> getParameters();
         string Table { get; set; }
         string Prefix { get; set; }
     }

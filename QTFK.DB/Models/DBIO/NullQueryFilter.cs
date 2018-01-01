@@ -30,9 +30,9 @@ namespace QTFK.Models.DBIO
             return string.Empty;
         }
 
-        public IDictionary<string, object> getParameters()
+        public IEnumerable<QueryParameter> getParameters()
         {
-            return new Dictionary<string, object>();
+            return Enumerable.Empty<QueryParameter>();
         }
     }
 }

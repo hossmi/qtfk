@@ -88,23 +88,11 @@ namespace QTFK.Models.DBIO
             }
         }
 
-        public virtual IDictionary<string, object> getParameters()
+        public virtual IEnumerable<QueryParameter> getParameters()
         {
-            IDictionary<string, object> resultParameters;
-            IDictionary<string, object> filterParameters;
-
-            resultParameters = this.fields.Values
-                .ToDictionary(p => p.Parameter, p => p.Value);
-
-            filterParameters = this.filter.getParameters();
-
-            foreach (var pair in filterParameters)
-            {
-                Asserts.check(resultParameters.ContainsKey(pair.Key) == false, $"Filter parameter '{pair.Key}' already exists in query parameters.");
-                resultParameters.Add(pair);
-            }
-
-            return resultParameters;
+            return this.fields.Values
+                .Select(v => new QueryParameter { Parameter = v.Parameter, Value = v.Value })
+                .Concat(this.filter.getParameters());
         }
 
         public virtual string Compile()

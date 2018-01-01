@@ -51,14 +51,10 @@ namespace QTFK.Models.DBIO
             return this.fields.Keys;
         }
 
-        public virtual IDictionary<string, object> getParameters()
+        public virtual IEnumerable<QueryParameter> getParameters()
         {
-            IDictionary<string, object> resultParameters;
-
-            resultParameters = this.fields.Values
-                .ToDictionary(p => p.Parameter, p => p.Value);
-
-            return resultParameters;
+            return this.fields.Values
+                .Select(p => new QueryParameter { Parameter = p.Parameter, Value = p.Value });
         }
 
         public virtual void setColumn(string fieldName, object value)
