@@ -5,8 +5,8 @@ namespace QTFK.Models
 {
     public interface IDBQuery
     {
-        string Compile();
-        IEnumerable<QueryParameter> getParameters();
+        QueryCompilation Compile();
+        //IEnumerable<QueryParameter> getParameters();
         string Table { get; set; }
         string Prefix { get; set; }
     }

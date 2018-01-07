@@ -11,7 +11,7 @@ namespace QTFK.Models.DBIO
         protected string prefix;
         protected string table;
         protected IQueryFilter filter;
-        protected readonly IDictionary<string, SetColumn> fields;
+        protected readonly IDictionary<string, object> fields;
 
         public AbstractUpdateQuery(IParameterBuilder parameterBuilder)
         {
@@ -21,7 +21,7 @@ namespace QTFK.Models.DBIO
             this.prefix = "";
             this.table = "";
             this.filter = NullQueryFilter.Instance;
-            this.fields = new Dictionary<string, SetColumn>();
+            this.fields = new Dictionary<string, object>();
         }
 
         public string Prefix
@@ -62,59 +62,57 @@ namespace QTFK.Models.DBIO
             }
         }
 
-        public virtual IEnumerable<string> getFields()
+        public virtual void setColumn(string fieldName, object value)
+        {
+            this.fields[fieldName] = value;
+        }
+
+        public IEnumerable<string> getFields()
         {
             return this.fields.Keys;
         }
 
-        public virtual void setColumn(string fieldName, object value)
+        public virtual QueryCompilation Compile()
         {
-            if (this.fields.ContainsKey(fieldName))
-            {
-                this.fields[fieldName].Value = value;
-            }
-            else
-            {
-                SetColumn column;
-
-                column = new SetColumn
-                {
-                    Name = fieldName,
-                    Value = value,
-                    Parameter = this.parameterBuilder.buildParameter("update_" + fieldName),
-                };
-
-                this.fields.Add(fieldName, column);
-            }
-        }
-
-        public virtual IEnumerable<QueryParameter> getParameters()
-        {
-            return this.fields.Values
-                .Select(v => new QueryParameter { Parameter = v.Parameter, Value = v.Value })
-                .Concat(this.filter.getParameters());
-        }
-
-        public virtual string Compile()
-        {
-            string result;
-            string whereSegment, columnSegment;
+            QueryCompilation result;
+            string whereSegment, columnSegment, query;
+            IDictionary<string, object> parameters;
+            FilterCompilation filterCompilation;
 
             Asserts.isFilled(this.table, $"Property '{nameof(this.Table)}' cannot be empty.");
 
-            whereSegment = this.filter.Compile();
+            filterCompilation = this.filter.Compile(this.parameterBuilder);
+            whereSegment = filterCompilation.FilterSegment;
             whereSegment = string.IsNullOrWhiteSpace(whereSegment) ? "" : $"WHERE ({whereSegment})";
 
-            columnSegment = this.fields
-                .Stringify(field => $" [{field.Value.Name}] = {field.Value.Parameter} ");
+            parameters = new Dictionary<string, object>();
 
-            result = $@"
+            columnSegment = this.fields
+                .Stringify(field =>
+                {
+                    string fieldResult, parameter;
+
+                    parameter = this.parameterBuilder.buildParameter("update_" + field.Key);
+                    parameters.Add(parameter, field.Value);
+
+                    fieldResult = $" [{field.Key}] = {parameter} ";
+
+                    return fieldResult;
+                });
+
+            query = $@"
                 UPDATE {this.prefix}[{this.table}]
                 SET {columnSegment}
                 {whereSegment}
                 ;";
 
+            foreach (var filterParameter in filterCompilation.Parameters)
+                parameters.Add(filterParameter.Parameter, filterParameter.Value);
+
+            result = new QueryCompilation(query, parameters);
+
             return result;
         }
+
     }
 }

@@ -24,7 +24,11 @@ namespace QTFK.Extensions.DBIO
 
         public static int Set(this IDBIO dbio, IDBQuery query)
         {
-            return prv_set(dbio, query.Compile(), query.getUniqueParameters());
+            QueryCompilation queryCompilation;
+
+            queryCompilation = query.Compile();
+
+            return prv_set(dbio, queryCompilation.Query, queryCompilation.Parameters);
         }
 
         public static int Set(this IDBIO dbio, string query)
@@ -77,12 +81,20 @@ namespace QTFK.Extensions.DBIO
         
         public static IEnumerable<T> Get<T>(this IDBIO dbio, IDBQuery query) where T : new()
         {
-            return prv_get<T>(dbio, query.Compile(), query.getUniqueParameters(), AutoMapExtension.AutoMap<T>);
+            QueryCompilation queryCompilation;
+
+            queryCompilation = query.Compile();
+
+            return prv_get<T>(dbio, queryCompilation.Query, queryCompilation.Parameters, AutoMapExtension.AutoMap<T>);
         }
 
         public static IEnumerable<T> Get<T>(this IDBIO dbio, IDBQuery query, Func<IDataRecord, T> buildDelegate)
         {
-            return prv_get<T>(dbio, query.Compile(), query.getUniqueParameters(), buildDelegate);
+            QueryCompilation queryCompilation;
+
+            queryCompilation = query.Compile();
+
+            return prv_get<T>(dbio, queryCompilation.Query, queryCompilation.Parameters, buildDelegate);
         }
 
         public static IDictionary<string, object> Params(this IDBIO dbio)

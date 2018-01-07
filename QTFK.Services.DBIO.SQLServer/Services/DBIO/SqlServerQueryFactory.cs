@@ -29,7 +29,7 @@ namespace QTFK.Services.DBIO
 
         protected override IDBQueryDelete prv_newDelete()
         {
-            return new SqlDeleteQuery();
+            return new SqlDeleteQuery(this.parameterBuilder);
         }
 
         protected override IDBQueryInsert prv_newInsert()
@@ -39,7 +39,7 @@ namespace QTFK.Services.DBIO
 
         protected override IDBQuerySelect prv_newSelect()
         {
-            return new SqlSelectQuery();
+            return new SqlSelectQuery(this.parameterBuilder);
         }
 
         protected override IDBQueryUpdate prv_newUpdate()

@@ -5,7 +5,7 @@ namespace QTFK.Models
 {
     public interface IQueryFilter
     {
-        string Compile();
-        IEnumerable<QueryParameter> getParameters();
+        FilterCompilation Compile(IParameterBuilder parameterBuilder);
+        //IEnumerable<QueryParameter> getParameters();
     }
 }

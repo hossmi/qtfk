@@ -56,8 +56,10 @@
     <Compile Include="Extensions\DBIO\QueryFactory\QueryFactoryExtension.cs" />
     <Compile Include="Models\DBIOException.cs" />
     <Compile Include="Models\DBIO\NullQueryFilter.cs" />
+    <Compile Include="Models\FilterCompilation.cs" />
     <Compile Include="Models\IDBQuery.cs" />
     <Compile Include="Models\IQueryFilter.cs" />
+    <Compile Include="Models\QueryCompilation.cs" />
     <Compile Include="Models\QueryParameter.cs" />
     <Compile Include="Models\SelectColumn.cs" />
     <Compile Include="Models\SetColumn.cs" />
