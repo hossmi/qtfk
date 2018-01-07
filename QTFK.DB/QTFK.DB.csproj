@@ -73,6 +73,7 @@
     <Compile Include="Services\DBIO\ParameterBuilder.cs" />
     <Compile Include="Services\IDBIO.cs" />
     <Compile Include="Services\IParameterBuilder.cs" />
+    <Compile Include="Services\IParameterBuilderFactory.cs" />
     <Compile Include="Services\IQueryExecutor.cs" />
     <Compile Include="Services\IQueryFactory.cs" />
     <Compile Include="Services\QueryExecutors\DefaultQueryExecutor.cs" />
