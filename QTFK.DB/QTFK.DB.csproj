@@ -70,7 +70,7 @@
     <Compile Include="Models\DBIO\AbstractInsertQuery.cs" />
     <Compile Include="Models\DBIO\AbstractSelectQuery.cs" />
     <Compile Include="Models\DBIO\AbstractUpdateQuery.cs" />
-    <Compile Include="Services\DBIO\ParameterBuilder.cs" />
+    <Compile Include="Services\DBIO\TSQLParameterBuilderFactory.cs" />
     <Compile Include="Services\IDBIO.cs" />
     <Compile Include="Services\IParameterBuilder.cs" />
     <Compile Include="Services\IParameterBuilderFactory.cs" />

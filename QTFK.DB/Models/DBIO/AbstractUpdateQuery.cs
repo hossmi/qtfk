@@ -7,17 +7,17 @@ namespace QTFK.Models.DBIO
 {
     public abstract class AbstractUpdateQuery : IDBQueryUpdate
     {
-        protected readonly IParameterBuilder parameterBuilder;
+        protected readonly IParameterBuilderFactory parameterBuilderFactory;
         protected string prefix;
         protected string table;
         protected IQueryFilter filter;
         protected readonly IDictionary<string, object> fields;
 
-        public AbstractUpdateQuery(IParameterBuilder parameterBuilder)
+        public AbstractUpdateQuery(IParameterBuilderFactory parameterBuilderFactory)
         {
-            Asserts.isSomething(parameterBuilder, $"Constructor parameter '{nameof(parameterBuilder)}' cannot be null.");
+            Asserts.isSomething(parameterBuilderFactory, $"Constructor parameter '{nameof(parameterBuilderFactory)}' cannot be null.");
 
-            this.parameterBuilder = parameterBuilder;
+            this.parameterBuilderFactory = parameterBuilderFactory;
             this.prefix = "";
             this.table = "";
             this.filter = NullQueryFilter.Instance;
@@ -78,10 +78,12 @@ namespace QTFK.Models.DBIO
             string whereSegment, columnSegment, query;
             IDictionary<string, object> parameters;
             FilterCompilation filterCompilation;
+            IParameterBuilder parameterBuilder;
 
             Asserts.isFilled(this.table, $"Property '{nameof(this.Table)}' cannot be empty.");
 
-            filterCompilation = this.filter.Compile(this.parameterBuilder);
+            parameterBuilder = this.parameterBuilderFactory.buildInstance();
+            filterCompilation = this.filter.Compile(parameterBuilder);
             whereSegment = filterCompilation.FilterSegment;
             whereSegment = string.IsNullOrWhiteSpace(whereSegment) ? "" : $"WHERE ({whereSegment})";
 
@@ -92,7 +94,7 @@ namespace QTFK.Models.DBIO
                 {
                     string fieldResult, parameter;
 
-                    parameter = this.parameterBuilder.buildParameter("update_" + field.Key);
+                    parameter = parameterBuilder.buildParameter("update_" + field.Key);
                     parameters.Add(parameter, field.Value);
 
                     fieldResult = $" [{field.Key}] = {parameter} ";

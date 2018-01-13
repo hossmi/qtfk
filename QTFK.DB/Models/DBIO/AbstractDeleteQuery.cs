@@ -6,17 +6,17 @@ namespace QTFK.Models.DBIO
 {
     public abstract class AbstractDeleteQuery : IDBQueryDelete
     {
-        private readonly IParameterBuilder parameterBuilder;
+        private readonly IParameterBuilderFactory parameterBuilderFactory;
         protected string prefix;
         protected string table;
         protected IQueryFilter filter;
 
-        public AbstractDeleteQuery(IParameterBuilder parameterBuilder)
+        public AbstractDeleteQuery(IParameterBuilderFactory parameterBuilderFactory)
         {
             this.prefix = "";
             this.table = "";
             this.filter = NullQueryFilter.Instance;
-            this.parameterBuilder = parameterBuilder;
+            this.parameterBuilderFactory = parameterBuilderFactory;
         }
 
         public string Prefix
@@ -62,11 +62,13 @@ namespace QTFK.Models.DBIO
             QueryCompilation result;
             string whereSegment, query;
             FilterCompilation filterCompilation;
-            IDictionary<string, object> parameters; 
+            IDictionary<string, object> parameters;
+            IParameterBuilder parameterBuilder;
 
             Asserts.isFilled(this.Table, $"Property '{nameof(this.Table)}' cannot be empty.");
 
-            filterCompilation = this.filter.Compile(this.parameterBuilder);
+            parameterBuilder = this.parameterBuilderFactory.buildInstance();
+            filterCompilation = this.filter.Compile(parameterBuilder);
 
             whereSegment = filterCompilation.FilterSegment;
             whereSegment = string.IsNullOrWhiteSpace(whereSegment) ? "" : $"WHERE ({whereSegment})";

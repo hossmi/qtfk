@@ -6,7 +6,7 @@ namespace QTFK.Models.DBIO
     [OleDB]
     internal class OleDBSelectQuery : AbstractSelectQuery
     {
-        public OleDBSelectQuery(IParameterBuilder parameterBuilder) : base(parameterBuilder)
+        public OleDBSelectQuery(IParameterBuilderFactory parameterBuilderFactory) : base(parameterBuilderFactory)
         {
 
         }

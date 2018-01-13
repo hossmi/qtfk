@@ -12,15 +12,15 @@ namespace QTFK.Models.DBIO
         private string table;
         private IQueryFilter filter;
         private IList<SelectColumn> columns;
-        private readonly IParameterBuilder parameterBuilder;
+        private readonly IParameterBuilderFactory parameterBuilderFactory;
 
-        public AbstractSelectQuery(IParameterBuilder parameterBuilder)
+        public AbstractSelectQuery(IParameterBuilderFactory parameterBuilderFactory)
         {
             this.prefix = "";
             this.table = "";
             this.filter = NullQueryFilter.Instance;
             this.columns = new List<SelectColumn>();
-            this.parameterBuilder = parameterBuilder;
+            this.parameterBuilderFactory = parameterBuilderFactory;
         }
 
         public string Prefix
@@ -80,10 +80,12 @@ namespace QTFK.Models.DBIO
             IEnumerable<string> tableColumns;
             IDictionary<string, object> parameters;
             FilterCompilation filterCompilation;
+            IParameterBuilder parameterBuilder;
 
             Asserts.isFilled(this.table, $"Property '{nameof(this.Table)}' cannot be empty.");
 
-            filterCompilation = this.filter.Compile(this.parameterBuilder);
+            parameterBuilder = this.parameterBuilderFactory.buildInstance();
+            filterCompilation = this.filter.Compile(parameterBuilder);
             whereSegment = filterCompilation.FilterSegment;
             whereSegment = string.IsNullOrWhiteSpace(whereSegment) ? "" : $"WHERE ({whereSegment})";
 

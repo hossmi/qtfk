@@ -6,7 +6,7 @@ namespace QTFK.Models.DBIO
     [OleDB]
     internal class OleDBDeleteQuery : AbstractDeleteQuery
     {
-        public OleDBDeleteQuery(IParameterBuilder parameterBuilder) : base(parameterBuilder)
+        public OleDBDeleteQuery(IParameterBuilderFactory parameterBuilderFactory) : base(parameterBuilderFactory)
         {
         }
     }

@@ -6,7 +6,7 @@ namespace QTFK.Models.DBIO
     [SqlServer]
     internal class SqlDeleteQuery : AbstractDeleteQuery
     {
-        public SqlDeleteQuery(IParameterBuilder parameterBuilder) : base(parameterBuilder)
+        public SqlDeleteQuery(IParameterBuilderFactory parameterBuilderFactory) : base(parameterBuilderFactory)
         {
 
         }

@@ -6,7 +6,7 @@ namespace QTFK.Models.DBIO
     [OleDB]
     internal class OleDBInsertQuery : AbstractInsertQuery
     {
-        public OleDBInsertQuery(IParameterBuilder parameterBuilder) : base(parameterBuilder)
+        public OleDBInsertQuery(IParameterBuilderFactory parameterBuilderFactory) : base(parameterBuilderFactory)
         {
         }
     }

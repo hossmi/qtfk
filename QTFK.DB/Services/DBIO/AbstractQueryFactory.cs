@@ -11,12 +11,12 @@ namespace QTFK.Services.DBIO
     {
         protected readonly List<Type> filterTypes;
         protected readonly string queryFilterInterfaceTypeFullName;
-        protected readonly IParameterBuilder parameterBuilder;
+        protected readonly IParameterBuilderFactory parameterBuilderFactory;
 
-        public AbstractQueryFactory(IEnumerable<Type> filterTypes, IParameterBuilder parameterBuilder)
+        public AbstractQueryFactory(IEnumerable<Type> filterTypes, IParameterBuilderFactory parameterBuilderFactory)
         {
             this.queryFilterInterfaceTypeFullName = typeof(IQueryFilter).FullName;
-            this.parameterBuilder = parameterBuilder;
+            this.parameterBuilderFactory = parameterBuilderFactory;
             this.filterTypes = filterTypes.ToList();
 
             foreach (Type t in this.filterTypes)
@@ -25,7 +25,7 @@ namespace QTFK.Services.DBIO
                 Asserts.check(t.IsInterface == false, $"Type '{t.FullName}' at parameter '{nameof(filterTypes)}' cannot be interface.");
                 Asserts.check(t.GetInterface(this.queryFilterInterfaceTypeFullName) != null, $"Type '{t.FullName}' at parameter '{nameof(filterTypes)}' does not implements '{this.queryFilterInterfaceTypeFullName}'.");
             }
-            Asserts.isSomething(parameterBuilder, $"Constructor parameter '{nameof(parameterBuilder)}' cannot be null.");
+            Asserts.isSomething(parameterBuilderFactory, $"Constructor parameter '{nameof(parameterBuilderFactory)}' cannot be null.");
         }
 
         public string Prefix { get; set; }
@@ -83,11 +83,11 @@ namespace QTFK.Services.DBIO
                     args = c.GetParameters();
 
                     return args.Length == 1
-                        && args[0].ParameterType == typeof(IParameterBuilder);
+                        && args[0].ParameterType == typeof(IParameterBuilderFactory);
                 });
 
             if (paramBuilderCtor != null)
-                instance = (IQueryFilter)paramBuilderCtor.Invoke(new object[] { this.parameterBuilder });
+                instance = (IQueryFilter)paramBuilderCtor.Invoke(new object[] { this.parameterBuilderFactory });
             else
                 instance = (IQueryFilter)Activator.CreateInstance(filterType);
 
