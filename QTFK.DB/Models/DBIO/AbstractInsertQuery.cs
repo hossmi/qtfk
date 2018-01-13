@@ -9,15 +9,15 @@ namespace QTFK.Models.DBIO
     {
         protected string prefix;
         protected string table;
-        protected readonly IDictionary<string, SetColumn> fields;
-        protected readonly IParameterBuilder parameterBuilder;
+        protected readonly IDictionary<string, object> fields;
+        protected readonly IParameterBuilderFactory parameterBuilderFactory;
 
-        public AbstractInsertQuery(IParameterBuilder parameterBuilder)
+        public AbstractInsertQuery(IParameterBuilderFactory parameterBuilderFactory)
         {
             this.prefix = "";
             this.table = "";
-            this.fields = new Dictionary<string, SetColumn>();
-            this.parameterBuilder = parameterBuilder;
+            this.fields = new Dictionary<string, object>();
+            this.parameterBuilderFactory = parameterBuilderFactory;
         }
 
         public string Prefix
@@ -51,46 +51,33 @@ namespace QTFK.Models.DBIO
             return this.fields.Keys;
         }
 
-        public virtual IEnumerable<QueryParameter> getParameters()
-        {
-            return this.fields.Values
-                .Select(p => new QueryParameter { Parameter = p.Parameter, Value = p.Value });
-        }
-
         public virtual void setColumn(string fieldName, object value)
         {
-            if (this.fields.ContainsKey(fieldName))
-            {
-                this.fields[fieldName].Value = value;
-            }
-            else
-            {
-                SetColumn column;
-
-                column = new SetColumn
-                {
-                    Name = fieldName,
-                    Value = value,
-                    Parameter = this.parameterBuilder.buildParameter("insert_" + fieldName),
-                };
-
-                this.fields.Add(fieldName, column);
-            }
+            this.fields[fieldName] = value;
         }
 
-        public virtual string Compile()
+        public virtual QueryCompilation Compile()
         {
-            string columnsSegment, valuesSegment;
+            QueryCompilation result;
+            string columnsSegment, valuesSegment, query;
+            IDictionary<string, object> parameters;
+            IParameterBuilder parameterBuilder;
 
             Asserts.isFilled(this.table, $"Property '{nameof(this.Table)}' cannot be empty.");
 
-            columnsSegment = this.fields.Values.Stringify(f => $" [{f.Name}] ");
-            valuesSegment = this.fields.Values.Stringify(f => $" {f.Parameter} ");
+            parameterBuilder = this.parameterBuilderFactory.buildInstance();
+            parameters = this.fields.ToDictionary(f => parameterBuilder.buildParameter("insert_" + f.Key), f => f.Value);
+            columnsSegment = this.fields.Keys.Stringify(f => $" [{f}] ");
+            valuesSegment = parameters.Keys.Stringify();
 
-            return $@"
+            query = $@"
                 INSERT INTO {this.prefix}[{this.table}] ({columnsSegment})
                 VALUES ({valuesSegment})
                 ;";
+
+            result = new QueryCompilation(query, parameters);
+
+            return result;
         }
     }
 }

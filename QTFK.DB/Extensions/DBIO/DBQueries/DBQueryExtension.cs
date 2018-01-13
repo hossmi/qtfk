@@ -50,37 +50,6 @@ namespace QTFK.Extensions.DBIO.DBQueries
             return db.Set(query);
         }
 
-        public static IDictionary<string, object> getUniqueParameters(this IDBQuery query)
-        {
-            return prv_getUniqueParameters(query.getParameters());
-        }
-
-        public static IDictionary<string, object> getUniqueParameters(this IQueryFilter filter)
-        {
-            return prv_getUniqueParameters(filter.getParameters());
-        }
-
-        private static IDictionary<string, object> prv_getUniqueParameters(IEnumerable<QueryParameter> parameters)
-        {
-            IDictionary<string, object> result;
-            object value;
-
-            result = new Dictionary<string, object>();
-
-            foreach (var item in parameters)
-            {
-                if(result.ContainsKey(item.Parameter))
-                {
-                    value = result[item.Parameter];
-                    Asserts.check(value.Equals(item.Value), $"Query has same parameter '{item.Parameter}' with multiple values.");
-                }
-                else
-                    result.Add(item.Parameter, item.Value);
-            }
-
-            return result;
-        }
-
         private static void prv_addColumn<T>(T query, string column, string alias) where T : IDBQuerySelectColumns
         {
             query.addColumn(new SelectColumn

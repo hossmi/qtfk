@@ -1,11 +1,12 @@
 ﻿using QTFK.Attributes;
+using QTFK.Services;
 
 namespace QTFK.Models.DBIO
 {
     [SqlServer]
     internal class SqlDeleteQuery : AbstractDeleteQuery
     {
-        public SqlDeleteQuery() : base()
+        public SqlDeleteQuery(IParameterBuilderFactory parameterBuilderFactory) : base(parameterBuilderFactory)
         {
 
         }

@@ -1,4 +1,5 @@
 ﻿using QTFK.Extensions.Collections.Strings;
+using QTFK.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,13 +12,15 @@ namespace QTFK.Models.DBIO
         private string table;
         private IQueryFilter filter;
         private IList<SelectColumn> columns;
+        private readonly IParameterBuilderFactory parameterBuilderFactory;
 
-        public AbstractSelectQuery()
+        public AbstractSelectQuery(IParameterBuilderFactory parameterBuilderFactory)
         {
             this.prefix = "";
             this.table = "";
             this.filter = NullQueryFilter.Instance;
             this.columns = new List<SelectColumn>();
+            this.parameterBuilderFactory = parameterBuilderFactory;
         }
 
         public string Prefix
@@ -58,11 +61,6 @@ namespace QTFK.Models.DBIO
             }
         }
 
-        public IEnumerable<QueryParameter> getParameters()
-        {
-            return this.filter.getParameters();
-        }
-
         public void addColumn(SelectColumn column)
         {
             this.columns.Add(column);
@@ -73,16 +71,22 @@ namespace QTFK.Models.DBIO
             return this.columns;
         }
 
-        public virtual string Compile()
+        public virtual QueryCompilation Compile()
         {
-            string compiledResult;
+            QueryCompilation result;
+            string query;
             string whereSegment, columnsSegment, mainTable;
             IList<IEnumerable<string>> allColumns;
             IEnumerable<string> tableColumns;
+            IDictionary<string, object> parameters;
+            FilterCompilation filterCompilation;
+            IParameterBuilder parameterBuilder;
 
             Asserts.isFilled(this.table, $"Property '{nameof(this.Table)}' cannot be empty.");
 
-            whereSegment = this.filter.Compile();
+            parameterBuilder = this.parameterBuilderFactory.buildInstance();
+            filterCompilation = this.filter.Compile(parameterBuilder);
+            whereSegment = filterCompilation.FilterSegment;
             whereSegment = string.IsNullOrWhiteSpace(whereSegment) ? "" : $"WHERE ({whereSegment})";
 
             mainTable = "t0";
@@ -97,13 +101,17 @@ namespace QTFK.Models.DBIO
                 .Stringify()
                 ;
 
-            compiledResult = $@"
+            query = $@"
                 SELECT {columnsSegment}
                 FROM {this.prefix}[{Table}] as {mainTable}
                 {whereSegment}
                 ;";
 
-            return compiledResult;
+            parameters = filterCompilation.Parameters.ToDictionary(p => p.Parameter, p => p.Value);
+
+            result = new QueryCompilation(query, parameters);
+
+            return result;
         }
 
         protected static IEnumerable<string> prv_prepareColumns(string table, IEnumerable<SelectColumn> columns)
