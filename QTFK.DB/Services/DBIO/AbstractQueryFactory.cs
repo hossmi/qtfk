@@ -60,8 +60,8 @@ namespace QTFK.Services.DBIO
             Type[] filterTypes;
             Type filterType;
             IQueryFilter instance;
-            ConstructorInfo[] ctors;
-            ConstructorInfo paramBuilderCtor;
+            //ConstructorInfo[] ctors;
+            //ConstructorInfo paramBuilderCtor;
 
             Asserts.check(interfaceType.IsInterface, $"Type '{interfaceType.FullName}' is not an interface.");
             Asserts.check(interfaceType.GetInterface(this.queryFilterInterfaceTypeFullName) != null, $"Type '{interfaceType.FullName}' does not inherits from '{this.queryFilterInterfaceTypeFullName}'.");
@@ -74,21 +74,21 @@ namespace QTFK.Services.DBIO
             Asserts.check(filterTypes.Length == 1, $"There is zero or more than one type implementing {interfaceType.FullName}");
 
             filterType = filterTypes[0];
-            ctors = filterType.GetConstructors();
-            paramBuilderCtor = ctors
-                .FirstOrDefault(c =>
-                {
-                    ParameterInfo[] args;
+            //ctors = filterType.GetConstructors();
+            //paramBuilderCtor = ctors
+            //    .FirstOrDefault(c =>
+            //    {
+            //        ParameterInfo[] args;
 
-                    args = c.GetParameters();
+            //        args = c.GetParameters();
 
-                    return args.Length == 1
-                        && args[0].ParameterType == typeof(IParameterBuilderFactory);
-                });
+            //        return args.Length == 1
+            //            && args[0].ParameterType == typeof(IParameterBuilderFactory);
+            //    });
 
-            if (paramBuilderCtor != null)
-                instance = (IQueryFilter)paramBuilderCtor.Invoke(new object[] { this.parameterBuilderFactory });
-            else
+            //if (paramBuilderCtor != null)
+            //    instance = (IQueryFilter)paramBuilderCtor.Invoke(new object[] { this.parameterBuilderFactory });
+            //else
                 instance = (IQueryFilter)Activator.CreateInstance(filterType);
 
             return instance;
