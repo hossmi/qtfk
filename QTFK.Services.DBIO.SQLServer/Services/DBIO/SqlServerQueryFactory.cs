@@ -14,37 +14,37 @@ namespace QTFK.Services.DBIO
             return new SQLServerQueryFactory(new Type[]
             {
                 //typeof(SqlByParamEqualsFilter),
-            }, ParameterBuilder.TSQL);
+            }, new TSQLParameterBuilderFactory());
         }
 
         public SQLServerQueryFactory(IEnumerable<Type> filterTypes)
-            : this(filterTypes, ParameterBuilder.TSQL)
+            : this(filterTypes, new TSQLParameterBuilderFactory())
         {
         }
 
-        public SQLServerQueryFactory(IEnumerable<Type> filterTypes, IParameterBuilder parameterBuilder) 
-            : base(filterTypes, parameterBuilder)
+        public SQLServerQueryFactory(IEnumerable<Type> filterTypes, IParameterBuilderFactory parameterBuilderFactory) 
+            : base(filterTypes, parameterBuilderFactory)
         {
         }
 
         protected override IDBQueryDelete prv_newDelete()
         {
-            return new SqlDeleteQuery();
+            return new SqlDeleteQuery(this.parameterBuilderFactory);
         }
 
         protected override IDBQueryInsert prv_newInsert()
         {
-            return new SqlInsertQuery(this.parameterBuilder);
+            return new SqlInsertQuery(this.parameterBuilderFactory);
         }
 
         protected override IDBQuerySelect prv_newSelect()
         {
-            return new SqlSelectQuery();
+            return new SqlSelectQuery(this.parameterBuilderFactory);
         }
 
         protected override IDBQueryUpdate prv_newUpdate()
         {
-            return new SqlUpdateQuery(this.parameterBuilder);
+            return new SqlUpdateQuery(this.parameterBuilderFactory);
         }
     }
 }

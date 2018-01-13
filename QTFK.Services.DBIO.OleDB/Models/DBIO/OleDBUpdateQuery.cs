@@ -6,7 +6,7 @@ namespace QTFK.Models.DBIO
     [OleDB]
     internal class OleDBUpdateQuery : AbstractUpdateQuery
     {
-        public OleDBUpdateQuery(IParameterBuilder parameterBuilder) : base(parameterBuilder)
+        public OleDBUpdateQuery(IParameterBuilderFactory parameterBuilderFactory) : base(parameterBuilderFactory)
         {
         }
     }

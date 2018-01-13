@@ -25,14 +25,11 @@ namespace QTFK.Models.DBIO
         {
         }
 
-        public string Compile()
+        public FilterCompilation Compile(IParameterBuilder parameterBuilder)
         {
-            return string.Empty;
-        }
-
-        public IEnumerable<QueryParameter> getParameters()
-        {
-            return Enumerable.Empty<QueryParameter>();
+            return new FilterCompilation(
+                string.Empty, 
+                Enumerable.Empty<QueryParameter>());
         }
     }
 }

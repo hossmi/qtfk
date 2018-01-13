@@ -1,18 +1,22 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
+using QTFK.Services;
 
 namespace QTFK.Models.DBIO
 {
     public abstract class AbstractDeleteQuery : IDBQueryDelete
     {
+        private readonly IParameterBuilderFactory parameterBuilderFactory;
         protected string prefix;
         protected string table;
         protected IQueryFilter filter;
 
-        public AbstractDeleteQuery()
+        public AbstractDeleteQuery(IParameterBuilderFactory parameterBuilderFactory)
         {
             this.prefix = "";
             this.table = "";
             this.filter = NullQueryFilter.Instance;
+            this.parameterBuilderFactory = parameterBuilderFactory;
         }
 
         public string Prefix
@@ -53,24 +57,31 @@ namespace QTFK.Models.DBIO
             }
         }
 
-        public virtual string Compile()
+        public virtual QueryCompilation Compile()
         {
-            string whereSegment;
+            QueryCompilation result;
+            string whereSegment, query;
+            FilterCompilation filterCompilation;
+            IDictionary<string, object> parameters;
+            IParameterBuilder parameterBuilder;
 
             Asserts.isFilled(this.Table, $"Property '{nameof(this.Table)}' cannot be empty.");
 
-            whereSegment = this.filter.Compile();
+            parameterBuilder = this.parameterBuilderFactory.buildInstance();
+            filterCompilation = this.filter.Compile(parameterBuilder);
+
+            whereSegment = filterCompilation.FilterSegment;
             whereSegment = string.IsNullOrWhiteSpace(whereSegment) ? "" : $"WHERE ({whereSegment})";
 
-            return $@"
+            query = $@"
                 DELETE FROM {this.prefix}[{this.table}]
                 {whereSegment}
                 ;";
-        }
 
-        public virtual IEnumerable<QueryParameter> getParameters()
-        {
-            return this.filter.getParameters();
+            parameters = filterCompilation.Parameters.ToDictionary(p => p.Parameter, p => p.Value);
+            result = new QueryCompilation(query, parameters);
+
+            return result;
         }
     }
 }
