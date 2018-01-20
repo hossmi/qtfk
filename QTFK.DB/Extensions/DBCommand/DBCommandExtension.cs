@@ -1,20 +1,42 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace QTFK.Extensions.DBCommand
 {
     public static class DBCommandExtension
     {
-        public static IDbCommand SetCommandText(this IDbCommand cmd, string query)
+        public static IDbCommand setCommandText(this IDbCommand cmd, string commandText)
         {
-            cmd.CommandText = query;
+            cmd.CommandText = commandText;
             return cmd;
         }
-        public static IDbCommand AddParameter(this IDbCommand cmd, string name, object value)
+
+        public static IDbCommand addParameter(this IDbCommand cmd, string name, object value)
+        {
+            return prv_addParameter(cmd, name, value);
+        }
+
+        public static IDbCommand addParameter(this IDbCommand cmd, KeyValuePair<string, object> parameter)
+        {
+            return prv_addParameter(cmd, parameter.Key, parameter.Value);
+        }
+
+        public static IDbCommand addParameters(this IDbCommand cmd, IEnumerable<KeyValuePair<string, object>> parameters)
+        {
+            foreach (var p in parameters)
+                cmd.addParameter(p.Key, p.Value);
+
+            return cmd;
+        }
+
+        public static IDbCommand clearParameters(this IDbCommand cmd)
+        {
+            cmd.Parameters.Clear();
+            return cmd;
+        }
+
+        private static IDbCommand prv_addParameter(IDbCommand cmd, string name, object value)
         {
             var p = cmd.CreateParameter();
             p.ParameterName = name;
@@ -23,18 +45,6 @@ namespace QTFK.Extensions.DBCommand
 
             return cmd;
         }
-        public static IDbCommand AddParameters(this IDbCommand cmd, IDictionary<string,object> parameters)
-        {
-            foreach (var p in parameters)
-                cmd.AddParameter(p.Key, p.Value);
 
-            return cmd;
-        }
-
-        public static IDbCommand ClearParameters(this IDbCommand cmd)
-        {
-            cmd.Parameters.Clear();
-            return cmd;
-        }
     }
 }

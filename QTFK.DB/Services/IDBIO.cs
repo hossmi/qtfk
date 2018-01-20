@@ -10,8 +10,8 @@ namespace QTFK.Services
     public interface IDBIO : IDisposable
     {
         int Set(Func<IDbCommand, int> instructions);
-        IEnumerable<T> Get<T>(string query, IDictionary<string, object> parameters, Func<IDataRecord, T> buildDelegate);
-        DataSet Get(string query, IDictionary<string, object> parameters);
+        IEnumerable<T> Get<T>(string query, IEnumerable<KeyValuePair<string, object>> parameters, Func<IDataRecord, T> buildDelegate);
+        DataSet Get(string query, IEnumerable<KeyValuePair<string, object>> parameters);
         object GetLastID(IDbCommand cmd);
     }
 }

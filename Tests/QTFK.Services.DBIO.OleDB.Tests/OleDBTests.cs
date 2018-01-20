@@ -62,7 +62,7 @@ namespace QTFK.Services.DBIO.OleDB.Tests
                     INSERT INTO persona (nombre, apellidos)
                     VALUES (@nombre,@apellidos)
                     ;";
-                cmd.AddParameters(new Dictionary<string, object>
+                cmd.addParameters(new Dictionary<string, object>
                 {
                     { "@nombre", testPerson.Name },
                     { "@apellidos", testPerson.LastName },
@@ -74,9 +74,9 @@ namespace QTFK.Services.DBIO.OleDB.Tests
                 Assert.IsTrue(id > 0);
 
                 cmd
-                    .SetCommandText($@" SELECT * FROM persona WHERE id = @id;")
-                    .ClearParameters()
-                    .AddParameter("@id", id)
+                    .setCommandText($@" SELECT * FROM persona WHERE id = @id;")
+                    .clearParameters()
+                    .addParameter("@id", id)
                     ;
 
                 var personsDB = cmd
@@ -136,14 +136,11 @@ namespace QTFK.Services.DBIO.OleDB.Tests
             this.db.Set($@"
                 INSERT INTO persona (nombre, apellidos)
                 VALUES (@nombre,@apellidos)
-                ;", new Dictionary<string, object>
-                {
-                    { "@nombre", "Tronco" },
-                    { "@apellidos", "Sanchez López" },
-                });
+                ;", Parameters.push("@nombre", "Tronco").push("@apellidos", "Sanchez López" )
+                );
 
             var personDB = this.db.Get($@" SELECT * FROM persona WHERE nombre = @nombre;",
-                this.db.Params().Set("@nombre", testPerson.Name),
+                Parameters.push("@nombre", testPerson.Name),
                 r => new Person
                 {
                     Name = r.Get<string>("nombre"),
@@ -177,27 +174,27 @@ namespace QTFK.Services.DBIO.OleDB.Tests
             this.db.Set($@"
                 INSERT INTO persona (nombre, apellidos, fecha_nacimiento, hora_nacimiento)
                 VALUES (@nombre,@apellidos, @fecha_nacimiento, @hora_nacimiento)
-                ;", this.db.Params()
-                    .Set("@nombre", pepePerson.Name)
-                    .Set("@apellidos", pepePerson.LastName)
-                    .SetDateTime("@fecha_nacimiento", "@hora_nacimiento", pepePerson.BirdhDate)
+                ;", Parameters.start()
+                    .push("@nombre", pepePerson.Name)
+                    .push("@apellidos", pepePerson.LastName)
+                    .pushDateTime("@fecha_nacimiento", "@hora_nacimiento", pepePerson.BirdhDate)
                 );
 
             this.db.Set($@"
                 INSERT INTO persona (nombre, apellidos, fecha_nacimiento, hora_nacimiento)
                 VALUES (@nombre,@apellidos, @fecha_nacimiento, @hora_nacimiento)
-                ;", this.db.Params()
-                    .Set("@nombre", troncoPerson.Name)
-                    .Set("@apellidos", troncoPerson.LastName)
-                    .SetDateTime("@fecha_nacimiento", "@hora_nacimiento", troncoPerson.DeathDate)
+                ;", Parameters.start()
+                    .push("@nombre", troncoPerson.Name)
+                    .push("@apellidos", troncoPerson.LastName)
+                    .pushDateTime("@fecha_nacimiento", "@hora_nacimiento", troncoPerson.DeathDate)
                 );
 
             var personsDB = this.db.Get($@" SELECT * FROM persona;", r => new Person
             {
                 Name = r.Get<string>("nombre"),
                 LastName = r.Get<string>("apellidos"),
-                BirdhDate = r.GetDateTime("fecha_nacimiento", "hora_nacimiento"),
-                DeathDate = r.GetNullableDateTime("fecha_nacimiento", "hora_nacimiento")
+                BirdhDate = r.getDateTime("fecha_nacimiento", "hora_nacimiento"),
+                DeathDate = r.getNullableDateTime("fecha_nacimiento", "hora_nacimiento")
             });
 
             var pepeDB = personsDB.Single(p => p.Name == "pepe");
@@ -328,7 +325,7 @@ namespace QTFK.Services.DBIO.OleDB.Tests
             this.db.Set(cmd =>
             {
                 data = cmd
-                    .SetCommandText($@" SELECT * FROM persona")
+                    .setCommandText($@" SELECT * FROM persona")
                     .ExecuteReader()
                     .GetRecords()
                     .AutoMap<DLPerson>()
@@ -344,7 +341,7 @@ namespace QTFK.Services.DBIO.OleDB.Tests
             this.db.Set(cmd =>
             {
                 data = cmd
-                    .SetCommandText($@" SELECT * FROM persona")
+                    .setCommandText($@" SELECT * FROM persona")
                     .ExecuteReader()
                     .GetRecords()
                     .AutoMap<DLPerson>((r, i) =>
@@ -394,7 +391,7 @@ namespace QTFK.Services.DBIO.OleDB.Tests
             Assert.AreEqual(DateTime.MinValue, testItem.BirthDate);
 
             data = this.db
-                .Get<DLPerson>($@" SELECT * FROM persona WHERE nombre = @nombre", this.db.Params().Set("@nombre", "Pepe"))
+                .Get<DLPerson>($@" SELECT * FROM persona WHERE nombre = @nombre", Parameters.push("@nombre", "Pepe"))
                 .ToList()
                 ;
 

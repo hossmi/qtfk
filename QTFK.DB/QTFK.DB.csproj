@@ -61,6 +61,7 @@
     <Compile Include="Models\IQueryFilter.cs" />
     <Compile Include="Models\QueryCompilation.cs" />
     <Compile Include="Models\QueryParameter.cs" />
+    <Compile Include="Extensions\DBIO\Parameters.cs" />
     <Compile Include="Models\SelectColumn.cs" />
     <Compile Include="Models\SetColumn.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

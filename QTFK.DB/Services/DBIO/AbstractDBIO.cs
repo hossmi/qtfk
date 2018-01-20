@@ -46,7 +46,7 @@ namespace QTFK.Services.DBIO
         {
         }
 
-        public virtual DataSet Get(string query, IDictionary<string, object> parameters)
+        public virtual DataSet Get(string query, IEnumerable<KeyValuePair<string, object>> parameters)
         {
             DataSet ds;
 
@@ -60,7 +60,7 @@ namespace QTFK.Services.DBIO
             {
                 try
                 {
-                    da.SelectCommand.AddParameters(parameters);
+                    da.SelectCommand.addParameters(parameters);
                     ds = new DataSet();
                     da.Fill(ds);
                 }
@@ -78,7 +78,7 @@ namespace QTFK.Services.DBIO
             return ds;
         }
 
-        public virtual IEnumerable<T> Get<T>(string query, IDictionary<string, object> parameters, Func<IDataRecord, T> buildDelegate)
+        public virtual IEnumerable<T> Get<T>(string query, IEnumerable<KeyValuePair<string, object>> parameters, Func<IDataRecord, T> buildDelegate)
         {
             IEnumerable<T> result;
             IDbTransaction trans;
@@ -103,7 +103,7 @@ namespace QTFK.Services.DBIO
 
                     command.Transaction = trans;
                     command.CommandText = query;
-                    command.AddParameters(parameters);
+                    command.addParameters(parameters);
 
                     reader = command.ExecuteReader();
                     result = reader
@@ -134,8 +134,8 @@ namespace QTFK.Services.DBIO
             try
             {
                 return cmd
-                    .SetCommandText(" SELECT @@IDENTITY ")
-                    .ClearParameters()
+                    .setCommandText(" SELECT @@IDENTITY ")
+                    .clearParameters()
                     .ExecuteScalar()
                     ;
             }

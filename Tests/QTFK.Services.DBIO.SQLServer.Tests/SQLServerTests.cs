@@ -60,7 +60,7 @@ namespace QTFK.Services.DBIO.SQLServer.Tests
                     INSERT INTO persona (nombre, apellidos)
                     VALUES (@nombre,@apellidos)
                     ;";
-                cmd.AddParameters(new Dictionary<string, object>
+                cmd.addParameters(new Dictionary<string, object>
                 {
                     { "@nombre", testPerson.Name },
                     { "@apellidos", testPerson.LastName },
@@ -72,9 +72,9 @@ namespace QTFK.Services.DBIO.SQLServer.Tests
                 Assert.IsTrue(id > 0);
 
                 cmd
-                    .SetCommandText($@" SELECT * FROM persona WHERE id = @id;")
-                    .ClearParameters()
-                    .AddParameter("@id", id)
+                    .setCommandText($@" SELECT * FROM persona WHERE id = @id;")
+                    .clearParameters()
+                    .addParameter("@id", id)
                     ;
 
                 var personsDB = cmd
@@ -126,11 +126,10 @@ namespace QTFK.Services.DBIO.SQLServer.Tests
                 USE qtfk
                 INSERT INTO persona (nombre, apellidos)
                 VALUES (@nombre,@apellidos)
-                ;", new Dictionary<string, object>
-                {
-                    { "@nombre", testPerson.Name },
-                    { "@apellidos", testPerson.LastName },
-                });
+                ;", Parameters
+                    .push("@nombre", testPerson.Name)
+                    .push("@apellidos", testPerson.LastName)
+                );
 
             this.db.Set($@"
                 USE qtfk
@@ -143,7 +142,7 @@ namespace QTFK.Services.DBIO.SQLServer.Tests
                 });
 
             var personDB = this.db.Get($@" SELECT * FROM persona WHERE nombre = @nombre;",
-                    this.db.Params().Set("@nombre", testPerson.Name),
+                    new Dictionary<string, object> { { "@nombre", testPerson.Name } },
                     r => new Person
                     {
                         Name = r.Get<string>("nombre"),

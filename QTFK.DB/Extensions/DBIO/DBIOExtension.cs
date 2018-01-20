@@ -1,5 +1,4 @@
 ﻿using QTFK.Extensions.Collections.Filters;
-using QTFK.Extensions.Collections.Dictionaries;
 using QTFK.Extensions.DBCommand;
 using QTFK.Extensions.Mapping.AutoMapping;
 using QTFK.Models;
@@ -7,12 +6,14 @@ using QTFK.Services;
 using System;
 using System.Collections.Generic;
 using System.Data;
-using QTFK.Extensions.DBIO.DBQueries;
+using System.Linq;
 
 namespace QTFK.Extensions.DBIO
 {
     public static class DBIOExtension
     {
+        private static IEnumerable<KeyValuePair<string, object>> emptyParameterCollection = Enumerable.Empty<KeyValuePair<string, object>>();
+
         public static void Set(this IDBIO dbio, Action<IDbCommand> instructions)
         {
             dbio.Set(cmd =>
@@ -33,10 +34,10 @@ namespace QTFK.Extensions.DBIO
 
         public static int Set(this IDBIO dbio, string query)
         {
-            return prv_set(dbio, query, prv_buildParams());
+            return prv_set(dbio, query, emptyParameterCollection);
         }
 
-        public static int Set(this IDBIO dbio, string query, IDictionary<string, object> parameters)
+        public static int Set(this IDBIO dbio, string query, IEnumerable<KeyValuePair<string, object>> parameters)
         {
             return prv_set(dbio, query, parameters);
         }
@@ -45,50 +46,57 @@ namespace QTFK.Extensions.DBIO
         {
             return dbio.Set(cmd =>
             {
-                int affectedRows = 0;
+                Result<int> queryExecutionResult;
+                int affectedRows;
+
+                affectedRows = 0;
+
                 foreach (string query in queries.NotEmpty())
                 {
                     cmd.CommandText = query;
-                    var res = new Result<int>(() => cmd.ExecuteNonQuery());
-                    affectedRows += res.Value;
+                    queryExecutionResult = new Result<int>(cmd.ExecuteNonQuery);
 
-                    if (!res.Ok && throwOnException)
-                        throw res.Exception;
+                    if(queryExecutionResult.Ok)
+                        affectedRows += queryExecutionResult.Value;
+                    else if(throwOnException)
+                        throw queryExecutionResult.Exception;
                 }
+
                 return affectedRows;
             });
         }
-        
+
         public static DataSet Get(this IDBIO dbio, string query)
         {
-            return dbio.Get(query, prv_buildParams());
+            return dbio.Get(query, emptyParameterCollection);
         }
-        
+
         public static IEnumerable<T> Get<T>(this IDBIO dbio, string query, Func<IDataRecord, T> buildDelegate)
         {
-            return prv_get<T>(dbio, query, prv_buildParams(), buildDelegate);
+            return prv_get<T>(dbio, query, emptyParameterCollection, buildDelegate);
         }
 
         public static IEnumerable<T> Get<T>(this IDBIO dbio, string query) where T : new()
         {
-            return prv_get<T>(dbio, query, prv_buildParams(), AutoMapExtension.AutoMap<T>);
+            return prv_get<T>(dbio, query, emptyParameterCollection, AutoMapExtension.AutoMap<T>);
         }
 
-        public static IEnumerable<T> Get<T>(this IDBIO dbio, string query, IDictionary<string, object> parameters) where T : new()
+        public static IEnumerable<T> Get<T>(this IDBIO dbio, string query, IEnumerable<KeyValuePair<string, object>> parameters) where T : new()
         {
             return prv_get<T>(dbio, query, parameters, AutoMapExtension.AutoMap<T>);
         }
-        
+
         public static IEnumerable<T> Get<T>(this IDBIO dbio, IDBQuery query) where T : new()
         {
-            QueryCompilation queryCompilation;
-
-            queryCompilation = query.Compile();
-
-            return prv_get<T>(dbio, queryCompilation.Query, queryCompilation.Parameters, AutoMapExtension.AutoMap<T>);
+            return prv_get<T>(dbio, query, AutoMapExtension.AutoMap<T>);
         }
 
         public static IEnumerable<T> Get<T>(this IDBIO dbio, IDBQuery query, Func<IDataRecord, T> buildDelegate)
+        {
+            return prv_get<T>(dbio, query, buildDelegate);
+        }
+
+        private static IEnumerable<T> prv_get<T>(IDBIO dbio, IDBQuery query, Func<IDataRecord, T> buildDelegate)
         {
             QueryCompilation queryCompilation;
 
@@ -97,27 +105,18 @@ namespace QTFK.Extensions.DBIO
             return prv_get<T>(dbio, queryCompilation.Query, queryCompilation.Parameters, buildDelegate);
         }
 
-        public static IDictionary<string, object> Params(this IDBIO dbio)
-        {
-            return prv_buildParams();
-        }
-
-        private static IDictionary<string, object> prv_buildParams()
-        {
-            return DictionaryExtension.New<string, object>();
-        }
-
-        private static IEnumerable<T> prv_get<T>(IDBIO dbio, string query, IDictionary<string, object> parameters, Func<IDataRecord, T> buildDelegate)
+        private static IEnumerable<T> prv_get<T>(IDBIO dbio, string query, IEnumerable<KeyValuePair<string, object>> parameters, Func<IDataRecord, T> buildDelegate)
         {
             return dbio.Get<T>(query, parameters, buildDelegate);
         }
 
-        private static int prv_set(IDBIO dbio, string query, IDictionary<string, object> parameters)
+        private static int prv_set(IDBIO dbio, string query, IEnumerable<KeyValuePair<string, object>> parameters)
         {
             return dbio.Set(cmd =>
             {
                 cmd.CommandText = query;
-                cmd.AddParameters(parameters);
+                cmd.addParameters(parameters);
+
                 return cmd.ExecuteNonQuery();
             });
         }
