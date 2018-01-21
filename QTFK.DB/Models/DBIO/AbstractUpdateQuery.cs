@@ -1,4 +1,5 @@
 ﻿using QTFK.Extensions.Collections.Strings;
+using QTFK.Extensions.DBIO;
 using QTFK.Services;
 using System.Collections.Generic;
 using System.Linq;
@@ -76,7 +77,8 @@ namespace QTFK.Models.DBIO
         {
             QueryCompilation result;
             string whereSegment, columnSegment, query;
-            IDictionary<string, object> parameters;
+            ICollection<KeyValuePair<string,object>> fieldParameters;
+            IEnumerable<KeyValuePair<string,object>> allParameters;
             FilterCompilation filterCompilation;
             IParameterBuilder parameterBuilder;
 
@@ -87,7 +89,7 @@ namespace QTFK.Models.DBIO
             whereSegment = filterCompilation.FilterSegment;
             whereSegment = string.IsNullOrWhiteSpace(whereSegment) ? "" : $"WHERE ({whereSegment})";
 
-            parameters = new Dictionary<string, object>();
+            fieldParameters = Parameters.start();
 
             columnSegment = this.fields
                 .Stringify(field =>
@@ -95,7 +97,7 @@ namespace QTFK.Models.DBIO
                     string fieldResult, parameter;
 
                     parameter = parameterBuilder.buildParameter("update_" + field.Key);
-                    parameters.Add(parameter, field.Value);
+                    fieldParameters.push(parameter, field.Value);
 
                     fieldResult = $" [{field.Key}] = {parameter} ";
 
@@ -108,10 +110,9 @@ namespace QTFK.Models.DBIO
                 {whereSegment}
                 ;";
 
-            foreach (var filterParameter in filterCompilation.Parameters)
-                parameters.Add(filterParameter.Parameter, filterParameter.Value);
+            allParameters = fieldParameters.Concat(filterCompilation.Parameters);
 
-            result = new QueryCompilation(query, parameters);
+            result = new QueryCompilation(query, allParameters);
 
             return result;
         }

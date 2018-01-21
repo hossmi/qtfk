@@ -62,7 +62,6 @@ namespace QTFK.Models.DBIO
             QueryCompilation result;
             string whereSegment, query;
             FilterCompilation filterCompilation;
-            IDictionary<string, object> parameters;
             IParameterBuilder parameterBuilder;
 
             Asserts.isFilled(this.Table, $"Property '{nameof(this.Table)}' cannot be empty.");
@@ -78,8 +77,7 @@ namespace QTFK.Models.DBIO
                 {whereSegment}
                 ;";
 
-            parameters = filterCompilation.Parameters.ToDictionary(p => p.Parameter, p => p.Value);
-            result = new QueryCompilation(query, parameters);
+            result = new QueryCompilation(query, filterCompilation.Parameters);
 
             return result;
         }

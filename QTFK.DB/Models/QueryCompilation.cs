@@ -1,11 +1,10 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 
 namespace QTFK.Models
 {
     public class QueryCompilation
     {
-        public QueryCompilation(string query, IDictionary<string, object> parameters)
+        public QueryCompilation(string query, IEnumerable<KeyValuePair<string, object>> parameters)
         {
             Asserts.isFilled(query, $"Contructor parameter '{nameof(query)}' cannot be empty.");
             Asserts.isSomething(parameters, $"Contructor parameter '{nameof(parameters)}' cannot be null.");
@@ -14,7 +13,7 @@ namespace QTFK.Models
             this.Parameters = parameters;
         }
 
-        public IDictionary<string, object> Parameters { get; }
+        public IEnumerable<KeyValuePair<string, object>> Parameters { get; }
         public string Query { get; }
     }
 }

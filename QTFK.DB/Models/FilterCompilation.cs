@@ -4,7 +4,7 @@ namespace QTFK.Models
 {
     public class FilterCompilation
     {
-        public FilterCompilation(string query, IEnumerable<QueryParameter> parameters)
+        public FilterCompilation(string query, IEnumerable<KeyValuePair<string, object>> parameters)
         {
             Asserts.isFilled(query, $"Contructor parameter '{nameof(query)}' cannot be empty.");
             Asserts.isSomething(parameters, $"Contructor parameter '{nameof(parameters)}' cannot be null.");
@@ -13,7 +13,7 @@ namespace QTFK.Models
             this.Parameters = parameters;
         }
 
-        public IEnumerable<QueryParameter> Parameters { get; }
+        public IEnumerable<KeyValuePair<string, object>> Parameters { get; }
         public string FilterSegment { get; }
     }
 }

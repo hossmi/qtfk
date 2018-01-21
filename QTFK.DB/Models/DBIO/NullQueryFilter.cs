@@ -29,7 +29,7 @@ namespace QTFK.Models.DBIO
         {
             return new FilterCompilation(
                 string.Empty, 
-                Enumerable.Empty<QueryParameter>());
+                Enumerable.Empty<KeyValuePair<string,object>>());
         }
     }
 }

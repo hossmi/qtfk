@@ -78,7 +78,6 @@ namespace QTFK.Models.DBIO
             string whereSegment, columnsSegment, mainTable;
             IList<IEnumerable<string>> allColumns;
             IEnumerable<string> tableColumns;
-            IDictionary<string, object> parameters;
             FilterCompilation filterCompilation;
             IParameterBuilder parameterBuilder;
 
@@ -107,9 +106,7 @@ namespace QTFK.Models.DBIO
                 {whereSegment}
                 ;";
 
-            parameters = filterCompilation.Parameters.ToDictionary(p => p.Parameter, p => p.Value);
-
-            result = new QueryCompilation(query, parameters);
+            result = new QueryCompilation(query, filterCompilation.Parameters);
 
             return result;
         }
