@@ -31,18 +31,18 @@ namespace QTFK.Cmd.Tests
             };
 
             var appArgs = new ConsoleArgsService()
-                .SetCaseSensitive(false)
-                .SetPrefix("--")
-                .AddErrorHandler(error => Assert.Fail($"Unexpected Argument Error! {error.Message}"))
+                .setCaseSensitive(false)
+                .setPrefix("--")
+                .setErrorHandler(error => Assert.Fail($"Unexpected Argument Error! {error.Message}"))
                 .Parse(args, builder => new
                 {
-                    RequiredString = builder.Required("someString", "Description for someString option."),
-                    RequiredNumber = builder.Required<double>("someNumber", "Description for someNumber option."),
-                    Input2 = builder.Required(2, "source", "Source path"),
-                    Input1 = builder.Required(1, "target", "Target path"),
-                    Input3_optional = builder.Optional(3, "iterations", "Number of times to try copy", 13),
-                    Flag = builder.Flag("someFlag", "Description for someFlag."),
-                    OptionalDate = builder.Optional("someOptionalDate", "Description for someOptionalDate.", new DateTime(2099, 12, 31))
+                    RequiredString = builder.getRequired("someString", "Description for someString option."),
+                    RequiredNumber = builder.setRequired<double>("someNumber", "Description for someNumber option."),
+                    Input2 = builder.getRequired(2, "source", "Source path"),
+                    Input1 = builder.getRequired(1, "target", "Target path"),
+                    Input3_optional = builder.setOptional(3, "iterations", "Number of times to try copy", 13),
+                    Flag = builder.getFlag("someFlag", "Description for someFlag."),
+                    OptionalDate = builder.setOptional("someOptionalDate", "Description for someOptionalDate.", new DateTime(2099, 12, 31))
                 });
 
             Assert.AreEqual("pepe", appArgs.RequiredString);
@@ -61,15 +61,15 @@ namespace QTFK.Cmd.Tests
             var errors = new List<Exception>();
 
             var service = new ConsoleArgsService()
-                .SetCaseSensitive(true)
-                .SetPrefix("/")
-                .AddErrorHandler(errors.Add)
+                .setCaseSensitive(true)
+                .setPrefix("/")
+                .setErrorHandler(errors.Add)
                 ;
 
             string[] args = new string[] { "/somearg", "3" };
             var result = service.Parse(args, builder => new
             {
-                Arg1 = builder.Required("someArg", "Description for someArg option."),
+                Arg1 = builder.getRequired("someArg", "Description for someArg option."),
             });
 
             Assert.AreEqual(1, errors.Count());
@@ -78,7 +78,7 @@ namespace QTFK.Cmd.Tests
             service.CaseSensitive = false;
             result = service.Parse(args, builder => new
             {
-                Arg1 = builder.Required("someArg", "Description for someArg option."),
+                Arg1 = builder.getRequired("someArg", "Description for someArg option."),
             });
 
             Assert.AreEqual(0, errors.Count());

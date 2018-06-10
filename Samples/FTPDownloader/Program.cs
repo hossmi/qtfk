@@ -1,5 +1,5 @@
 ﻿using QTFK.Extensions;
-using QTFK.Services.Factories;
+using QTFK.Services.ConsoleArgsServices;
 using System;
 
 namespace FTPDownloader
@@ -8,20 +8,19 @@ namespace FTPDownloader
     {
         static void Main(string[] args)
         {
-            var info = new DefaultConsoleArgsFactory()
-                .Build()
-                .SetDescription("Downloads remotes files from an FTP or SFTP.")
-                .SetCaseSensitive(false)
+            var info = ConsoleArgsService.createDefault()
+                .setDescription("Downloads remotes files from an FTP or SFTP.")
+                .setCaseSensitive(false)
                 .Parse(args, b => new
                 {
-                    Host = b.Required("host","Remote ip or domain."),
-                    Port = b.Required<int>("port", "Server listening port."),
-                    User = b.Optional("user", "User name for authentication required access.", "anonymous"),
-                    Pass = b.Optional("pass", "The password for user name.", "anonymous"),
-                    SourceFile = b.Required(1,"source_file", "remote full file path (ex: /dir1/dir2/someFile.txt)"),
-                    TargetFolder = b.Optional(2, "target_folder", @"Folder on to download file. (ex: C:\dir3\dir4\)", Environment.CurrentDirectory),
-                    Retries = b.Optional("retries", "Number of times to retry connection and file download", 3),
-                    Overwrite = b.Flag("overwrite", "Replaces file in target folder if already exists."),
+                    Host = b.getRequired("host","Remote ip or domain."),
+                    Port = b.setRequired<int>("port", "Server listening port."),
+                    User = b.getOptional("user", "User name for authentication required access.", "anonymous"),
+                    Pass = b.getOptional("pass", "The password for user name.", "anonymous"),
+                    SourceFile = b.getRequired(1,"source_file", "remote full file path (ex: /dir1/dir2/someFile.txt)"),
+                    TargetFolder = b.getOptional(2, "target_folder", @"Folder on to download file. (ex: C:\dir3\dir4\)", Environment.CurrentDirectory),
+                    Retries = b.setOptional("retries", "Number of times to retry connection and file download", 3),
+                    Overwrite = b.getFlag("overwrite", "Replaces file in target folder if already exists."),
                 });
 
             //at this time we have all needed info for our ftp app. 

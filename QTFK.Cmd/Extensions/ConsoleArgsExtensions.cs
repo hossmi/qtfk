@@ -11,58 +11,51 @@ namespace QTFK.Extensions
 {
     public static class ConsoleArgsExtensions
     {
-        public static IConsoleArgsService SetPrefix(this IConsoleArgsService service, string prefix)
+        public static IConsoleArgsService setPrefix(this IConsoleArgsService service, string prefix)
         {
             service.Prefix = prefix;
             return service;
         }
 
-        public static IConsoleArgsService SetCaseSensitive(this IConsoleArgsService service, bool value)
+        public static IConsoleArgsService setCaseSensitive(this IConsoleArgsService service, bool value)
         {
             service.CaseSensitive = value;
             return service;
         }
 
-        public static IConsoleArgsService AddErrorHandler(this IConsoleArgsService service, ArgsErrorDelegate onError)
+        public static IConsoleArgsService setErrorHandler(this IConsoleArgsService service, ArgsErrorDelegate onError)
         {
-            service.Error += onError;
+            service.OnError = onError;
             return service;
         }
 
-        public static IConsoleArgsService AddUsageHandler(this IConsoleArgsService service, ArgsUsageDelegate onUsage)
+        public static IConsoleArgsService setUsageHandler(this IConsoleArgsService service, ArgsUsageDelegate onUsage)
         {
-            service.Usage += onUsage;
+            service.OnUsage = onUsage;
             return service;
         }
 
-        public static IConsoleArgsService SetDescription(this IConsoleArgsService service, string description)
+        public static IConsoleArgsService setDescription(this IConsoleArgsService service, string description)
         {
             service.Description = description;
             return service;
         }
 
-        public static IConsoleArgsService SetShowHelpOnError(this IConsoleArgsService service, bool value)
+        public static IConsoleArgsService setShowHelpOnError(this IConsoleArgsService service, bool value)
         {
             service.ShowHelpOnError = value;
             return service;
         }
 
-        public static IConsoleArgsService SetHelp(this IConsoleArgsService service, string name, string description)
+        public static IConsoleArgsService setHelp(this IConsoleArgsService service, string name, string description)
         {
-            service.HelpArgument = new ArgumentInfo
-            {
-                Name = name,
-                Description = description,
-                IsFlag = true,
-                IsIndexed = false,
-                IsOptional = true,
-            };
+            service.HelpArgument = ArgumentInfo.createHelp(name, description);
             return service;
         }
 
-        public static IConsoleArgsService SetTermination(this IConsoleArgsService service, Action termination)
+        public static IConsoleArgsService setTerminationHandler(this IConsoleArgsService service, Action termination)
         {
-            service.OnNullResult = termination;
+            service.OnFatal = termination;
             return service;
         }
 
@@ -70,9 +63,9 @@ namespace QTFK.Extensions
 
 
 
-        public static T Required<T>(this IConsoleArgsBuilder builder, string name, string description) where T : struct
+        public static T setRequired<T>(this IConsoleArgsBuilder builder, string name, string description) where T : struct
         {
-            string result = builder.Required(name, description);
+            string result = builder.getRequired(name, description);
             if (string.IsNullOrEmpty(result))
                 return default(T);
 
@@ -80,28 +73,28 @@ namespace QTFK.Extensions
             return (T)converter.ConvertFromString(result);
         }
 
-        public static T Optional<T>(this IConsoleArgsBuilder builder, string name, string description, T defaultValue)
+        public static T setOptional<T>(this IConsoleArgsBuilder builder, string name, string description, T defaultValue)
         {
-            string result = builder.Optional(name, description, defaultValue.ToString());
+            string result = builder.getOptional(name, description, defaultValue.ToString());
             var converter = TypeDescriptor.GetConverter(defaultValue);
             return (T)converter.ConvertFromString(result);
         }
 
-        public static T Optional<T>(this IConsoleArgsBuilder builder, string name, string description, T defaultValue, Func<string, T> customConverter)
+        public static T setOptional<T>(this IConsoleArgsBuilder builder, string name, string description, T defaultValue, Func<string, T> customConverter)
         {
-            string result = builder.Optional(name, description, defaultValue.ToString());
+            string result = builder.getOptional(name, description, defaultValue.ToString());
             return customConverter(result);
         }
 
-        public static T Optional<T>(this IConsoleArgsBuilder builder, int index, string name, string description, T defaultValue)
+        public static T setOptional<T>(this IConsoleArgsBuilder builder, int index, string name, string description, T defaultValue)
         {
-            string result = builder.Optional(index, name, description, defaultValue.ToString());
+            string result = builder.getOptional(index, name, description, defaultValue.ToString());
             var converter = TypeDescriptor.GetConverter(defaultValue);
             return (T)converter.ConvertFromString(result);
         }
-        public static T Optional<T>(this IConsoleArgsBuilder builder, int index, string name, string description, T defaultValue, Func<string, T> customConverter)
+        public static T setOptional<T>(this IConsoleArgsBuilder builder, int index, string name, string description, T defaultValue, Func<string, T> customConverter)
         {
-            string result = builder.Optional(index, name, description, defaultValue.ToString());
+            string result = builder.getOptional(index, name, description, defaultValue.ToString());
             return customConverter(result);
         }
     }

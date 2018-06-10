@@ -64,7 +64,6 @@
     <Compile Include="Services\ConsoleArgsBuilders\ConsoleArgsBuilder.cs" />
     <Compile Include="Services\ConsoleArgsServices\ConsoleArgsService.cs" />
     <Compile Include="Services\ConsoleArgsBuilders\ExplorerConsoleArgsBuilder.cs" />
-    <Compile Include="Services\Factories\DefaultConsoleArgsFactory.cs" />
     <Compile Include="Services\IConsoleArgsBuilder.cs" />
     <Compile Include="Services\IConsoleArgsService.cs" />
   </ItemGroup>

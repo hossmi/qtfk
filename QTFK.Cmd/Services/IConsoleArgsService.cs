@@ -15,9 +15,9 @@ namespace QTFK.Services
         ArgumentInfo HelpArgument { get; set; }
         bool ShowHelpOnError { get; set; }
 
-        Action OnNullResult { get; set; }
-        event ArgsErrorDelegate Error;
-        event ArgsUsageDelegate Usage;
+        Action OnFatal { get; set; }
+        ArgsErrorDelegate OnError { get; set; }
+        ArgsUsageDelegate OnUsage { get; set; }
 
         T Parse<T>(IEnumerable<string> args, Func<IConsoleArgsBuilder, T> builder) where T: class;
     }

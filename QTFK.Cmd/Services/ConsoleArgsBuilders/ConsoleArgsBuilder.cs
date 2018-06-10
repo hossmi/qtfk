@@ -12,7 +12,7 @@ namespace QTFK.Services.ConsoleArgsBuilders
         private readonly IDictionary<string, ArgumentInfo> argsInfo;
         private readonly IEqualityComparer<string> stringComparer;
 
-        public event ArgsErrorDelegate Error;
+        public ArgsErrorDelegate ErrorFound { get; set; }
 
         public ConsoleArgsBuilder(
             IConsoleArgsService service
@@ -27,37 +27,37 @@ namespace QTFK.Services.ConsoleArgsBuilders
             this.stringComparer = stringcomparer;
         }
 
-        public string Required(string name, string description)
+        public string getRequired(string name, string description)
         {
             string result = prv_findNamed(name, 0);
 
             if (result == null)
-                Error?.Invoke(new Exception($"Missing value for '{name}'"));
+                ErrorFound?.Invoke(new Exception($"Missing value for '{name}'"));
 
             return result;
         }
 
-        public string Optional(string name, string description, string defaultValue)
+        public string getOptional(string name, string description, string defaultValue)
         {
             return prv_findNamed(name, 0) ?? defaultValue;
         }
 
-        public string Required(int index, string name, string description)
+        public string getRequired(int index, string name, string description)
         {
             string result = prv_findUnnamed(index, 0, 1);
 
             if (result == null)
-                Error?.Invoke(new Exception($"Missing value for {index}{(index==1 ? "st" : index == 2 ? "nd" : "th")} argument '{name}'."));
+                ErrorFound?.Invoke(new Exception($"Missing value for {index}{(index==1 ? "st" : index == 2 ? "nd" : "th")} argument '{name}'."));
 
             return result;
         }
 
-        public string Optional(int index, string name, string description, string defaultValue)
+        public string getOptional(int index, string name, string description, string defaultValue)
         {
             return prv_findUnnamed(index, 0, 1) ?? defaultValue;
         }
 
-        public bool Flag(string name, string description)
+        public bool getFlag(string name, string description)
         {
             return prv_findFlag(name, 0);
         }

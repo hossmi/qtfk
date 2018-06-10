@@ -29,25 +29,25 @@ namespace QTFK.Cmd.Tests
 
             _appArgs = new ConsoleArgsService()
                 .As<IConsoleArgsService>()
-                .SetCaseSensitive(false)
-                .SetDescription("Copy directory trees and files.")
-                .SetHelp("?", "Shows this help.")
-                .SetPrefix("/")
-                .AddErrorHandler(_errors.Add)
-                .AddUsageHandler((description,options) => { _appDescription = description; _appOptions = options; })
-                .SetShowHelpOnError(true)
+                .setCaseSensitive(false)
+                .setDescription("Copy directory trees and files.")
+                .setHelp("?", "Shows this help.")
+                .setPrefix("/")
+                .setErrorHandler(_errors.Add)
+                .setUsageHandler((description,options) => { _appDescription = description; _appOptions = options; })
+                .setShowHelpOnError(true)
                 ;
 
             _builder = b => new XCopyArgsTest
             {
-                Source = b.Required(1, "source", "Source files to be copied."),
-                Target = b.Optional(2, "target", "Destination path.", Environment.CurrentDirectory),
-                Recursive = b.Flag("s", "Recursive copy of subfoldes."),
-                CopyEmptyFolders = b.Flag("e", "With 's' option, copies empty subfolders."),
-                VerifyEachFileSize = b.Flag("v", "Verifies file size after each copy."),
-                CopyAfter = b.Optional("d", "Copy files modified during or after specified date.", DateTime.MinValue),
-                Overwrite = b.Flag("r", "Overwrites existing files."),
-                Retries = b.Optional("Retries", "Number of times to retry the copy operation", 3),
+                Source = b.getRequired(1, "source", "Source files to be copied."),
+                Target = b.getOptional(2, "target", "Destination path.", Environment.CurrentDirectory),
+                Recursive = b.getFlag("s", "Recursive copy of subfoldes."),
+                CopyEmptyFolders = b.getFlag("e", "With 's' option, copies empty subfolders."),
+                VerifyEachFileSize = b.getFlag("v", "Verifies file size after each copy."),
+                CopyAfter = b.setOptional("d", "Copy files modified during or after specified date.", DateTime.MinValue),
+                Overwrite = b.getFlag("r", "Overwrites existing files."),
+                Retries = b.setOptional("Retries", "Number of times to retry the copy operation", 3),
             };
         }
 

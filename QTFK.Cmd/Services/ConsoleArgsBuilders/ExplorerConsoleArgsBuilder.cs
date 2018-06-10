@@ -15,30 +15,30 @@ namespace QTFK.Services.ConsoleArgsBuilders
             this.data = data;
         }
 
-        public event ArgsErrorDelegate Error;
+        public ArgsErrorDelegate ErrorFound { get; set; }
 
-        public bool Flag(string name, string description)
+        public bool getFlag(string name, string description)
         {
             prv_setOptionData(this.data, name, description, true, false, false.ToString(), true);
             return false;
         }
 
-        public string Optional(string name, string description, string defaultValue)
+        public string getOptional(string name, string description, string defaultValue)
         {
             return prv_setOptionData(this.data, name, description, true, false, defaultValue, false);
         }
 
-        public string Optional(int index, string name, string description, string defaultValue)
+        public string getOptional(int index, string name, string description, string defaultValue)
         {
             return prv_setOptionData(this.data, name, description, true, true, defaultValue, false);
         }
 
-        public string Required(string name, string description)
+        public string getRequired(string name, string description)
         {
             return prv_setOptionData(this.data, name, description, false, false, string.Empty, false);
         }
 
-        public string Required(int index, string name, string description)
+        public string getRequired(int index, string name, string description)
         {
             return prv_setOptionData(this.data, name, description, false, true, string.Empty, false);
         }
@@ -52,15 +52,7 @@ namespace QTFK.Services.ConsoleArgsBuilders
         {
             ArgumentInfo argumentInfo;
 
-            argumentInfo = new ArgumentInfo
-            {
-                Name = name,
-                Description = description,
-                Default = defaultValue,
-                IsOptional = isOptional,
-                IsIndexed = isIndexed,
-                IsFlag = isFlag,
-            };
+            argumentInfo = ArgumentInfo.createDefault(name, description, defaultValue, isOptional, isIndexed, isFlag);
             data.Set(name, argumentInfo);
 
             return defaultValue;
