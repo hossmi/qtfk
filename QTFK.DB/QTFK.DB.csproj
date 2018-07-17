@@ -51,7 +51,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="QTFK.Logs">
-      <HintPath>..\..\qtfkdata\libs\qtfk.1.5.0\QTFK.Logs.dll</HintPath>
+      <HintPath>..\QTFK.Logs\bin\Debug\QTFK.Logs.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
