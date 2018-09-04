@@ -50,9 +50,6 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="QTFK.Logs">
-      <HintPath>..\QTFK.Logs\bin\Debug\QTFK.Logs.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -99,6 +96,10 @@
     <ProjectReference Include="..\QTFK.Core\QTFK.Core.csproj">
       <Project>{8c740adf-e4e1-444a-a9f0-2e40b174260f}</Project>
       <Name>QTFK.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\QTFK.Logs\QTFK.Logs.csproj">
+      <Project>{277f230c-64c9-4a90-bf71-1d0e83d26658}</Project>
+      <Name>QTFK.Logs</Name>
     </ProjectReference>
     <ProjectReference Include="..\QTFK.Reflection\QTFK.Reflection.csproj">
       <Project>{FB47E6F1-2E3B-47FC-A5A6-C048F54B7FE5}</Project>
