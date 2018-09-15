@@ -62,7 +62,6 @@
   <ItemGroup>
     <Compile Include="Attributes\DBAttribute.cs" />
     <Compile Include="Attributes\OleDBAttribute.cs" />
-    <Compile Include="Attributes\OracleAttribute.cs" />
     <Compile Include="Attributes\SqlServerAttribute.cs" />
     <Compile Include="Extensions\DBCommand\DBCommandExtension.cs" />
     <Compile Include="Extensions\DBIO\DBIOExtension.cs" />
