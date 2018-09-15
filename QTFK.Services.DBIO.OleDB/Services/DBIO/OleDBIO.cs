@@ -5,7 +5,7 @@ using QTFK.Attributes;
 namespace QTFK.Services.DBIO
 {
     [OleDB]
-    public class OleDBIO : AbstractDBIO<OleDbConnection, OleDbCommand, OleDbDataAdapter>
+    public class OleDBIO : AbstractDBIO<OleDbConnection, OleDbCommand, OleDbDataAdapter>, IOleDBIO
     {
         public OleDBIO(string connectionString)
             : base(connectionString)

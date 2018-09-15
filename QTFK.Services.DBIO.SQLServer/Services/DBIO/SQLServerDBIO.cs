@@ -5,7 +5,7 @@ using QTFK.Attributes;
 namespace QTFK.Services.DBIO
 {
     [SqlServer]
-    public class SQLServerDBIO : AbstractDBIO<SqlConnection, SqlCommand, SqlDataAdapter>
+    public class SQLServerDBIO : AbstractDBIO<SqlConnection, SqlCommand, SqlDataAdapter>, ISqlServerDBIO
     {
         public SQLServerDBIO(string connectionString) 
             : base(connectionString)
