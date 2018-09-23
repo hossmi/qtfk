@@ -79,38 +79,14 @@ namespace QTFK.Core.Tests
     }
 ";
             compiler = new CompilerWrapper();
-            compiler.CompilationResult += result =>
+            try
             {
-                if (!result.Errors.HasErrors)
-                    Assert.Fail("Expected compilation error");
-            };
-            assembly = compiler.build(code);
-        }
-
-        [TestMethod]
-        public void compiling_simple_class_with_errors_checking_null_assembly()
-        {
-            string code;
-            ICompilerWrapper compiler;
-            Assembly assembly;
-
-            code = @"
-    using System;
-
-    namespace First
-    {
-        public class Pepe
-        {
-            public int Suma(int a, int b)
-            {
-                return a + b
+                assembly = compiler.build(code);
+                Assert.Fail("Expected compilation error");
             }
-        }
-    }
-";
-            compiler = new CompilerWrapper();
-            assembly = compiler.build(code);
-            Assert.IsNull(assembly);
+            catch (CompilerException)
+            {
+            }
         }
 
         [TestMethod]

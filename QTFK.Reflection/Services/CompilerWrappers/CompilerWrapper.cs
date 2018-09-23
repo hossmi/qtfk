@@ -8,13 +8,12 @@ namespace QTFK.Services.CompilerWrappers
 {
     public class CompilerWrapper : ICompilerWrapper
     {
-        public event Action<CompilerResults> CompilationResult;
-
         public Assembly build(string code, IEnumerable<string> referencedAssemblies, Action<CompilerParameters> settings)
         {
             using (var provider = new CSharpCodeProvider())
             {
                 CompilerParameters parameters;
+                CompilerResults compilerResults;
 
                 parameters = new CompilerParameters();
 
@@ -26,13 +25,12 @@ namespace QTFK.Services.CompilerWrappers
 
                 settings(parameters);
 
-                var result = provider.CompileAssemblyFromSource(parameters, code);
-                CompilationResult?.Invoke(result);
+                compilerResults = provider.CompileAssemblyFromSource(parameters, code);
 
-                return result.Errors.HasErrors
-                    ? null
-                    : result.CompiledAssembly
-                    ;
+                if (compilerResults.Errors.HasErrors)
+                    throw new CompilerException(compilerResults.Errors);
+
+                return compilerResults.CompiledAssembly;
             }
         }
     }
