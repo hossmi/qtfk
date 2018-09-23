@@ -2,7 +2,7 @@
 using System.CodeDom.Compiler;
 using System.Runtime.Serialization;
 
-namespace QTFK.Services
+namespace QTFK.Services.Compilers
 {
     [Serializable]
     public class CompilerException : Exception

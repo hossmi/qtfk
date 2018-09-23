@@ -4,11 +4,11 @@ using System.Collections.Generic;
 using System.Reflection;
 using Microsoft.CSharp;
 
-namespace QTFK.Services.CompilerWrappers
+namespace QTFK.Services.Compilers
 {
-    public class CompilerWrapper : ICompilerWrapper
+    public class CompilerWrapper 
     {
-        public Assembly build(string code, IEnumerable<string> referencedAssemblies, Action<CompilerParameters> settings)
+        public static Assembly buildInMemoryAssembly(string code, IEnumerable<string> referencedAssemblies)
         {
             using (var provider = new CSharpCodeProvider())
             {
@@ -22,8 +22,6 @@ namespace QTFK.Services.CompilerWrappers
 
                 parameters.GenerateInMemory = true;
                 parameters.GenerateExecutable = false;
-
-                settings(parameters);
 
                 compilerResults = provider.CompileAssemblyFromSource(parameters, code);
 

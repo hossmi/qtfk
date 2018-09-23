@@ -1,13 +1,11 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Reflection;
-using QTFK.Services.CompilerWrappers;
-using QTFK.Extensions.Compilers;
-using QTFK.Services;
 using SampleLibrary;
 using QTFK.Extensions.Assemblies;
 using System.Linq;
 using System.Collections.Generic;
+using QTFK.Services.Compilers;
 
 namespace QTFK.Core.Tests
 {
@@ -18,7 +16,6 @@ namespace QTFK.Core.Tests
         [TestMethod]
         public void compiling_simple_class()
         {
-            ICompilerWrapper compiler;
             string code;
             Assembly assembly;
             Type pepeType;
@@ -40,8 +37,7 @@ namespace QTFK.Core.Tests
         }
     }
 ";
-            compiler = new CompilerWrapper();
-            assembly = compiler.build(code);
+            assembly = CompilerWrapper.buildInMemoryAssembly(code, new string[] { });
 
             pepeType = assembly.GetType("First.Pepe");
 
@@ -61,7 +57,6 @@ namespace QTFK.Core.Tests
         public void compiling_simple_class_with_errors()
         {
             string code;
-            ICompilerWrapper compiler;
             Assembly assembly;
 
             code = @"
@@ -78,10 +73,9 @@ namespace QTFK.Core.Tests
         }
     }
 ";
-            compiler = new CompilerWrapper();
             try
             {
-                assembly = compiler.build(code);
+                assembly = CompilerWrapper.buildInMemoryAssembly(code, new string[] { });
                 Assert.Fail("Expected compilation error");
             }
             catch (CompilerException)
@@ -93,7 +87,6 @@ namespace QTFK.Core.Tests
         public void compiling_implementation_class_with_external_reference()
         {
             string code;
-            ICompilerWrapper compiler;
             Assembly assembly;
             ISampleService pepeService, samePepeService;
 
@@ -112,8 +105,7 @@ namespace QTFK.Core.Tests
         }
     }
 ";
-            compiler = new CompilerWrapper();
-            assembly = compiler.build(code, new string[] { "SampleLibrary.dll" });
+            assembly = CompilerWrapper.buildInMemoryAssembly(code, new string[] { "SampleLibrary.dll" });
             pepeService = assembly.createAssignableInstance<ISampleService>();
             samePepeService = (ISampleService)assembly.createAssignableInstance(typeof(ISampleService));
 
@@ -126,7 +118,6 @@ namespace QTFK.Core.Tests
         {
             string code;
             ISampleService pepeService, samePepeService;
-            ICompilerWrapper compiler;
             Assembly assembly;
             object[] constructorParams;
 
@@ -155,8 +146,7 @@ namespace QTFK.Core.Tests
         }
     }
 ";
-            compiler = new CompilerWrapper();
-            assembly = compiler.build(code, new string[] { "SampleLibrary.dll" });
+            assembly = CompilerWrapper.buildInMemoryAssembly(code, new string[] { "SampleLibrary.dll" });
             constructorParams = new object[] { 2m };
             pepeService = assembly.createAssignableInstance<ISampleService>(constructorParams);
             samePepeService = (ISampleService)assembly.createAssignableInstance(typeof(ISampleService), constructorParams);
@@ -169,11 +159,9 @@ namespace QTFK.Core.Tests
         public void compiling_two_classes_with_external_reference()
         {
             string code;
-            ICompilerWrapper compiler;
             Assembly assembly;
             ISampleService pepeService, troncoService;
             IEnumerable<ISampleService> instances;
-            IEnumerable<ICompilerWrapper> noInstances;
 
             code = @"
     using System;
@@ -198,8 +186,7 @@ namespace QTFK.Core.Tests
         }
     }
 ";
-            compiler = new CompilerWrapper();
-            assembly = compiler.build(code, new string[] { "SampleLibrary.dll" });
+            assembly = CompilerWrapper.buildInMemoryAssembly(code, new string[] { "SampleLibrary.dll" });
             
             pepeService = assembly.createInstance<ISampleService>("First.PepeSampleService");
             troncoService = assembly.createInstance<ISampleService>("First.TroncoSampleService");
@@ -220,9 +207,6 @@ namespace QTFK.Core.Tests
 
             instances = assembly.createAssignableInstances<ISampleService>();
             Assert.AreEqual(2, instances.Count());
-
-            noInstances = assembly.createAssignableInstances<ICompilerWrapper>();
-            Assert.AreEqual(0, noInstances.Count());
         }
     }
 }
