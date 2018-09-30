@@ -99,6 +99,60 @@ namespace QTFK.Services.DBIO.SQLServer.Tests
 
         [TestMethod]
         [TestCategory("DB SQL Server")]
+        public void SQLServer_Set_RollbackTransInvocationTest()
+        {
+            var testPerson = new Person
+            {
+                Name = "pepe",
+                LastName = "De la rosa Castaños",
+            };
+
+            this.db.Set(cmd =>
+            {
+                cmd.CommandText = $@"
+                    USE qtfk
+                    INSERT INTO persona (nombre, apellidos)
+                    VALUES (@nombre,@apellidos)
+                    ;";
+                cmd.addParameters(new Dictionary<string, object>
+                {
+                    { "@nombre", testPerson.Name },
+                    { "@apellidos", testPerson.LastName },
+                });
+
+                cmd.ExecuteNonQuery();
+
+                int id = Convert.ToInt32(this.db.GetLastID(cmd));
+                Assert.IsTrue(id > 0);
+
+                cmd.Transaction.Rollback();
+            });
+
+            this.db.Set(cmd =>
+            {
+                cmd
+                    .setCommandText($@" SELECT * FROM persona WHERE name = @name;")
+                    .clearParameters()
+                    .addParameter("@name", "pepe")
+                    ;
+
+                var personsDB = cmd
+                    .ExecuteReader()
+                    .GetRecords()
+                    .Select(r => new Person
+                    {
+                        Name = r.Get<string>("nombre"),
+                        LastName = r.Get<string>("apellidos"),
+                    })
+                    .ToList()
+                    ;
+
+                Assert.AreEqual(0, personsDB.Count());
+            });
+        }
+
+        [TestMethod]
+        [TestCategory("DB SQL Server")]
         public void SQLServer_Set_error_test()
         {
             try
