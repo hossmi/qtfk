@@ -31,7 +31,7 @@ namespace QTFK.Services.Compilers
             return exception;
         }
 
-        public static Assembly buildInMemoryAssembly(string code, IEnumerable<string> referencedAssemblies)
+        private static Assembly prv_buildInMemoryAssembly(string[] sources, IEnumerable<string> referencedAssemblies)
         {
             using (var provider = new CSharpCodeProvider())
             {
@@ -46,13 +46,24 @@ namespace QTFK.Services.Compilers
                 parameters.GenerateInMemory = true;
                 parameters.GenerateExecutable = false;
 
-                compilerResults = provider.CompileAssemblyFromSource(parameters, code);
+                compilerResults = provider.CompileAssemblyFromSource(parameters, sources);
 
                 if (compilerResults.Errors.HasErrors)
                     throw prv_newCompilerException(compilerResults.Errors);
 
                 return compilerResults.CompiledAssembly;
             }
+        }
+
+
+        public static Assembly buildInMemoryAssembly(IEnumerable<string> sources, IEnumerable<string> referencedAssemblies)
+        {
+            return prv_buildInMemoryAssembly(sources.ToArray(), referencedAssemblies);
+        }
+
+        public static Assembly buildInMemoryAssembly(string code, IEnumerable<string> referencedAssemblies)
+        {
+            return prv_buildInMemoryAssembly(new string[] { code }, referencedAssemblies);
         }
 
     }
