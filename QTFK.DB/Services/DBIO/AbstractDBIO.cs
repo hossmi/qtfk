@@ -165,7 +165,8 @@ namespace QTFK.Services.DBIO
                     trans = conn.BeginTransaction();
                     command.Transaction = trans;
                     affectedRows = instructions(command);
-                    trans.Commit();
+                    if(trans.Connection != null)
+                        trans.Commit();
                 }
                 catch (Exception ex)
                 {

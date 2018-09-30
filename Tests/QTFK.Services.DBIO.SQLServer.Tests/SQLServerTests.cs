@@ -131,7 +131,7 @@ namespace QTFK.Services.DBIO.SQLServer.Tests
             this.db.Set(cmd =>
             {
                 cmd
-                    .setCommandText($@" SELECT * FROM persona WHERE name = @name;")
+                    .setCommandText($@" SELECT * FROM persona WHERE nombre = @name;")
                     .clearParameters()
                     .addParameter("@name", "pepe")
                     ;
