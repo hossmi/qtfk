@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.CodeDom.Compiler;
 using System.Collections.Generic;
 using System.Reflection;
@@ -8,6 +9,28 @@ namespace QTFK.Services.Compilers
 {
     public class CompilerWrapper 
     {
+        private static Exception prv_newCompilerException(CompilerErrorCollection errors)
+        {
+            CompilerException exception;
+            CompilerFail[] errorArray;
+
+            errorArray = new CompilerFail[errors.Count];
+
+            for (int i = 0, n = errors.Count; i < n; i++)
+            {
+                CompilerFail fail;
+                CompilerError error;
+
+                error = errors[i];
+                fail = new CompilerFail(error.FileName, error.Line, error.Column, error.ErrorNumber, error.ErrorText, error.IsWarning);
+                errorArray[i] = fail;
+            }
+
+            exception = new CompilerException(errorArray);
+
+            return exception;
+        }
+
         public static Assembly buildInMemoryAssembly(string code, IEnumerable<string> referencedAssemblies)
         {
             using (var provider = new CSharpCodeProvider())
@@ -26,10 +49,11 @@ namespace QTFK.Services.Compilers
                 compilerResults = provider.CompileAssemblyFromSource(parameters, code);
 
                 if (compilerResults.Errors.HasErrors)
-                    throw new CompilerException(compilerResults.Errors);
+                    throw prv_newCompilerException(compilerResults.Errors);
 
                 return compilerResults.CompiledAssembly;
             }
         }
+
     }
 }

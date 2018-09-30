@@ -1,5 +1,4 @@
 ﻿using System;
-using System.CodeDom.Compiler;
 using System.Runtime.Serialization;
 
 namespace QTFK.Services.Compilers
@@ -11,11 +10,11 @@ namespace QTFK.Services.Compilers
         {
         }
 
-        public CompilerException(CompilerErrorCollection errors) : base("Error compiling code. See Errors property for details.")
+        public CompilerException(CompilerFail[] errors) : base("Error compiling code. See Errors property for details.")
         {
             this.Errors = errors;
         }
 
-        public CompilerErrorCollection Errors { get; }
+        public CompilerFail[] Errors { get; }
     }
 }
