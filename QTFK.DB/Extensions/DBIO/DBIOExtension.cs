@@ -14,6 +14,31 @@ namespace QTFK.Extensions.DBIO
     {
         private static IEnumerable<KeyValuePair<string, object>> emptyParameterCollection = Enumerable.Empty<KeyValuePair<string, object>>();
 
+        private static IEnumerable<T> prv_get<T>(IDBIO dbio, IDBQuery query, Func<IDataRecord, T> buildDelegate)
+        {
+            QueryCompilation queryCompilation;
+
+            queryCompilation = query.Compile();
+
+            return prv_get<T>(dbio, queryCompilation.Query, queryCompilation.Parameters, buildDelegate);
+        }
+
+        private static IEnumerable<T> prv_get<T>(IDBIO dbio, string query, IEnumerable<KeyValuePair<string, object>> parameters, Func<IDataRecord, T> buildDelegate)
+        {
+            return dbio.Get<T>(query, parameters, buildDelegate);
+        }
+
+        private static int prv_set(IDBIO dbio, string query, IEnumerable<KeyValuePair<string, object>> parameters)
+        {
+            return dbio.Set(cmd =>
+            {
+                cmd.CommandText = query;
+                cmd.addParameters(parameters);
+
+                return cmd.ExecuteNonQuery();
+            });
+        }
+
         public static void Set(this IDBIO dbio, Action<IDbCommand> instructions)
         {
             dbio.Set(cmd =>
@@ -96,29 +121,10 @@ namespace QTFK.Extensions.DBIO
             return prv_get<T>(dbio, query, buildDelegate);
         }
 
-        private static IEnumerable<T> prv_get<T>(IDBIO dbio, IDBQuery query, Func<IDataRecord, T> buildDelegate)
+        public static T GetScalar<T>(this IDBIO dbio, string query) where T : struct
         {
-            QueryCompilation queryCompilation;
-
-            queryCompilation = query.Compile();
-
-            return prv_get<T>(dbio, queryCompilation.Query, queryCompilation.Parameters, buildDelegate);
+            return dbio.GetScalar<T>(query, emptyParameterCollection);
         }
 
-        private static IEnumerable<T> prv_get<T>(IDBIO dbio, string query, IEnumerable<KeyValuePair<string, object>> parameters, Func<IDataRecord, T> buildDelegate)
-        {
-            return dbio.Get<T>(query, parameters, buildDelegate);
-        }
-
-        private static int prv_set(IDBIO dbio, string query, IEnumerable<KeyValuePair<string, object>> parameters)
-        {
-            return dbio.Set(cmd =>
-            {
-                cmd.CommandText = query;
-                cmd.addParameters(parameters);
-
-                return cmd.ExecuteNonQuery();
-            });
-        }
     }
 }

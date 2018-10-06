@@ -15,6 +15,23 @@ namespace QTFK.Services.DBIO
         where TCommand : IDbCommand
         where TDataAdapter : IDbDataAdapter, IDisposable
     {
+        protected static DBIOException prv_wrapException(IDbCommand cmd, Exception ex, ILogger<LogLevel> logger, string subject)
+        {
+            return prv_wrapException(cmd?.CommandText ?? "", ex, logger, subject);
+        }
+
+        protected static DBIOException prv_wrapException(string query, Exception ex, ILogger<LogLevel> logger, string subject)
+        {
+            string message = $@"{subject}:
+Exception: {ex.GetType().Name}
+Message: {ex.Message}
+Command: '{query}'";
+
+            logger.log(LogLevel.Error, message);
+
+            return new DBIOException(message, ex);
+        }
+
         protected const string ERROR_MESSAGE_DEFAULT = "Error ocurred executing SQL instructions";
         protected const string ERROR_MESSAGE_GETTING_ID = "Error ocurred getting las ID";
 
@@ -181,21 +198,37 @@ namespace QTFK.Services.DBIO
             return affectedRows;
         }
 
-        protected static DBIOException prv_wrapException(IDbCommand cmd, Exception ex, ILogger<LogLevel> logger, string subject)
+        public T GetScalar<T>(string query, IEnumerable<KeyValuePair<string, object>> parameters) where T : struct
         {
-            return prv_wrapException(cmd?.CommandText ?? "", ex, logger, subject);
-        }
+            T value;
 
-        protected static DBIOException prv_wrapException(string query, Exception ex, ILogger<LogLevel> logger, string subject)
-        {
-            string message = $@"{subject}:
-Exception: {ex.GetType().Name}
-Message: {ex.Message}
-Command: '{query}'";
+            Asserts.isFilled(query, $"Parameter '{nameof(query)}' cannot be empty.");
+            Asserts.isSomething(parameters, $"Parameter '{nameof(parameters)}' cannot be null.");
 
-            logger.log(LogLevel.Error, message);
+            value = default(T);
 
-            return new DBIOException(message, ex);
+            using (TConnection conn = prv_buildConnection(this.connectionString))
+            using (TCommand cmd = prv_buildCommand(conn))
+            {
+                try
+                {
+                    conn.Open();
+                    value = (T)cmd
+                        .setCommandText(query)
+                        .addParameters(parameters)
+                        .ExecuteScalar();
+                }
+                catch (Exception ex)
+                {
+                    throw prv_wrapException(query, ex, this.log, ERROR_MESSAGE_DEFAULT);
+                }
+                finally
+                {
+                    conn?.Close();
+                }
+            }
+
+            return value;
         }
     }
 }

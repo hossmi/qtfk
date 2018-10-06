@@ -13,5 +13,6 @@ namespace QTFK.Services
         IEnumerable<T> Get<T>(string query, IEnumerable<KeyValuePair<string, object>> parameters, Func<IDataRecord, T> buildDelegate);
         DataSet Get(string query, IEnumerable<KeyValuePair<string, object>> parameters);
         object GetLastID(IDbCommand cmd);
+        T GetScalar<T>(string query, IEnumerable<KeyValuePair<string, object>> parameters) where T: struct;
     }
 }

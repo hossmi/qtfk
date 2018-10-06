@@ -212,6 +212,54 @@ namespace QTFK.Services.DBIO.SQLServer.Tests
 
         [TestMethod]
         [TestCategory("DB SQL Server")]
+        public void SQLServer_Get_Scalar_test()
+        {
+            int totalPersons;
+            Person[] persons;
+
+            persons = new Person[]
+            {
+                new Person {Name = "Pepe", LastName = "De la rosa"},
+                new Person {Name = "Rosario", LastName = "Céspedes"},
+                new Person {Name = "Rosa", LastName = "Robles De la Huerta"},
+                new Person {Name = "Pepe", LastName = "Olmos"},
+            };
+
+            this.db.Set(cmd =>
+            {
+                cmd.CommandText = $@"
+                    USE qtfk
+                    INSERT INTO persona (nombre, apellidos)
+                    VALUES (@nombre,@apellidos)
+                    ;";
+
+                foreach (Person person in persons)
+                {
+                    cmd
+                        .clearParameters()
+                        .addParameters(new Dictionary<string, object>
+                        {
+                            { "@nombre", person.Name },
+                            { "@apellidos", person.LastName },
+                        });
+
+                    cmd.ExecuteNonQuery();
+                }
+            });
+
+            totalPersons = this.db.GetScalar<int>(
+                $@" SELECT COUNT(*) FROM persona WHERE nombre = @nombre;",
+                new Dictionary<string, object> { { "@nombre", "Pepe" } });
+
+            Assert.AreEqual(2, totalPersons);
+
+            totalPersons = this.db.GetScalar<int>($@" SELECT COUNT(*) FROM persona;");
+
+            Assert.AreEqual(4, totalPersons);
+        }
+
+        [TestMethod]
+        [TestCategory("DB SQL Server")]
         public void SQLServer_Get_T_error_test()
         {
             this.db.Set($@"
