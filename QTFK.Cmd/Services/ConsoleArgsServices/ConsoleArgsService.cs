@@ -25,7 +25,7 @@ namespace QTFK.Services.ConsoleArgsServices
                 ArgumentInfo argumentInfo;
 
                 argumentInfo = ArgumentInfo.createDefault(name, description, defaultValue, isOptional, isIndexed, isFlag);
-                data.Set(name, argumentInfo);
+                data[name] = argumentInfo;
 
                 return defaultValue;
             }

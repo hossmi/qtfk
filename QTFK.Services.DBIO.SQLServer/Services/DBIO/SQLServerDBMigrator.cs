@@ -70,11 +70,12 @@ namespace QTFK.Services.DBIO
 
         private static IDictionary<string, object> Map(MigrationInfo data)
         {
-            return DictionaryExtension.New()
-                .Set("@migrationDate", data.MigrationDate)
-                .Set("@version", data.Version)
-                .Set("@description", data.Description)
-                ;
+            return new Dictionary<string, object>
+            {
+                { "@migrationDate", data.MigrationDate },
+                { "@version", data.Version },
+                { "@description", data.Description },
+            };
         }
 
         private static MigrationInfo Map(IDataRecord record)
