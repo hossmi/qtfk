@@ -3,12 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using QTFK.Models;
 using QTFK.Extensions.DBIO;
-using QTFK.Extensions.Collections.Dictionaries;
 using QTFK.Extensions.Mapping.AutoMapping;
-using QTFK.Extensions.DBCommand;
 using QTFK.Extensions.DataReader;
-using QTFK.Extensions.DBIO.OleDBIOExtensions;
-using QTFK.Extensions.Mapping;
 using System.Data;
 
 namespace QTFK.Services.DBIO
@@ -75,12 +71,13 @@ namespace QTFK.Services.DBIO
 
         private static IDictionary<string, object> Map(MigrationInfo data)
         {
-            return DictionaryExtension.New()
-                .Set("@migrationDate", data.MigrationDate.ToString())
-                .Set("@secs", data.MigrationDate.Millisecond.ToString())
-                .Set("@version", data.Version)
-                .Set("@description", data.Description)
-                ;
+            return new Dictionary<string, object>
+            {
+                { "@migrationDate", data.MigrationDate.ToString() },
+                { "@secs", data.MigrationDate.Millisecond.ToString() },
+                { "@version", data.Version },
+                { "@description", data.Description },
+            };
         }
 
         private static MigrationInfo Map(IDataRecord record)

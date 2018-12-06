@@ -34,6 +34,24 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x64\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
+    <OutputPath>bin\x64\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.configuration" />
@@ -73,9 +91,17 @@
       <Project>{8C740ADF-E4E1-444A-A9F0-2E40B174260F}</Project>
       <Name>QTFK.Core</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\QTFK.Extensions\QTFK.Extensions.csproj">
-      <Project>{d6db2c2b-d86d-45cf-a756-37ed71c614d3}</Project>
-      <Name>QTFK.Extensions</Name>
+    <ProjectReference Include="..\..\QTFK.DBMigrations\QTFK.DBMigrations.csproj">
+      <Project>{200f8a2c-e9f3-42a9-b813-339083a77344}</Project>
+      <Name>QTFK.DBMigrations</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\QTFK.DB\QTFK.DB.csproj">
+      <Project>{857badf5-36dc-4404-a998-904879300e48}</Project>
+      <Name>QTFK.DB</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\QTFK.Logs\QTFK.Logs.csproj">
+      <Project>{277F230C-64C9-4A90-BF71-1D0E83D26658}</Project>
+      <Name>QTFK.Logs</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\QTFK.Services.DBIO.SQLServer\QTFK.Services.DBIO.SQLServer.csproj">
       <Project>{251058ED-EA21-439B-A495-FE43A9669B57}</Project>

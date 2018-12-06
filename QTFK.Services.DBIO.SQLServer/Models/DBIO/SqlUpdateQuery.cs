@@ -1,30 +1,13 @@
-﻿using QTFK.Extensions.Collections.Dictionaries;
-using QTFK.Extensions.Collections.Strings;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using QTFK.Attributes;
+using QTFK.Services;
 
 namespace QTFK.Models.DBIO
 {
-    public class SqlUpdateQuery : IDBQuery, IDBQueryWithTableName, IDBQueryWriteColumns, IDBQueryWhereClause, IDBQueryTablePrefix
+    [SqlServer]
+    internal class SqlUpdateQuery : AbstractUpdateQuery
     {
-        public string Prefix { get; set; } = "";
-        public string Table { get; set; } = "";
-        public IDictionary<string, object> Fields { get; set; } = DictionaryExtension.New();
-        public string Where { get; set; } = "";
-        public IDictionary<string, object> Parameters { get; set; } = DictionaryExtension.New();
-
-        public string Compile()
+        public SqlUpdateQuery(IParameterBuilderFactory parameterBuilderFactory) : base(parameterBuilderFactory)
         {
-            string whereSegment = string.IsNullOrWhiteSpace(Where) ? "" : $"WHERE ({Where})";
-            string prefix = string.IsNullOrWhiteSpace(Prefix) ? "" : Prefix.Trim();
-            string fieldValueList = Fields.Stringify(c => $"[{c.Key}] = {c.Value}");
-
-            return $@"
-                UPDATE {prefix}[{Table}] 
-                SET {fieldValueList}
-                {whereSegment}
-                ;";
         }
     }
 }

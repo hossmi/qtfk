@@ -3,6 +3,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using QTFK.Extensions.DBIO;
 using QTFK.Extensions.Collections.Filters;
 using System.Configuration;
+using QTFK.FileSystem;
 
 namespace QTFK.Services.DBIO.OleDB.Tests
 {
@@ -27,14 +28,14 @@ namespace QTFK.Services.DBIO.OleDB.Tests
         [TestCategory("DB")]
         public void OleDB_Create_tables()
         {
-            _db.Set(File.ReadBlocks("create.sql", "go").NotEmpty(), true);
+            _db.Set(FileExtension.readBlocks("create.sql", "go").NotEmpty(), true);
         }
 
         [TestMethod]
         [TestCategory("DB")]
         public void OleDB_Drop_tables()
         {
-            _db.Set(File.ReadBlocks("drop.sql", "go").NotEmpty(), false);
+            _db.Set(FileExtension.readBlocks("drop.sql", "go").NotEmpty(), false);
         }
     }
 }

@@ -116,10 +116,10 @@ namespace QTFK.Services.DBIO.SQLServer.Tests
                         VALUES ( 
                             @id, @nombre, @tipo_cliente
                         );"
-                    , db.Params()
-                        .Set("@id", 1000001)
-                        .Set("@nombre", "Pepe")
-                        .Set("@tipo_cliente", 1)
+                    , Parameters.start()
+                        .push("@id", 1000001)
+                        .push("@nombre", "Pepe")
+                        .push("@tipo_cliente", 1)
                     );
 
                     db.Set($@"
@@ -129,17 +129,17 @@ namespace QTFK.Services.DBIO.SQLServer.Tests
                         VALUES(
                             @id, @nombre, @tipo_cliente
                         ); "
-                    , db.Params()
-                        .Set("@id", 1000002)
-                        .Set("@nombre", "Tronco")
-                        .Set("@tipo_cliente", 2)
+                    , Parameters.start()
+                        .push("@id", 1000002)
+                        .push("@nombre", "Tronco")
+                        .push("@tipo_cliente", 2)
                     );
                     return 3;
                 },
                 Downgrade = db =>
                 {
-                    db.Set("DELETE FROM cliente WHERE nombre = @nombre;", db.Params().Set("@nombre", "Pepe"));
-                    db.Set("DELETE FROM cliente WHERE nombre = @nombre;", db.Params().Set("@nombre", "Tronco"));
+                    db.Set("DELETE FROM cliente WHERE nombre = @nombre;", Parameters.push("@nombre", "Pepe"));
+                    db.Set("DELETE FROM cliente WHERE nombre = @nombre;", Parameters.push("@nombre", "Tronco"));
                 },
             };
 

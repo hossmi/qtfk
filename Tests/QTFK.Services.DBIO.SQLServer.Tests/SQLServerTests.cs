@@ -1,12 +1,8 @@
 ﻿using System;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using QTFK.Services;
-using QTFK.Services.DBIO;
 using QTFK.Extensions.DBIO;
 using System.Collections.Generic;
-using System.Text;
-using QTFK.Extensions.Collections.Filters;
 using QTFK.Extensions.DBCommand;
 using QTFK.Extensions.DataReader;
 using QTFK.Services.DBIO.SQLServer.Tests.Models;
@@ -14,41 +10,37 @@ using System.Data;
 using QTFK.Extensions.DataSets;
 using QTFK.Models;
 using QTFK.Extensions.Collections.Dictionaries;
-using QTFK.Models.DBIO;
-using QTFK.Extensions.DBIO.DBQueries;
-using QTFK.Extensions.Mapping.AutoMapping;
 
 namespace QTFK.Services.DBIO.SQLServer.Tests
 {
     [TestClass]
     public class SQLServerTests
     {
-        private readonly string _connectionString;
-        private readonly CreateDrop _createDrop;
-        private readonly IDBIO _db;
+        private readonly string connectionString;
+        private readonly CreateDrop createDrop;
+        private readonly IDBIO db;
 
         public SQLServerTests()
         {
-            _connectionString = System.Configuration.ConfigurationManager.ConnectionStrings["tests"]?.ConnectionString;
-            if (string.IsNullOrWhiteSpace(_connectionString))
+            this.connectionString = System.Configuration.ConfigurationManager.ConnectionStrings["tests"]?.ConnectionString;
+            if (string.IsNullOrWhiteSpace(this.connectionString))
                 throw new ArgumentException($"Empty or invalid 'tests' connection string in app.config", "tests");
 
-            _db = new SQLServerDBIO(_connectionString);
-            _createDrop = new CreateDrop(_connectionString, _db);
+            this.db = new SQLServerDBIO(this.connectionString);
+            this.createDrop = new CreateDrop(this.connectionString, this.db);
         }
 
         [TestInitialize()]
         public void Create()
         {
-            _createDrop.SQL_Drop_tables();
-            _createDrop.SQL_Create_tables();
+            this.createDrop.SQL_Drop_tables();
+            this.createDrop.SQL_Create_tables();
         }
-
 
         [TestCleanup()]
         public void Drop()
         {
-            _createDrop.SQL_Drop_tables();
+            this.createDrop.SQL_Drop_tables();
         }
 
         [TestMethod]
@@ -61,14 +53,14 @@ namespace QTFK.Services.DBIO.SQLServer.Tests
                 LastName = "De la rosa Castaños",
             };
 
-            _db.Set(cmd =>
+            this.db.Set(cmd =>
             {
                 cmd.CommandText = $@"
                     USE qtfk
                     INSERT INTO persona (nombre, apellidos)
                     VALUES (@nombre,@apellidos)
                     ;";
-                cmd.AddParameters(new Dictionary<string, object>
+                cmd.addParameters(new Dictionary<string, object>
                 {
                     { "@nombre", testPerson.Name },
                     { "@apellidos", testPerson.LastName },
@@ -76,13 +68,13 @@ namespace QTFK.Services.DBIO.SQLServer.Tests
 
                 cmd.ExecuteNonQuery();
 
-                int id = Convert.ToInt32(_db.GetLastID(cmd));
+                int id = Convert.ToInt32(this.db.GetLastID(cmd));
                 Assert.IsTrue(id > 0);
 
                 cmd
-                    .SetCommandText($@" SELECT * FROM persona WHERE id = @id;")
-                    .ClearParameters()
-                    .AddParameter("@id", id)
+                    .setCommandText($@" SELECT * FROM persona WHERE id = @id;")
+                    .clearParameters()
+                    .addParameter("@id", id)
                     ;
 
                 var personsDB = cmd
@@ -107,11 +99,65 @@ namespace QTFK.Services.DBIO.SQLServer.Tests
 
         [TestMethod]
         [TestCategory("DB SQL Server")]
+        public void SQLServer_Set_RollbackTransInvocationTest()
+        {
+            var testPerson = new Person
+            {
+                Name = "pepe",
+                LastName = "De la rosa Castaños",
+            };
+
+            this.db.Set(cmd =>
+            {
+                cmd.CommandText = $@"
+                    USE qtfk
+                    INSERT INTO persona (nombre, apellidos)
+                    VALUES (@nombre,@apellidos)
+                    ;";
+                cmd.addParameters(new Dictionary<string, object>
+                {
+                    { "@nombre", testPerson.Name },
+                    { "@apellidos", testPerson.LastName },
+                });
+
+                cmd.ExecuteNonQuery();
+
+                int id = Convert.ToInt32(this.db.GetLastID(cmd));
+                Assert.IsTrue(id > 0);
+
+                cmd.Transaction.Rollback();
+            });
+
+            this.db.Set(cmd =>
+            {
+                cmd
+                    .setCommandText($@" SELECT * FROM persona WHERE nombre = @name;")
+                    .clearParameters()
+                    .addParameter("@name", "pepe")
+                    ;
+
+                var personsDB = cmd
+                    .ExecuteReader()
+                    .GetRecords()
+                    .Select(r => new Person
+                    {
+                        Name = r.Get<string>("nombre"),
+                        LastName = r.Get<string>("apellidos"),
+                    })
+                    .ToList()
+                    ;
+
+                Assert.AreEqual(0, personsDB.Count());
+            });
+        }
+
+        [TestMethod]
+        [TestCategory("DB SQL Server")]
         public void SQLServer_Set_error_test()
         {
             try
             {
-                _db.Set(cmd =>
+                this.db.Set(cmd =>
                 {
                     throw new StackOverflowException("Booooom");
                 });
@@ -130,17 +176,16 @@ namespace QTFK.Services.DBIO.SQLServer.Tests
                 LastName = "De la rosa Castaños",
             };
 
-            _db.Set($@"
+            this.db.Set($@"
                 USE qtfk
                 INSERT INTO persona (nombre, apellidos)
                 VALUES (@nombre,@apellidos)
-                ;", new Dictionary<string, object>
-                {
-                    { "@nombre", testPerson.Name },
-                    { "@apellidos", testPerson.LastName },
-                });
+                ;", Parameters
+                    .push("@nombre", testPerson.Name)
+                    .push("@apellidos", testPerson.LastName)
+                );
 
-            _db.Set($@"
+            this.db.Set($@"
                 USE qtfk
                 INSERT INTO persona (nombre, apellidos)
                 VALUES (@nombre,@apellidos)
@@ -150,8 +195,8 @@ namespace QTFK.Services.DBIO.SQLServer.Tests
                     { "@apellidos", "Sanchez López" },
                 });
 
-            var personDB = _db.Get($@" SELECT * FROM persona WHERE nombre = @nombre;",
-                    _db.Params().Set("@nombre", testPerson.Name),
+            var personDB = this.db.Get($@" SELECT * FROM persona WHERE nombre = @nombre;",
+                    new Dictionary<string, object> { { "@nombre", testPerson.Name } },
                     r => new Person
                     {
                         Name = r.Get<string>("nombre"),
@@ -165,12 +210,59 @@ namespace QTFK.Services.DBIO.SQLServer.Tests
             Assert.AreEqual(testPerson.LastName, personDB.LastName);
         }
 
+        [TestMethod]
+        [TestCategory("DB SQL Server")]
+        public void SQLServer_Get_Scalar_test()
+        {
+            int totalPersons;
+            Person[] persons;
+
+            persons = new Person[]
+            {
+                new Person {Name = "Pepe", LastName = "De la rosa"},
+                new Person {Name = "Rosario", LastName = "Céspedes"},
+                new Person {Name = "Rosa", LastName = "Robles De la Huerta"},
+                new Person {Name = "Pepe", LastName = "Olmos"},
+            };
+
+            this.db.Set(cmd =>
+            {
+                cmd.CommandText = $@"
+                    USE qtfk
+                    INSERT INTO persona (nombre, apellidos)
+                    VALUES (@nombre,@apellidos)
+                    ;";
+
+                foreach (Person person in persons)
+                {
+                    cmd
+                        .clearParameters()
+                        .addParameters(new Dictionary<string, object>
+                        {
+                            { "@nombre", person.Name },
+                            { "@apellidos", person.LastName },
+                        });
+
+                    cmd.ExecuteNonQuery();
+                }
+            });
+
+            totalPersons = this.db.GetScalar<int>(
+                $@" SELECT COUNT(*) FROM persona WHERE nombre = @nombre;",
+                new Dictionary<string, object> { { "@nombre", "Pepe" } });
+
+            Assert.AreEqual(2, totalPersons);
+
+            totalPersons = this.db.GetScalar<int>($@" SELECT COUNT(*) FROM persona;");
+
+            Assert.AreEqual(4, totalPersons);
+        }
 
         [TestMethod]
         [TestCategory("DB SQL Server")]
         public void SQLServer_Get_T_error_test()
         {
-            _db.Set($@"
+            this.db.Set($@"
                 USE qtfk
                 INSERT INTO persona (nombre, apellidos)
                 VALUES (@nombre,@apellidos)
@@ -182,14 +274,14 @@ namespace QTFK.Services.DBIO.SQLServer.Tests
 
             try
             {
-                var items = _db.Get("This SQl is a bullshit", builder => builder.Get<string>("none"));
+                var items = this.db.Get("This SQl is a bullshit", builder => builder.Get<string>("none"));
                 Assert.Fail("It was not expected to achieve this line!");
             }
             catch (DBIOException) { }
 
             try
             {
-                var items = _db.Get("SELECT * FROM persona", builder => builder.Get<string>("notExistentColumn"));
+                var items = this.db.Get("SELECT * FROM persona", builder => builder.Get<string>("notExistentColumn"));
                 Assert.Fail("It was not expected to achieve this line!");
             }
             catch (DBIOException) { }
@@ -205,7 +297,7 @@ namespace QTFK.Services.DBIO.SQLServer.Tests
                 LastName = "De la rosa Castaños",
             };
 
-            _db.Set($@"
+            this.db.Set($@"
                 USE qtfk
                 INSERT INTO persona (nombre, apellidos)
                 VALUES (@nombre,@apellidos)
@@ -215,7 +307,7 @@ namespace QTFK.Services.DBIO.SQLServer.Tests
                     { "@apellidos", testPerson.LastName },
                 });
 
-            _db.Set($@"
+            this.db.Set($@"
                 USE qtfk
                 INSERT INTO persona (nombre, apellidos)
                 VALUES (@nombre,@apellidos)
@@ -225,7 +317,7 @@ namespace QTFK.Services.DBIO.SQLServer.Tests
                     { "@apellidos", "Sanchez López" },
                 });
 
-            var data = _db.Get($@" SELECT * FROM persona");
+            var data = this.db.Get($@" SELECT * FROM persona");
             Assert.AreEqual(1, data.Tables.Count);
             Assert.AreEqual(2, data.Tables[0].Rows.Count);
             Assert.IsNotNull(data.AsTable());
@@ -246,245 +338,10 @@ namespace QTFK.Services.DBIO.SQLServer.Tests
         {
             try
             {
-                _db.Get("Wrooon SQL statment");
+                this.db.Get("Wrooon SQL statment");
                 Assert.Fail("It was not expected to achieve this line!");
             }
             catch (DBIOException) { }
-        }
-
-        [TestMethod]
-        [TestCategory("DB OleDB")]
-        public void QueryBuilder_SQL_tests_1()
-        {
-            IDBQuery insert;
-
-            insert = new SqlInsertQuery()
-                .SetTablePrefix("qtfk.dbo.")
-                .Set("persona", c => c
-                    .Column("nombre")
-                    .Column("apellidos")
-                );
-
-            _db.Set(insert, _db.Params()
-                .Set("@nombre", "Pepe")
-                .Set("@apellidos", "De la rosa Castaños")
-                );
-
-            _db.Set(insert, _db.Params()
-                .Set("@nombre", "Tronco")
-                .Set("@apellidos", "Sanchez López")
-                );
-
-            _db.Set(insert, _db.Params()
-                .Set("@nombre", "Louis")
-                .Set("@apellidos", "Norton Smith")
-                );
-
-            //selects
-            var select = new SqlSelectQuery()
-                    .SetTablePrefix("qtfk.dbo.")
-                    .SetTable("persona")
-                    .AddColumn("*")
-                    //.SetWhere("nombre = @nombre")
-                    ;
-
-            var data = _db
-                .Get<DLPerson>(select)
-                .ToList()
-                ;
-
-            Assert.AreEqual(3, data.Count());
-            var testItem = data.Single(i => i.Nombre == "Tronco");
-            Assert.AreEqual("Sanchez López", testItem.Apellidos);
-
-            select.SetWhere("nombre = @nombre");
-
-            data = _db
-                .Get<DLPerson>(select, _db.Params().Set("@nombre", "Pepe"))
-                .ToList()
-                ;
-
-            Assert.AreEqual(1, data.Count());
-            testItem = data.Single(i => i.Nombre == "Pepe");
-            Assert.AreEqual("De la rosa Castaños", testItem.Apellidos);
-
-            //IDBQuery updates
-            var update = new SqlUpdateQuery()
-                .SetTablePrefix("qtfk.dbo.")
-                .Set("persona", c => c
-                    .Column("apellidos"))
-                .SetWhere("nombre = @nombre")
-                ;
-
-            _db.Set(update, _db.Params()
-                .Set("@apellidos", "Ramírez de Villalobos")
-                .Set("@nombre", "Pepe")
-                );
-
-            data = _db
-                .Get<DLPerson>(select, _db.Params()
-                .Set("@nombre", "Pepe"))
-                .ToList()
-                ;
-
-            Assert.AreEqual(1, data.Count());
-            testItem = data.Single(i => i.Nombre == "Pepe");
-            Assert.AreEqual("Ramírez de Villalobos", testItem.Apellidos);
-
-            var delete = new SqlDeleteQuery()
-                .SetTablePrefix("qtfk.dbo.")
-                .SetTable("persona")
-                .SetWhere("nombre = @nombre")
-                ;
-
-            _db.Set(delete, _db.Params().Set("@nombre", "Pepe"));
-
-            data = _db
-                .Get<DLPerson>(select, _db.Params().Set("@nombre", "Pepe"))
-                .ToList()
-                ;
-
-            Assert.AreEqual(0, data.Count());
-        }
-
-        [TestMethod]
-        [TestCategory("DB OleDB")]
-        public void QueryBuilder_SQL_tests_2()
-        {
-            IDBQuery insert;
-
-            insert = new SqlInsertQuery()
-                .SetTablePrefix("qtfk.dbo.")
-                .Set("persona", c => c
-                    .Column("nombre")
-                    .Column("apellidos")
-                    );
-
-            _db.Set(insert, _db.Params().Set("@nombre", "Pepe").Set("@apellidos", "De la rosa Castaños"));
-            _db.Set(insert, _db.Params().Set("@nombre", "Tronco").Set("@apellidos", "Sanchez López"));
-            _db.Set(insert, _db.Params().Set("@nombre", "Louis").Set("@apellidos", "Norton Smith"));
-
-            insert = new SqlInsertQuery()
-                .SetTablePrefix("qtfk.dbo.")
-                .Set("etiqueta", c => c
-                    .Column("nombre")
-                );
-
-            _db.Set(insert, _db.Params().Set("@nombre", "Ciencia"));
-            _db.Set(insert, _db.Params().Set("@nombre", "Humor"));
-            _db.Set(insert, _db.Params().Set("@nombre", "Youtube"));
-            _db.Set(insert, _db.Params().Set("@nombre", "Crash"));
-
-            var persons = _db
-                .Get<DLPerson>(new SqlSelectQuery()
-                    .SetTablePrefix("qtfk.dbo.")
-                    .Select("persona", c => c
-                        .Column("*")
-                    ))
-                .ToList()
-                ;
-
-            var tags = _db
-                .Get<DLTag>(new SqlSelectQuery()
-                    .SetTablePrefix("qtfk.dbo.")
-                    .SetTable("etiqueta")
-                    .AddColumn("*"))
-                .ToList()
-                ;
-
-            var pairs = tags
-                .SelectMany(t => persons.Select(p => new { person_ID = p.Id, tag_ID = t.Id }))
-                .ToList()
-                ;
-
-            insert = new SqlInsertQuery()
-                .SetTablePrefix("qtfk.dbo.")
-                .Set("etiquetas_personas", c => c
-                    .Column("persona_id")
-                    .Column("etiqueta_id")
-                );
-
-            foreach (var pair in pairs)
-                _db.Set(insert, _db.Params().Set("@persona_id", pair.person_ID).Set("@etiqueta_id", pair.tag_ID));
-
-            var select = new SqlSelectQuery()
-                .SetTablePrefix("qtfk.dbo.")
-                .Select("etiquetas_personas", c => c.Column("*"))
-                .AddJoin(JoinKind.Left, "etiqueta", m => m.Add("etiqueta_id", "id"), c => c
-                    .Column("*")
-                    .Column("nombre", "etiqueta_nombre")
-                    )
-                .AddJoin(JoinKind.Left, "persona", "persona_id", "id", c => c
-                    .Column("*")
-                    .Column("nombre", "persona_nombre")
-                    )
-                ;
-
-            //string sql = select.Compile();
-
-            var data = _db
-                .Get(select, r => new
-                {
-                    Person = r.AutoMap<DLPerson>(p => p.Nombre = r.Get<string>("persona_nombre")),
-                    Tag = r.AutoMap<DLTag>(t => t.Nombre = r.Get<string>("etiqueta_nombre")),
-                })
-                .ToList()
-                ;
-
-            Assert.AreEqual(12, data.Count());
-            Assert.AreEqual(4, data.Where(r => r.Person.Nombre == "Pepe").Count());
-            Assert.AreEqual(3, data.Where(r => r.Tag.Nombre == "Youtube").Count());
-            var testItem = data.Single(i => i.Person.Nombre == "Pepe" && i.Tag.Nombre == "Youtube");
-            Assert.AreEqual("De la rosa Castaños", testItem.Person.Apellidos);
-
-            //IDBQuery updates
-            var update = new SqlUpdateQuery()
-                .SetTablePrefix("qtfk.dbo.")
-                .Set("persona", c => c
-                    .Column("apellidos"))
-                .SetWhere("nombre = @nombre")
-                ;
-
-            _db.Set(update, _db.Params()
-                .Set("@apellidos", "Ramírez de Villalobos")
-                .Set("@nombre", "Pepe")
-                );
-
-            var selectPersons = new SqlSelectQuery()
-                .SetTablePrefix("qtfk.dbo.")
-                .Select("persona", c => c.Column("*"))
-                .SetWhere("nombre = @nombre")
-                .SetParam("@nombre", "Pepe")
-                ;
-
-            var person = _db
-                .Get<DLPerson>(selectPersons)
-                .Single()
-                ;
-
-            Assert.AreEqual("Ramírez de Villalobos", person.Apellidos);
-
-            var delete = new SqlDeleteQuery()
-                .SetTablePrefix("qtfk.dbo.")
-                .SetTable("persona")
-                .SetWhere("nombre = @nombre")
-                .SetParam("@nombre", "Pepe")
-                ;
-
-            _db.Set(delete);
-
-            data = _db
-                .Get(select, r => new
-                {
-                    Person = r.AutoMap<DLPerson>(p => p.Nombre = r.Get<string>("persona_nombre")),
-                    Tag = r.AutoMap<DLTag>(t => t.Nombre = r.Get<string>("etiqueta_nombre")),
-                })
-                .ToList()
-                ;
-
-            Assert.AreEqual(8, data.Count());
-            Assert.AreEqual(0, data.Where(r => r.Person.Nombre == "Pepe").Count());
-            Assert.AreEqual(2, data.Where(r => r.Tag.Nombre == "Youtube").Count());
         }
     }
 }

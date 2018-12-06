@@ -29,6 +29,23 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x64\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
+    <OutputPath>bin\x64\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <PlatformTarget>x64</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -40,39 +57,34 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Extensions\Loggers\LoggerLevelExtension.cs" />
-    <Compile Include="Models\DBIOException.cs" />
-    <Compile Include="Models\IDBQuery.cs" />
-    <Compile Include="Models\SetColumn.cs" />
-    <Compile Include="Models\SelectColumn.cs" />
-    <Compile Include="Models\Joins.cs" />
-    <Compile Include="Services\CRUDRepositories\InMemoryCRUDRepositoryBase.cs" />
-    <Compile Include="Services\CRUDRepositories\InMemoryLambdaCRUDRepository.cs" />
-    <Compile Include="Services\DBIO\DBMigrationStepProviderBase.cs" />
-    <Compile Include="Services\DBIO\DefaultDBMigrationStepProvider.cs" />
-    <Compile Include="Services\DBIO\DBMigrationStep.cs" />
-    <Compile Include="Models\LogLevel.cs" />
-    <Compile Include="Models\MigrationInfo.cs" />
+    <Compile Include="Asserts.cs" />
+    <Compile Include="Extensions\Collections\Casting\CastExtension.cs" />
+    <Compile Include="Extensions\Collections\CollectionExtension.cs" />
+    <Compile Include="Extensions\Collections\Dictionaries\DictionaryExtension.cs" />
+    <Compile Include="Extensions\Collections\Filters\EnumerableFilterExtension.cs" />
+    <Compile Include="Extensions\Collections\Strings\StringExtension.cs" />
+    <Compile Include="Extensions\Collections\SwitchCase\SwitchCaseExtension.cs" />
+    <Compile Include="Extensions\DataReader\DataReaderExtension.cs" />
+    <Compile Include="Extensions\DataSets\DataSetExtension.cs" />
+    <Compile Include="Extensions\Exceptions\ExceptionExtension.cs" />
+    <Compile Include="Extensions\FileSystem\FileExtension.cs" />
+    <Compile Include="Extensions\Mapping\AutoMapping\AutoMapExtension.cs" />
+    <Compile Include="Extensions\Mapping\EntityMapperExtension.cs" />
+    <Compile Include="Extensions\Objects\DictionaryConverter\DictionaryExtension.cs" />
+    <Compile Include="Extensions\Objects\Manipulator\ManipulatorExtension.cs" />
+    <Compile Include="Extensions\Objects\Properties\PropertyExtension.cs" />
     <Compile Include="Models\Result.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\EntityMappers\DefaultEntityMapper.cs" />
-    <Compile Include="Services\ICRUDRepository.cs" />
-    <Compile Include="Services\IDBIO.cs" />
-    <Compile Include="Services\IDBMigrator.cs" />
     <Compile Include="Services\IEntityMapper.cs" />
-    <Compile Include="Services\ILogger.cs" />
-    <Compile Include="Services\IDBMigrationStep.cs" />
-    <Compile Include="Services\IDBMigrationStepProvider.cs" />
-    <Compile Include="Services\Loggers\ConsoleLogger.cs" />
-    <Compile Include="Services\Loggers\DebugLogger.cs" />
-    <Compile Include="Services\Loggers\FileLogger.cs" />
-    <Compile Include="Services\Loggers\MultiLogger.cs" />
-    <Compile Include="Services\Loggers\NullLogger.cs" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <None Include="QTFK.Core.nuspec" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>xcopy /Y $(TargetPath) $(SolutionDir)\$(ConfigurationName)\qtfk\</PostBuildEvent>
+    <PostBuildEvent>
+    </PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

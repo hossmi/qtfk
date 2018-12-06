@@ -10,37 +10,6 @@ namespace QTFK.Core.Tests
     {
         [TestMethod]
         [TestCategory("Result<T>")]
-        public void Result_test_1()
-        {
-            Result res = new Result();
-            Assert.IsTrue(res.Ok);
-            Assert.IsNull(res.Exception);
-            Assert.IsNull(res.Message);
-
-            res = new Result(new DivideByZeroException("boooom"));
-            Assert.IsFalse(res.Ok);
-            Assert.IsNotNull(res.Exception);
-            Assert.AreEqual("boooom", res.Message);
-
-            try
-            {
-                Exception nullEx = null;
-                res = new Result(nullEx);
-                Assert.Fail("Constructor Result(Exception) must fail on null exception passed");
-            }
-            catch (ArgumentNullException)
-            {
-                //ok
-            }
-            catch (Exception ex)
-            {
-                //ooops unexpected
-                throw ex;
-            }
-        }
-
-        [TestMethod]
-        [TestCategory("Result<T>")]
         public void Result_test_2()
         {
             Result res = new Result(() =>

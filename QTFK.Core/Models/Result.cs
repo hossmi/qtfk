@@ -1,70 +1,64 @@
-﻿using System;
+﻿using QTFK.Extensions.Exceptions;
+using System;
 using System.Linq;
 
 namespace QTFK.Models
 {
     public class Result
     {
-        protected Exception _exception;
+        protected Exception exception;
 
-        public Exception Exception { get { return _exception; } }
+        public Exception Exception { get { return this.exception; } }
         public bool Ok { get { return Exception == null; } }
-        public string Message { get { return _exception?.Message; } }
+        public string Message { get { return this.exception?.Message; } }
 
-        public Result() { }
+        protected Result()
+        {
+
+        }
 
         public Result(Action body)
         {
+            Asserts.isSomething(body, "Delegate 'body' cannot be null.");
+
             try
             {
                 body();
             }
             catch (Exception ex)
             {
-                _exception = ex;
+                this.exception = ex;
             }
-        }
-
-        public Result(Exception ex)
-        {
-            if (ex == null)
-                throw new ArgumentNullException(nameof(ex));
-            _exception = ex;
         }
 
         public Result Wrap<TExcep>(Func<Exception, TExcep> exceptionWrapperDelegate) where TExcep : Exception
         {
-            _exception = exceptionWrapperDelegate(_exception);
+            this.exception = this.exception.wrap<TExcep>(exceptionWrapperDelegate);
             return this;
         }
     }
 
     public class Result<T> : Result
     {
-        public Result(T value)
-        {
-            Value = value;
-        }
-
-        public Result(Exception ex) : base(ex) { }
+        public T Value { get; }
 
         public Result(Func<T> body)
         {
+            Asserts.isSomething(body, "Delegate 'body' cannot be null.");
+
             try
             {
                 Value = body();
             }
             catch (Exception ex)
             {
-                _exception = ex;
+                this.exception = ex;
             }
         }
 
-        public T Value { get; }
-
         public new Result<T> Wrap<TExcep>(Func<Exception, TExcep> exceptionWrapperDelegate) where TExcep : Exception
         {
-            _exception = exceptionWrapperDelegate(_exception);
+            this.exception = this.exception.wrap<TExcep>(exceptionWrapperDelegate);
             return this;
         }
 
