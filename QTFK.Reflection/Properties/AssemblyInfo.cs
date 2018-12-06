@@ -6,9 +6,9 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("QTFK.Reflection")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyDescription("Quick Tools for at runtime code compilation and reflection")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
+[assembly: AssemblyCompany("Hossmi")]
 [assembly: AssemblyProduct("QTFK.Reflection")]
 [assembly: AssemblyCopyright("Copyright ©  2017")]
 [assembly: AssemblyTrademark("")]

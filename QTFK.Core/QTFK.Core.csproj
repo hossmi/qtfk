@@ -78,14 +78,13 @@
     <Compile Include="Services\EntityMappers\DefaultEntityMapper.cs" />
     <Compile Include="Services\IEntityMapper.cs" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <None Include="QTFK.Core.nuspec" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>del /F /S $(SolutionDir)\bin\$(SolutionName)\*.* 2 &gt; NUL
-mkdir $(SolutionDir)\bin 2 &gt; NUL
-mkdir $(SolutionDir)\bin\$(SolutionName) 2 &gt; NUL
-
-xcopy /Y $(TargetPath) $(SolutionDir)\bin\$(SolutionName)\</PostBuildEvent>
+    <PostBuildEvent>
+    </PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

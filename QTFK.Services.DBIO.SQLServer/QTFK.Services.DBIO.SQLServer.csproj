@@ -47,6 +47,21 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="QTFK.Core, Version=1.6.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\QTFK.Core.1.6.0\lib\net452\QTFK.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="QTFK.DB, Version=1.6.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\QTFK.DB.1.6.0\lib\net452\QTFK.DB.dll</HintPath>
+    </Reference>
+    <Reference Include="QTFK.DBMigrations, Version=1.6.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\QTFK.DBMigrations.1.6.0\lib\net452\QTFK.DBMigrations.dll</HintPath>
+    </Reference>
+    <Reference Include="QTFK.Logs, Version=1.6.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\QTFK.Logs.1.6.0\lib\net452\QTFK.Logs.dll</HintPath>
+    </Reference>
+    <Reference Include="QTFK.Reflection, Version=1.6.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\QTFK.Reflection.1.6.0\lib\net452\QTFK.Reflection.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -68,29 +83,16 @@
     <Compile Include="Services\DBIO\SQLServerDBIO.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\QTFK.Core\QTFK.Core.csproj">
-      <Project>{8C740ADF-E4E1-444A-A9F0-2E40B174260F}</Project>
-      <Name>QTFK.Core</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\QTFK.DBMigrations\QTFK.DBMigrations.csproj">
-      <Project>{200f8a2c-e9f3-42a9-b813-339083a77344}</Project>
-      <Name>QTFK.DBMigrations</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\QTFK.DB\QTFK.DB.csproj">
-      <Project>{857badf5-36dc-4404-a998-904879300e48}</Project>
-      <Name>QTFK.DB</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\QTFK.Logs\QTFK.Logs.csproj">
-      <Project>{277f230c-64c9-4a90-bf71-1d0e83d26658}</Project>
-      <Name>QTFK.Logs</Name>
-    </ProjectReference>
+    <Folder Include="Models\DBIO\Filters\" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Models\DBIO\Filters\" />
+    <None Include="packages.config" />
+    <None Include="QTFK.Services.DBIO.SQLServer.nuspec" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>xcopy /Y $(TargetPath) $(SolutionDir)\bin\qtfk\</PostBuildEvent>
+    <PostBuildEvent>
+    </PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

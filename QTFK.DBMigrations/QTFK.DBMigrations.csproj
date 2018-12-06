@@ -50,6 +50,18 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="QTFK.Core, Version=1.6.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\QTFK.Core.1.6.0\lib\net452\QTFK.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="QTFK.DB, Version=1.6.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\QTFK.DB.1.6.0\lib\net452\QTFK.DB.dll</HintPath>
+    </Reference>
+    <Reference Include="QTFK.Logs, Version=1.6.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\QTFK.Logs.1.6.0\lib\net452\QTFK.Logs.dll</HintPath>
+    </Reference>
+    <Reference Include="QTFK.Reflection, Version=1.6.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\QTFK.Reflection.1.6.0\lib\net452\QTFK.Reflection.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -71,17 +83,12 @@
     <Compile Include="Services\IDBMigrator.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\QTFK.Core\QTFK.Core.csproj">
-      <Project>{8c740adf-e4e1-444a-a9f0-2e40b174260f}</Project>
-      <Name>QTFK.Core</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\QTFK.DB\QTFK.DB.csproj">
-      <Project>{857badf5-36dc-4404-a998-904879300e48}</Project>
-      <Name>QTFK.DB</Name>
-    </ProjectReference>
+    <None Include="packages.config" />
+    <None Include="QTFK.DBMigrations.nuspec" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>xcopy /Y $(TargetPath) $(SolutionDir)\bin\qtfk\</PostBuildEvent>
+    <PostBuildEvent>
+    </PostBuildEvent>
   </PropertyGroup>
 </Project>

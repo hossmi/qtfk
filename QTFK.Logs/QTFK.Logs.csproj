@@ -50,6 +50,9 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="QTFK.Core, Version=1.6.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\QTFK.Core.1.6.0\lib\net452\QTFK.Core.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -71,13 +74,12 @@
     <Compile Include="Services\Loggers\NullLogger.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\QTFK.Core\QTFK.Core.csproj">
-      <Project>{8c740adf-e4e1-444a-a9f0-2e40b174260f}</Project>
-      <Name>QTFK.Core</Name>
-    </ProjectReference>
+    <None Include="packages.config" />
+    <None Include="QTFK.Logs.nuspec" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>xcopy /Y $(TargetPath) $(SolutionDir)\bin\qtfk\</PostBuildEvent>
+    <PostBuildEvent>
+    </PostBuildEvent>
   </PropertyGroup>
 </Project>

@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>$id$</id>
+    <version>$version$</version>
+    <title>$title$</title>
+    <authors>$author$</authors>
+    <owners>$author$</owners>
+    <licenseUrl>https://raw.githubusercontent.com/hossmi/qtfk/develop/LICENSE</licenseUrl>
+    <projectUrl>https://github.com/hossmi/qtfk</projectUrl>
+    <!--<iconUrl>http://ICON_URL_HERE_OR_DELETE_THIS_LINE</iconUrl>-->
+    <requireLicenseAcceptance>true</requireLicenseAcceptance>
+    <description>$description$</description>
+    <releaseNotes>First Nuget Release.</releaseNotes>
+    <copyright>Copyright 2018</copyright>
+    <tags>Reflection runtime-compilation</tags>
+  </metadata>
+</package>
