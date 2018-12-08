@@ -25,14 +25,12 @@ namespace QTFK.Services.DBIO.OleDB.Tests
         }
 
         [TestMethod]
-        [TestCategory("DB")]
         public void OleDB_Create_tables()
         {
             this._db.Set(FileExtension.readBlocks("create.sql", "go").NotEmpty(), true);
         }
 
         [TestMethod]
-        [TestCategory("DB")]
         public void OleDB_Drop_tables()
         {
             this._db.Set(FileExtension.readBlocks("drop.sql", "go").NotEmpty(), false);

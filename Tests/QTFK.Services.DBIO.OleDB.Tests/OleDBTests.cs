@@ -47,7 +47,6 @@ namespace QTFK.Services.DBIO.OleDB.Tests
         }
 
         [TestMethod]
-        [TestCategory("DB OleDB")]
         public void OleDB_Set_test()
         {
             var testPerson = new Person
@@ -100,7 +99,6 @@ namespace QTFK.Services.DBIO.OleDB.Tests
         }
 
         [TestMethod]
-        [TestCategory("DB OleDB")]
         public void OleDB_Set_error_test()
         {
             try
@@ -115,7 +113,6 @@ namespace QTFK.Services.DBIO.OleDB.Tests
         }
 
         [TestMethod]
-        [TestCategory("DB OleDB")]
         public void OleDB_Get_T_test()
         {
             var testPerson = new Person
@@ -156,7 +153,6 @@ namespace QTFK.Services.DBIO.OleDB.Tests
 
 
         [TestMethod]
-        [TestCategory("DB OleDB")]
         public void OleDB_Date_Time_field_test()
         {
             var pepePerson = new Person
@@ -208,7 +204,6 @@ namespace QTFK.Services.DBIO.OleDB.Tests
         }
 
         [TestMethod]
-        [TestCategory("DB OleDB")]
         public void OleDB_Get_T_error_test()
         {
             this.db.Set($@"
@@ -236,7 +231,6 @@ namespace QTFK.Services.DBIO.OleDB.Tests
         }
 
         [TestMethod]
-        [TestCategory("DB OleDB")]
         public void OleDB_Get_DataSet_test()
         {
             var testPerson = new Person
@@ -279,7 +273,6 @@ namespace QTFK.Services.DBIO.OleDB.Tests
         }
 
         [TestMethod]
-        [TestCategory("DB OleDB")]
         public void OleDB_Get_DataSet_error_test()
         {
             try
@@ -291,7 +284,6 @@ namespace QTFK.Services.DBIO.OleDB.Tests
         }
 
         [TestMethod]
-        [TestCategory("Mapping")]
         public void AutoMap_IDataRecord_tests()
         {
             this.db.Set($@"
@@ -359,7 +351,6 @@ namespace QTFK.Services.DBIO.OleDB.Tests
         }
 
         [TestMethod]
-        [TestCategory("Mapping")]
         public void AutoMap_and_DBIO_IDataRecord_tests()
         {
             this.db.Set($@"
