@@ -53,6 +53,9 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="QTFK.Core, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\QTFK.Core.2.0.0\lib\net452\QTFK.Core.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -87,10 +90,7 @@
     <Compile Include="StringExtensionTest.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\QTFK.Core\QTFK.Core.csproj">
-      <Project>{8c740adf-e4e1-444a-a9f0-2e40b174260f}</Project>
-      <Name>QTFK.Core</Name>
-    </ProjectReference>
+    <None Include="packages.config" />
   </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">

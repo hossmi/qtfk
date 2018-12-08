@@ -53,6 +53,24 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="QTFK.Core, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\QTFK.Core.2.0.0\lib\net452\QTFK.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="QTFK.DB, Version=1.6.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\QTFK.DB.1.6.0\lib\net452\QTFK.DB.dll</HintPath>
+    </Reference>
+    <Reference Include="QTFK.DBMigrations, Version=1.6.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\QTFK.DBMigrations.1.6.0\lib\net452\QTFK.DBMigrations.dll</HintPath>
+    </Reference>
+    <Reference Include="QTFK.Logs, Version=1.6.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\QTFK.Logs.1.6.0\lib\net452\QTFK.Logs.dll</HintPath>
+    </Reference>
+    <Reference Include="QTFK.Reflection, Version=1.6.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\QTFK.Reflection.1.6.0\lib\net452\QTFK.Reflection.dll</HintPath>
+    </Reference>
+    <Reference Include="QTFK.Services.DBIO.SQLServer, Version=1.6.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\QTFK.Services.DBIO.SQLServer.1.6.0\lib\net452\QTFK.Services.DBIO.SQLServer.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.configuration" />
     <Reference Include="System.Data" />
@@ -85,28 +103,7 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <None Include="App.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\..\QTFK.Core\QTFK.Core.csproj">
-      <Project>{8C740ADF-E4E1-444A-A9F0-2E40B174260F}</Project>
-      <Name>QTFK.Core</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\QTFK.DBMigrations\QTFK.DBMigrations.csproj">
-      <Project>{200f8a2c-e9f3-42a9-b813-339083a77344}</Project>
-      <Name>QTFK.DBMigrations</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\QTFK.DB\QTFK.DB.csproj">
-      <Project>{857badf5-36dc-4404-a998-904879300e48}</Project>
-      <Name>QTFK.DB</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\QTFK.Logs\QTFK.Logs.csproj">
-      <Project>{277F230C-64C9-4A90-BF71-1D0E83D26658}</Project>
-      <Name>QTFK.Logs</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\QTFK.Services.DBIO.SQLServer\QTFK.Services.DBIO.SQLServer.csproj">
-      <Project>{251058ED-EA21-439B-A495-FE43A9669B57}</Project>
-      <Name>QTFK.Services.DBIO.SQLServer</Name>
-    </ProjectReference>
+    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="drop.sql">
