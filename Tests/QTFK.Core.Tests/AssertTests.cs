@@ -6,17 +6,16 @@ namespace QTFK.Core.Tests
 {
     enum EnumSample
     {
-        valueMin = 5,
-        valueMed = 8,
-        valueMax = 13,
+        min = 5,
+        average = 8,
+        max = 13,
     }
 
     [TestClass]
     public class AssertTests
     {
-        [TestCategory("Asserts")]
         [TestMethod]
-        public void Asserting_good_values()
+        public void when_assert_good_values_code_does_not_throws_exception()
         {
             string someString, someEnumSampleAsString;
             int number;
@@ -29,20 +28,19 @@ namespace QTFK.Core.Tests
             someType = typeof(AssertTests);
             someObject = someType;
 
-            someEnumSample = EnumSample.valueMin;
-            someEnumSampleAsString = EnumSample.valueMax.ToString();
+            someEnumSample = EnumSample.min;
+            someEnumSampleAsString = EnumSample.max.ToString();
 
-            Asserts.isFilled(someString, $"'{nameof(someString)}' cannot be empty.");
-            Asserts.check(number > 0, $"'{nameof(number)}' must be greater than zero.");
-            Asserts.isSomething(someType, "'{nameof(number)}' cannot be null.");
-            Asserts.isSomething(someObject, "'{nameof(number)}' cannot be null.");
-            Asserts.isValidEnum<EnumSample>(someEnumSample, "'{nameof(number)}' cannot be null.");
-            Asserts.isValidEnum<EnumSample>(someEnumSampleAsString, "'{nameof(number)}' cannot be null.");
+            Asserts.stringIsNotEmpty(someString);
+            Asserts.isTrue(number > 0);
+            Asserts.isNotNull(someType);
+            Asserts.isNotNull(someObject);
+            Asserts.isValidEnum<EnumSample>(someEnumSample);
+            Asserts.isValidEnum<EnumSample>(someEnumSampleAsString);
         }
 
-        [TestCategory("Asserts")]
         [TestMethod]
-        public void Asserting_bad_values()
+        public void when_assert_bad_values_code_throws_exception()
         {
             string someString, someEnumSampleAsString;
             int number;
@@ -60,42 +58,42 @@ namespace QTFK.Core.Tests
 
             try
             {
-                Asserts.isFilled(someString, $"'{nameof(someString)}' cannot be empty.");
+                Asserts.stringIsNotEmpty(someString);
                 Assert.Fail();
             }
             catch { }
 
             try
             {
-                Asserts.check(number > 0, $"'{nameof(number)}' must be greater than zero.");
+                Asserts.isTrue(number > 0);
                 Assert.Fail();
             }
             catch { }
 
             try
             {
-                Asserts.isSomething(someType, "'{nameof(number)}' cannot be null.");
+                Asserts.isNotNull(someType);
                 Assert.Fail();
             }
             catch { }
 
             try
             {
-                Asserts.isSomething(someObject, "'{nameof(number)}' cannot be null.");
+                Asserts.isNotNull(someObject);
                 Assert.Fail();
             }
             catch { }
 
             try
             {
-                Asserts.isValidEnum<EnumSample>(someEnumSample, "'{nameof(number)}' cannot be null.");
+                Asserts.isValidEnum<EnumSample>(someEnumSample);
                 Assert.Fail();
             }
             catch { }
 
             try
             {
-                Asserts.isValidEnum<EnumSample>(someEnumSampleAsString, "'{nameof(number)}' cannot be null.");
+                Asserts.isValidEnum<EnumSample>(someEnumSampleAsString);
                 Assert.Fail();
             }
             catch { }
