@@ -25,13 +25,13 @@ namespace QTFK.Models
 
         public void Dispose()
         {
-            if (!_disposed)
+            if (!this._disposed)
             {
                 AppDomain.Unload(Domain);
                 Domain = null;
                 Handle = null;
                 Instance = null;
-                _disposed = true;
+                this._disposed = true;
             }
         }
     }

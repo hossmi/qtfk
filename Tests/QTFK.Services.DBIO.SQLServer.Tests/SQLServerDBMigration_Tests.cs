@@ -18,21 +18,21 @@ namespace QTFK.Services.DBIO.SQLServer.Tests
 
         public SQLServerDBMigration_Tests()
         {
-            _connectionString = System.Configuration.ConfigurationManager.ConnectionStrings["tests"]?.ConnectionString;
-            if (string.IsNullOrWhiteSpace(_connectionString))
+            this._connectionString = System.Configuration.ConfigurationManager.ConnectionStrings["tests"]?.ConnectionString;
+            if (string.IsNullOrWhiteSpace(this._connectionString))
                 throw new ArgumentException($"Empty or invalid 'tests' connection string in app.config", "tests");
-            _db = new SQLServerDBIO(_connectionString);
-            _createDrop = new CreateDrop(_connectionString, _db);
+            this._db = new SQLServerDBIO(this._connectionString);
+            this._createDrop = new CreateDrop(this._connectionString, this._db);
         }
 
         [TestInitialize]
         [TestCleanup]
         public void Drop()
         {
-            _createDrop.SQL_Drop_tables();
-            IDBMigrator migrator = new SQLServerDBMigrator(_db, new DefaultDBMigrationStepProvider(Enumerable.Empty<IDBMigrationStep>()));
+            this._createDrop.SQL_Drop_tables();
+            IDBMigrator migrator = new SQLServerDBMigrator(this._db, new DefaultDBMigrationStepProvider(Enumerable.Empty<IDBMigrationStep>()));
             new Result(migrator.UnInstall);
-            new Result(() => DropTableCliente(_db));
+            new Result(() => DropTableCliente(this._db));
         }
 
         [TestMethod]
@@ -40,7 +40,7 @@ namespace QTFK.Services.DBIO.SQLServer.Tests
         [TestCategory("DB Migrations")]
         public void SQLServerDBMigrator_tests()
         {
-            IDBMigrator migrator = new SQLServerDBMigrator(_db, new DefaultDBMigrationStepProvider(GetMigrations()));
+            IDBMigrator migrator = new SQLServerDBMigrator(this._db, new DefaultDBMigrationStepProvider(GetMigrations()));
 
             int version = migrator.GetCurrentVersion();
             var migrationStep = migrator.GetLastMigration();
@@ -67,7 +67,7 @@ namespace QTFK.Services.DBIO.SQLServer.Tests
             Assert.AreEqual(_kMigration3, migrationStep.Description);
 
             //simulating error on migration from 3 to 4
-            migrator = new SQLServerDBMigrator(_db, new BadMigrationProvider());
+            migrator = new SQLServerDBMigrator(this._db, new BadMigrationProvider());
 
             steps = migrator.Upgrade();
 
