@@ -13,5 +13,14 @@ namespace QTFK.Extensions.Collections
             items.Add(item);
             return items;
         }
+
+        public static IEnumerable<T> apply<T>(this IEnumerable<T> items, Action<T> actionDelegate) where T : class
+        {
+            foreach (T item in items)
+            {
+                actionDelegate(item);
+                yield return item;
+            }
+        }
     }
 }
