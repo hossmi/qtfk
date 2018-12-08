@@ -44,7 +44,7 @@ namespace QTFK.Services.DBIO.SQLServer.Tests
         }
 
         [TestMethod]
-        [TestCategory("DB SQL Server")]
+        [TestCategory("Requires SQL Server database connection")]
         public void SQLServer_Set_test()
         {
             var testPerson = new Person
@@ -98,7 +98,7 @@ namespace QTFK.Services.DBIO.SQLServer.Tests
         }
 
         [TestMethod]
-        [TestCategory("DB SQL Server")]
+        [TestCategory("Requires SQL Server database connection")]
         public void SQLServer_Set_RollbackTransInvocationTest()
         {
             var testPerson = new Person
@@ -152,7 +152,7 @@ namespace QTFK.Services.DBIO.SQLServer.Tests
         }
 
         [TestMethod]
-        [TestCategory("DB SQL Server")]
+        [TestCategory("Requires SQL Server database connection")]
         public void SQLServer_Set_error_test()
         {
             try
@@ -167,7 +167,7 @@ namespace QTFK.Services.DBIO.SQLServer.Tests
         }
 
         [TestMethod]
-        [TestCategory("DB SQL Server")]
+        [TestCategory("Requires SQL Server database connection")]
         public void SQLServer_Get_T_test()
         {
             var testPerson = new Person
@@ -211,7 +211,7 @@ namespace QTFK.Services.DBIO.SQLServer.Tests
         }
 
         [TestMethod]
-        [TestCategory("DB SQL Server")]
+        [TestCategory("Requires SQL Server database connection")]
         public void SQLServer_Get_Scalar_test()
         {
             int totalPersons;
@@ -259,7 +259,7 @@ namespace QTFK.Services.DBIO.SQLServer.Tests
         }
 
         [TestMethod]
-        [TestCategory("DB SQL Server")]
+        [TestCategory("Requires SQL Server database connection")]
         public void SQLServer_Get_T_error_test()
         {
             this.db.Set($@"
@@ -288,7 +288,7 @@ namespace QTFK.Services.DBIO.SQLServer.Tests
         }
 
         [TestMethod]
-        [TestCategory("DB SQL Server")]
+        [TestCategory("Requires SQL Server database connection")]
         public void SQLServer_Get_DataSet_test()
         {
             var testPerson = new Person
@@ -333,7 +333,7 @@ namespace QTFK.Services.DBIO.SQLServer.Tests
         }
 
         [TestMethod]
-        [TestCategory("DB SQL Server")]
+        [TestCategory("Requires SQL Server database connection")]
         public void SQLServer_Get_DataSet_error_test()
         {
             try

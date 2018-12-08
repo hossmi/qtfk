@@ -36,8 +36,7 @@ namespace QTFK.Services.DBIO.SQLServer.Tests
         }
 
         [TestMethod]
-        [TestCategory("DB SQL Server")]
-        [TestCategory("DB Migrations")]
+        [TestCategory("Requires SQL Server database connection")]
         public void SQLServerDBMigrator_tests()
         {
             IDBMigrator migrator = new SQLServerDBMigrator(this._db, new DefaultDBMigrationStepProvider(GetMigrations()));

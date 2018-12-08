@@ -24,14 +24,14 @@ namespace QTFK.Services.DBIO.SQLServer.Tests
         }
 
         [TestMethod]
-        [TestCategory("DB")]
+        [TestCategory("Requires SQL Server database connection")]
         public void SQL_Create_tables()
         {
             this._db.Set(FileExtension.readBlocks("create.sql", "go").NotEmpty(), true);
         }
 
         [TestMethod]
-        [TestCategory("DB")]
+        [TestCategory("Requires SQL Server database connection")]
         public void SQL_Drop_tables()
         {
             this._db.Set(FileExtension.readBlocks("drop.sql", "go").NotEmpty(), false);
