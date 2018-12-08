@@ -11,7 +11,6 @@ namespace QTFK.Sandbox.Tests
     public class SandBoxTests
     {
         [TestMethod]
-        [TestCategory("Sandbox")]
         public void sandBox_core_test()
         {
             ISandboxFactory factory;
@@ -36,7 +35,6 @@ namespace QTFK.Sandbox.Tests
         }
 
         [TestMethod]
-        [TestCategory("Sandbox")]
         public void sandBox_Extensions_test1()
         {
             ISandboxFactory factory;
@@ -59,7 +57,6 @@ namespace QTFK.Sandbox.Tests
         }
 
         [TestMethod]
-        [TestCategory("Sandbox")]
         public void sandBox_Extensions_test2()
         {
             ISandboxFactory factory;
@@ -79,7 +76,6 @@ namespace QTFK.Sandbox.Tests
         }
 
         [TestMethod]
-        [TestCategory("Sandbox")]
         public void sandBox_Extensions_test3()
         {
             ISandboxFactory factory;

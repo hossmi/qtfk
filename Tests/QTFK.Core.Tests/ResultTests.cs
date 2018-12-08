@@ -9,7 +9,6 @@ namespace QTFK.Core.Tests
     public class ResultTests
     {
         [TestMethod]
-        [TestCategory("Result<T>")]
         public void Result_test_2()
         {
             Result res = new Result(() =>
@@ -31,7 +30,6 @@ namespace QTFK.Core.Tests
         }
 
         [TestMethod]
-        [TestCategory("Result<T>")]
         public void Result_T_test()
         {
             var res = new Result<int>(() =>
@@ -55,9 +53,7 @@ namespace QTFK.Core.Tests
             Assert.AreEqual(0, res.Value);
         }
 
-
         [TestMethod]
-        [TestCategory("Result<T>")]
         public void Result_T_test_2()
         {
             var res = new Result<int?>(() =>
@@ -82,7 +78,6 @@ namespace QTFK.Core.Tests
         }
 
         [TestMethod]
-        [TestCategory("Result<T>")]
         public void Result_wrap_Exception_test()
         {
             var res = new Result<int>(() =>
@@ -102,7 +97,6 @@ namespace QTFK.Core.Tests
         }
 
         [TestMethod]
-        [TestCategory("Result<T>")]
         public void Result_wrap_Exception_test_2()
         {
             var res = new Result(() =>

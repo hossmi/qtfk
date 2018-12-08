@@ -20,7 +20,6 @@ namespace QTFK.Core.Tests
         const string kDecimal = "numero_decimal";
 
         [TestMethod]
-        [TestCategory("Mapping")]
         public void AutoMap_tests()
         {
             var ds = new DataSet();

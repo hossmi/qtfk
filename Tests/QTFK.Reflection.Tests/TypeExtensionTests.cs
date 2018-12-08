@@ -6,7 +6,6 @@ using QTFK.Extensions.Types;
 namespace QTFK.Reflection.Tests
 {
     [TestClass]
-    [TestCategory("Reflection")]
     public class TypeExtensionTests
     {
         [TestMethod]

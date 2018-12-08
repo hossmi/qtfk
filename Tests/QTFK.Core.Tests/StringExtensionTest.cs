@@ -10,7 +10,6 @@ namespace QTFK.Core.Tests
     public class StringExtensionTest
     {
         [TestMethod]
-        [TestCategory("Extensions")]
         public void Stringify_collection()
         {
             var cadenas = new string[] { "uno que llega", @"lorem ipsum", null, "" };

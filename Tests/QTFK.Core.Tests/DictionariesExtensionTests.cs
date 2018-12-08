@@ -10,7 +10,6 @@ namespace QTFK.Core.Tests
     public class DictionariesExtensionTests
     {
         [TestMethod]
-        [TestCategory("Extensions")]
         public void DictionariesExtension_Tests_1()
         {
             IDictionary<string, object> d;
@@ -49,7 +48,6 @@ namespace QTFK.Core.Tests
         }
 
         [TestMethod]
-        [TestCategory("Extensions")]
         public void DictionariesExtension_Tests_3()
         {
             var d = new Dictionary<string, object>
@@ -86,7 +84,6 @@ namespace QTFK.Core.Tests
         }
 
         [TestMethod]
-        [TestCategory("Extensions")]
         public void DictionariesExtension_Tests_5()
         {
             IDictionary<string, object> d;
@@ -125,7 +122,6 @@ namespace QTFK.Core.Tests
         }
 
         [TestMethod]
-        [TestCategory("Extensions")]
         public void DictionariesExtension_Tests_6()
         {
             IDictionary<string, object> d;

@@ -9,7 +9,6 @@ namespace QTFK.Core.Tests
     public class CastExtensionTest
     {
         [TestMethod]
-        [TestCategory("Extensions")]
         public void CastExtension_tests()
         {
             var simple = new SimpleTestClass

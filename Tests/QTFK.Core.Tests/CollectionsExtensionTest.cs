@@ -10,7 +10,6 @@ namespace QTFK.Core.Tests
     public class CollectionsExtensionTest
     {
         [TestMethod]
-        [TestCategory("Extensions")]
         public void SwitchCase_extension_test()
         {
             var persons = new[]

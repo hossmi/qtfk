@@ -12,7 +12,6 @@ namespace QTFK.Logs.Tests
     public class LoggerTests
     {
         [TestMethod]
-        [TestCategory("Loggers")]
         public void ConsoleLogger_T_Tests()
         {
             var buffer = new System.IO.StringWriter();
@@ -42,7 +41,6 @@ Booooom!!
         }
 
         [TestMethod]
-        [TestCategory("Loggers")]
         public void ConsoleLogger_Tests()
         {
             var buffer = new System.IO.StringWriter();
@@ -72,7 +70,6 @@ Booooom!!
         }
 
         [TestMethod]
-        [TestCategory("Loggers")]
         public void Logger_Filter_Tests()
         {
             var buffer = new System.IO.StringWriter();
@@ -99,7 +96,6 @@ Ups! an Error!
         }
 
         [TestMethod]
-        [TestCategory("Loggers")]
         public void ConsoleLogger_extension_Tests()
         {
             var buffer = new System.IO.StringWriter();
@@ -129,7 +125,6 @@ Booooom!!
         }
 
         [TestMethod]
-        [TestCategory("Loggers")]
         public void MultiLogger_Tests()
         {
             var buffer = new System.IO.StringWriter();
@@ -161,7 +156,6 @@ Booooom!!
         }
 
         [TestMethod]
-        [TestCategory("Loggers")]
         public void FileLogger_Tests()
         {
             string path;

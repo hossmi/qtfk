@@ -22,7 +22,6 @@ namespace QTFK.Core.Tests
         const string kDecimal = "numero_decimal";
 
         [TestMethod]
-        [TestCategory("Mapping")]
         public void EntityMapper_tests()
         {
             var mapper = new DefaultEntityMapper();
@@ -96,7 +95,6 @@ namespace QTFK.Core.Tests
         }
 
         [TestMethod]
-        [TestCategory("Mapping")]
         public void EntityMapperExtension_tests()
         {
             var mapper = new DefaultEntityMapper();

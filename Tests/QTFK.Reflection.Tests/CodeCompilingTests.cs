@@ -10,7 +10,6 @@ using QTFK.Services.Compilers;
 namespace QTFK.Core.Tests
 {
     [TestClass]
-    [TestCategory("Reflection")]
     public class CodeCompilingTests
     {
         [TestMethod]
