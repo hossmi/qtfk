@@ -10,36 +10,34 @@ using QTFK.Extensions.Collections.Dictionaries;
 namespace QTFK.Services.DBIO.OleDB.Tests
 {
     [TestClass]
-    public class OleDBMigration_Tests
+    public class OleDBMigrationTests
     {
-        private readonly string _connectionString;
-        private readonly IDBIO _db;
-        private readonly CreateDrop _createDrop;
+        private readonly string connectionString;
+        private readonly IDBIO db;
+        private readonly CreateDrop createDrop;
 
-        public OleDBMigration_Tests()
+        public OleDBMigrationTests()
         {
-            _connectionString = System.Configuration.ConfigurationManager.ConnectionStrings["tests"]?.ConnectionString;
-            if (string.IsNullOrWhiteSpace(_connectionString))
+            this.connectionString = System.Configuration.ConfigurationManager.ConnectionStrings["tests"]?.ConnectionString;
+            if (string.IsNullOrWhiteSpace(this.connectionString))
                 throw new ArgumentException($"Empty or invalid 'tests' connection string in app.config", "tests");
-            _db = new OleDBIO(_connectionString);
-            _createDrop = new CreateDrop(_connectionString, _db);
+            this.db = new OleDBIO(this.connectionString);
+            this.createDrop = new CreateDrop(this.connectionString, this.db);
         }
 
         [TestInitialize]
         [TestCleanup]
         public void Drop()
         {
-            _createDrop.OleDB_Drop_tables();
-            IDBMigrator migrator = new OleDBMigrator(_db, new DefaultDBMigrationStepProvider(Enumerable.Empty<IDBMigrationStep>()));
+            this.createDrop.OleDB_Drop_tables();
+            IDBMigrator migrator = new OleDBMigrator(this.db, new DefaultDBMigrationStepProvider(Enumerable.Empty<IDBMigrationStep>()));
             new Result(migrator.UnInstall);
         }
 
         [TestMethod]
-        [TestCategory("DB OleDB")]
-        [TestCategory("DB Migrations")]
-        public void OleDBMigration_tests()
+        public void when_migrate_oledb_works_as_spected()
         {
-            IDBMigrator migrator = new OleDBMigrator(_db, new DefaultDBMigrationStepProvider(GetMigrations()));
+            IDBMigrator migrator = new OleDBMigrator(this.db, new DefaultDBMigrationStepProvider(GetMigrations()));
 
             int version = migrator.GetCurrentVersion();
             var migrationStep = migrator.GetLastMigration();
@@ -66,7 +64,7 @@ namespace QTFK.Services.DBIO.OleDB.Tests
             Assert.AreEqual(_kMigration3, migrationStep.Description);
 
             //simulating error on migration from 3 to 4
-            migrator = new OleDBMigrator(_db, new BadMigrationProvider());
+            migrator = new OleDBMigrator(this.db, new PrvBadMigrationProvider());
 
             steps = migrator.Upgrade();
 
@@ -144,7 +142,7 @@ namespace QTFK.Services.DBIO.OleDB.Tests
 
         }
 
-        class BadMigrationProvider : DBMigrationStepProviderBase
+        class PrvBadMigrationProvider : DBMigrationStepProviderBase
         {
             public override IEnumerable<IDBMigrationStep> GetSteps()
             {

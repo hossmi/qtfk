@@ -1,12 +1,8 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using QTFK.Services;
 using System.Collections.Generic;
-using QTFK.Models;
 using System.Linq;
 using QTFK.Extensions;
-using QTFK.Extensions.Collections.Casting;
-using QTFK.Cmd.Tests.Models;
 using QTFK.Services.ConsoleArgsServices;
 
 namespace QTFK.Cmd.Tests
@@ -15,8 +11,7 @@ namespace QTFK.Cmd.Tests
     public class ConsoleTest1
     {
         [TestMethod]
-        [TestCategory("Console")]
-        public void Console_Test1()
+        public void simple_ConsoleArgsService_works_as_spected()
         {
             var someDate = new DateTime(2012, 1, 1);
             var args = new string[]
@@ -55,8 +50,7 @@ namespace QTFK.Cmd.Tests
         }
 
         [TestMethod]
-        [TestCategory("Console")]
-        public void Console_Test_Case_Sensitive()
+        public void case_sensitive_instance_of_ConsoleArgsService_works_as_spected()
         {
             var errors = new List<Exception>();
 

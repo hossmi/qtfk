@@ -23,7 +23,7 @@ namespace QTFK.Services.Loggers
         /// <param name="messageBuilder">Defines how the message will be crafted. By default: [time] level | message</param>
         public FileLogger(String filepath, MessageBuilderDelegate messageBuilder = null)
         {
-            Asserts.isFilled(filepath, $"{nameof(filepath)} cannot be empty");
+            Asserts.stringIsNotEmpty(filepath);
 
             this.filepath = filepath;
             this.messageBuilder = messageBuilder ?? prv_defaultMessageBuilder;

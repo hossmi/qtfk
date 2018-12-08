@@ -29,12 +29,12 @@ namespace QTFK.Extensions.DBIO.EngineAttribute
             string engine;
             Type itemType;
 
-            Asserts.isSomething(item, $"Parameter '{nameof(item)}' cannot be null.");
+            Asserts.isNotNull(item);
 
             itemType = item.GetType();
             dbAttribute = itemType.GetCustomAttribute<DBAttribute>();
 
-            Asserts.isSomething(dbAttribute, $"Class '{itemType.FullName}' has no {nameof(DBAttribute)}.");
+            Asserts.isNotNull(dbAttribute);
             engine = dbAttribute.Engine;
 
             return engine;

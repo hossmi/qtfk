@@ -12,10 +12,10 @@ namespace QTFK.Extensions.Exceptions
         {
             T wrappedException;
 
-            Asserts.isSomething(wrapperDelegate, $"'{nameof(wrapperDelegate)}' cannot be null.");
+            Asserts.isNotNull(wrapperDelegate);
 
             wrappedException = wrapperDelegate(exception);
-            Asserts.isSomething(wrappedException, $"'{nameof(wrapperDelegate)}' must return a not null Exception.");
+            Asserts.isNotNull(wrappedException);
 
             return wrappedException;
         }

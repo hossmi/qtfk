@@ -10,12 +10,12 @@ namespace QTFK.Services.EntityMappers
 
         public DefaultEntityMapper()
         {
-            _entityMaps = new Dictionary<KeyValuePair<Type, Type>, object>();
+            this._entityMaps = new Dictionary<KeyValuePair<Type, Type>, object>();
         }
 
         public TTarget Map<TSource, TTarget>(TSource row)
         {
-            Func<TSource, TTarget> mapper = (Func<TSource, TTarget>)_entityMaps[BuildKey<TSource,TTarget>()];
+            Func<TSource, TTarget> mapper = (Func<TSource, TTarget>)this._entityMaps[BuildKey<TSource,TTarget>()];
             return mapper(row);
         }
 
@@ -26,7 +26,7 @@ namespace QTFK.Services.EntityMappers
 
         public void Register<TSource, TTarget>(Func<TSource, TTarget> mapper)
         {
-            _entityMaps[BuildKey<TSource,TTarget>()] = mapper;
+            this._entityMaps[BuildKey<TSource,TTarget>()] = mapper;
         }
     }
 }

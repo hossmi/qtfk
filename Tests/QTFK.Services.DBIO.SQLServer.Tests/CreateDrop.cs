@@ -16,25 +16,25 @@ namespace QTFK.Services.DBIO.SQLServer.Tests
 
         public CreateDrop(string connectionString = null, IDBIO db = null)
         {
-            _connectionString = connectionString ?? System.Configuration.ConfigurationManager.ConnectionStrings["tests"]?.ConnectionString;
-            if (string.IsNullOrWhiteSpace(_connectionString))
+            this._connectionString = connectionString ?? System.Configuration.ConfigurationManager.ConnectionStrings["tests"]?.ConnectionString;
+            if (string.IsNullOrWhiteSpace(this._connectionString))
                 throw new ArgumentException($"Empty or invalid 'tests' connection string in app.config", "tests");
 
-            _db = db ?? new SQLServerDBIO(_connectionString);
+            this._db = db ?? new SQLServerDBIO(this._connectionString);
         }
 
         [TestMethod]
         [TestCategory("DB")]
         public void SQL_Create_tables()
         {
-            _db.Set(FileExtension.readBlocks("create.sql", "go").NotEmpty(), true);
+            this._db.Set(FileExtension.readBlocks("create.sql", "go").NotEmpty(), true);
         }
 
         [TestMethod]
         [TestCategory("DB")]
         public void SQL_Drop_tables()
         {
-            _db.Set(FileExtension.readBlocks("drop.sql", "go").NotEmpty(), false);
+            this._db.Set(FileExtension.readBlocks("drop.sql", "go").NotEmpty(), false);
         }
     }
 }

@@ -9,7 +9,7 @@ namespace QTFK.Services.Loggers
 
         public MultiLogger(IEnumerable<ILogger<T>> logs)
         {
-            Asserts.isSomething(logs, $"{nameof(logs)} cannot be null.");
+            Asserts.isNotNull(logs);
 
             this.logs = logs;
         }

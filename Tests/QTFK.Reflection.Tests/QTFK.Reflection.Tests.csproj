@@ -62,6 +62,12 @@
     <Reference Include="Microsoft.VisualStudio.TestPlatform.TestFramework.Extensions, Version=14.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\..\packages\MSTest.TestFramework.1.1.11\lib\net45\Microsoft.VisualStudio.TestPlatform.TestFramework.Extensions.dll</HintPath>
     </Reference>
+    <Reference Include="QTFK.Core, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\QTFK.Core.2.0.0\lib\net452\QTFK.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="QTFK.Reflection, Version=1.6.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\QTFK.Reflection.1.6.1\lib\net452\QTFK.Reflection.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
   </ItemGroup>
@@ -74,10 +80,6 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\QTFK.Reflection\QTFK.Reflection.csproj">
-      <Project>{fb47e6f1-2e3b-47fc-a5a6-c048f54b7fe5}</Project>
-      <Name>QTFK.Reflection</Name>
-    </ProjectReference>
     <ProjectReference Include="..\..\Samples\SampleLibrary\SampleLibrary.csproj">
       <Project>{c73b69f8-ba2f-4dce-83ae-14a6716d96f6}</Project>
       <Name>SampleLibrary</Name>

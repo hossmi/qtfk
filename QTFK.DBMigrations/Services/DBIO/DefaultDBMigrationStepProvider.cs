@@ -22,12 +22,12 @@ namespace QTFK.Services.DBIO
             , IEnumerable<IDBMigrationStep> steps
             ) : base(tablePrefix)
         {
-            _steps = steps;
+            this._steps = steps;
         }
 
         public override IEnumerable<IDBMigrationStep> GetSteps()
         {
-            return _steps;
+            return this._steps;
         }
     }
 }

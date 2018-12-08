@@ -10,7 +10,7 @@ namespace QTFK.Attributes
     {
         public DBAttribute(string engine)
         {
-            Asserts.isFilled(engine, "Parameter 'engine' cannot be empty.");
+            Asserts.stringIsNotEmpty(engine);
             Engine = engine;
         }
 

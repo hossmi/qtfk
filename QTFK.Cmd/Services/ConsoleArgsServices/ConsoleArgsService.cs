@@ -33,7 +33,7 @@ namespace QTFK.Services.ConsoleArgsServices
 
             public PrvExplorerConsoleArgsBuilder(IDictionary<string, ArgumentInfo> data)
             {
-                Asserts.isSomething(data, $"'{nameof(data)}' cannot be null.");
+                Asserts.isNotNull(data);
 
                 this.data = data;
             }
@@ -80,7 +80,7 @@ namespace QTFK.Services.ConsoleArgsServices
 
         private void prv_init()
         {
-            Asserts.isFilled(this.Prefix, "It is mandatory the use of a prefix for options.");
+            Asserts.stringIsNotEmpty(this.Prefix);
 
             this.Description = this.Description ?? string.Empty;
             this.HelpArgument = this.HelpArgument ?? ArgumentInfo.createHelp("help", string.Empty);

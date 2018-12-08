@@ -22,10 +22,10 @@ namespace QTFK.Services.DBIO
 
         public SQLServerDBMigrator(IDBIO db, IDBMigrationStepProvider migratorProvider)
         {
-            _db = db;
-            _migrationSteps = (migratorProvider.GetSteps() ?? Enumerable.Empty<IDBMigrationStep>())
+            this._db = db;
+            this._migrationSteps = (migratorProvider.GetSteps() ?? Enumerable.Empty<IDBMigrationStep>())
                 .ToDictionary(m => m.ForVersion);
-            _tableName = $"{migratorProvider.TablePrefix ?? ""}{kVersionTableName}";
+            this._tableName = $"{migratorProvider.TablePrefix ?? ""}{kVersionTableName}";
         }
 
         string _SQL_Create_Table_Version
@@ -33,11 +33,11 @@ namespace QTFK.Services.DBIO
             get
             {
                 return $@"
-                    CREATE TABLE [{_tableName}] (
+                    CREATE TABLE [{this._tableName}] (
                           [{nameof(MigrationInfo.MigrationDate)}] datetime NOT NULL
                         , [{nameof(MigrationInfo.Version)}] int NULL
                         , [{nameof(MigrationInfo.Description)}] nvarchar(1024) NULL
-                        , CONSTRAINT [PK_{_tableName}] PRIMARY KEY ([{nameof(MigrationInfo.MigrationDate)}])
+                        , CONSTRAINT [PK_{this._tableName}] PRIMARY KEY ([{nameof(MigrationInfo.MigrationDate)}])
                     );";
             }
         }
@@ -47,7 +47,7 @@ namespace QTFK.Services.DBIO
             get
             {
                 return $@"
-                    INSERT INTO [{_tableName}] (
+                    INSERT INTO [{this._tableName}] (
                           [{nameof(MigrationInfo.MigrationDate)}]
                         , [{nameof(MigrationInfo.Version)}]
                         , [{nameof(MigrationInfo.Description)}]
@@ -64,7 +64,7 @@ namespace QTFK.Services.DBIO
         {
             get
             {
-                return $"SELECT * FROM [{_tableName}] ";
+                return $"SELECT * FROM [{this._tableName}] ";
             }
         }
 
@@ -89,12 +89,12 @@ namespace QTFK.Services.DBIO
 
             if (!version.HasValue)
             {
-                _db.Set(_SQL_Create_Table_Version);
+                this._db.Set(_SQL_Create_Table_Version);
                 version = GetVersion();
             }
 
             if (version == 0)
-                _db.Set(_SQL_INSERT_INTO_Version, Map(new MigrationInfo()
+                this._db.Set(_SQL_INSERT_INTO_Version, Map(new MigrationInfo()
                 {
                     Description = $"{nameof(SQLServerDBMigrator)} Initialization.",
                     MigrationDate = DateTime.Now,
@@ -106,7 +106,7 @@ namespace QTFK.Services.DBIO
 
         public IEnumerable<MigrationInfo> GetMigrations()
         {
-            var result = new Result<IEnumerable<MigrationInfo>>(() => _db
+            var result = new Result<IEnumerable<MigrationInfo>>(() => this._db
                 .Get(_SQL_SELECT_FROM_Version, Map)
                 .DefaultIfEmpty(new MigrationInfo())
                 );
@@ -119,10 +119,10 @@ namespace QTFK.Services.DBIO
 
         private int? GetVersion()
         {
-            var result = new Result<int?>(() => _db
+            var result = new Result<int?>(() => this._db
                     .Get<int?>($@"
                         SELECT TOP 1 [{nameof(MigrationInfo.Version)}]
-                        FROM [{_tableName}]
+                        FROM [{this._tableName}]
                         ORDER BY [{nameof(MigrationInfo.MigrationDate)}] DESC",
                         r => r.Get<int?>("version"))
                     .FirstOrDefault()
@@ -143,12 +143,12 @@ namespace QTFK.Services.DBIO
             {
                 int currentVersion = GetVersion().Value;
 
-                if (!_migrationSteps.ContainsKey(currentVersion))
+                if (!this._migrationSteps.ContainsKey(currentVersion))
                     break;
 
-                var step = _migrationSteps[currentVersion];
+                var step = this._migrationSteps[currentVersion];
 
-                var result = new Result<int>(() => step.Upgrade(_db));
+                var result = new Result<int>(() => step.Upgrade(this._db));
                 if (result.Ok)
                 {
                     var info = new MigrationInfo
@@ -158,19 +158,19 @@ namespace QTFK.Services.DBIO
                         MigrationDate = DateTime.Now
                     };
 
-                    _db.Set(_SQL_INSERT_INTO_Version, Map(info));
+                    this._db.Set(_SQL_INSERT_INTO_Version, Map(info));
                     yield return info;
                     continue;
                 }
 
-                new Result(() => step.Downgrade(_db));
+                new Result(() => step.Downgrade(this._db));
                 break;
             }
         }
 
         public void UnInstall()
         {
-            _db.Set($@"DROP TABLE [{_tableName}]");
+            this._db.Set($@"DROP TABLE [{this._tableName}]");
         }
     }
 }

@@ -16,29 +16,29 @@ namespace QTFK.Cmd.Tests
     {
         private IConsoleArgsService _appArgs;
         private Func<IConsoleArgsBuilder, XCopyArgsTest> _builder;
-        private IList<Exception> _errors;
-        private IEnumerable<ArgumentInfo> _appOptions;
-        private string _appDescription;
+        private IList<Exception> errors;
+        private IEnumerable<ArgumentInfo> appOptions;
+        private string appDescription;
 
         [TestInitialize()]
         public void Init()
         {
-            _errors = new List<Exception>();
-            _appOptions = Enumerable.Empty<ArgumentInfo>();
-            _appDescription = string.Empty;
+            this.errors = new List<Exception>();
+            this.appOptions = Enumerable.Empty<ArgumentInfo>();
+            this.appDescription = string.Empty;
 
-            _appArgs = new ConsoleArgsService()
+            this._appArgs = new ConsoleArgsService()
                 .As<IConsoleArgsService>()
                 .setCaseSensitive(false)
                 .setDescription("Copy directory trees and files.")
                 .setHelp("?", "Shows this help.")
                 .setPrefix("/")
-                .setErrorHandler(_errors.Add)
-                .setUsageHandler((description,options) => { _appDescription = description; _appOptions = options; })
+                .setErrorHandler(this.errors.Add)
+                .setUsageHandler((description,options) => { this.appDescription = description; this.appOptions = options; })
                 .setShowHelpOnError(true)
                 ;
 
-            _builder = b => new XCopyArgsTest
+            this._builder = b => new XCopyArgsTest
             {
                 Source = b.getRequired(1, "source", "Source files to be copied."),
                 Target = b.getOptional(2, "target", "Destination path.", Environment.CurrentDirectory),
@@ -52,23 +52,21 @@ namespace QTFK.Cmd.Tests
         }
 
         [TestMethod]
-        [TestCategory("Console")]
-        public void Console_xcopy_test_empty()
+        public void when_instance_of_ConsoleArgsService_is_invoked_with_no_args_returns_null_result()
         {
-            var result = _appArgs.Parse(Enumerable.Empty<string>(), _builder);
+            var result = this._appArgs.Parse(Enumerable.Empty<string>(), this._builder);
 
             Assert.IsNull(result);
 
-            Assert.AreEqual(1, _errors.Count());
-            Assert.AreEqual("Copy directory trees and files.", _appDescription);
-            Assert.AreEqual(9, _appOptions.Count());
+            Assert.AreEqual(1, this.errors.Count());
+            Assert.AreEqual("Copy directory trees and files.", this.appDescription);
+            Assert.AreEqual(9, this.appOptions.Count());
         }
 
         [TestMethod]
-        [TestCategory("Console")]
-        public void Console_xcopy_test_required()
+        public void when_instance_of_ConsoleArgsService_is_invoked_with_one_args_returns_not_null_result()
         {
-            var result = _appArgs.Parse(new string[] { @"C:\pepe\tronco\*.txt" }, _builder);
+            var result = this._appArgs.Parse(new string[] { @"C:\pepe\tronco\*.txt" }, this._builder);
 
             Assert.IsNotNull(result);
             Assert.AreEqual(@"C:\pepe\tronco\*.txt", result.Source);
@@ -80,16 +78,15 @@ namespace QTFK.Cmd.Tests
             Assert.AreEqual(false, result.CopyEmptyFolders);
             Assert.AreEqual(DateTime.MinValue, result.CopyAfter);
 
-            Assert.AreEqual(0, _errors.Count());
-            Assert.AreEqual(string.Empty, _appDescription);
-            Assert.AreEqual(0, _appOptions.Count());
+            Assert.AreEqual(0, this.errors.Count());
+            Assert.AreEqual(string.Empty, this.appDescription);
+            Assert.AreEqual(0, this.appOptions.Count());
         }
 
         [TestMethod]
-        [TestCategory("Console")]
-        public void Console_xcopy_test_full()
+        public void when_instance_of_ConsoleArgsService_is_invoked_with_many_args_works_as_spected()
         {
-            var result = _appArgs.Parse(new string[] 
+            var result = this._appArgs.Parse(new string[] 
             {
                 @"C:\pepe\tronco\*.txt",
                 "/s",
@@ -99,7 +96,7 @@ namespace QTFK.Cmd.Tests
                 "/d", new DateTime(2099,12,31).ToShortDateString(),
                 "/r",
                 "/retries", "34"
-            }, _builder);
+            }, this._builder);
 
             Assert.IsNotNull(result);
             Assert.AreEqual(@"C:\pepe\tronco\*.txt", result.Source);
@@ -111,9 +108,9 @@ namespace QTFK.Cmd.Tests
             Assert.AreEqual(true, result.CopyEmptyFolders);
             Assert.AreEqual(new DateTime(2099, 12, 31), result.CopyAfter);
 
-            Assert.AreEqual(0, _errors.Count());
-            Assert.AreEqual(string.Empty, _appDescription);
-            Assert.AreEqual(0, _appOptions.Count());
+            Assert.AreEqual(0, this.errors.Count());
+            Assert.AreEqual(string.Empty, this.appDescription);
+            Assert.AreEqual(0, this.appOptions.Count());
         }
     }
 }

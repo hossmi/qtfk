@@ -19,7 +19,7 @@ namespace QTFK.Models
 
         public Result(Action body)
         {
-            Asserts.isSomething(body, "Delegate 'body' cannot be null.");
+            Asserts.isNotNull(body);
 
             try
             {
@@ -44,7 +44,7 @@ namespace QTFK.Models
 
         public Result(Func<T> body)
         {
-            Asserts.isSomething(body, "Delegate 'body' cannot be null.");
+            Asserts.isNotNull(body);
 
             try
             {
