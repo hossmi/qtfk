@@ -20,6 +20,7 @@ namespace QTFK.Core.Tests
         }
 
         [TestMethod]
+        [TestCategory("One minute execution")]
         public void isTrue_returns_true_50_percent_of_times_after_1_minute_of_execution()
         {
             const double precision = 0.001;
@@ -46,6 +47,7 @@ namespace QTFK.Core.Tests
         }
 
         [TestMethod]
+        [TestCategory("One minute execution")]
         public void isTrue_returns_true_specified_percent_of_times_after_1_minute_of_execution()
         {
             const double PRECISION = 0.001;
@@ -73,6 +75,7 @@ namespace QTFK.Core.Tests
         }
 
         [TestMethod]
+        [TestCategory("One minute execution")]
         public void next_for_randoms_returns_each_element_equally_after_1_minute_of_execution()
         {
             const double PRECISION = 0.001;
