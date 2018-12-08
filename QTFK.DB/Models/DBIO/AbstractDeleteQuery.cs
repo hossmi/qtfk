@@ -27,7 +27,7 @@ namespace QTFK.Models.DBIO
             }
             set
             {
-                Asserts.isSomething(value, $"Value for property {nameof(Prefix)} cannot be null.");
+                Asserts.isNotNull(value);
                 this.prefix = value;
             }
         }
@@ -40,7 +40,7 @@ namespace QTFK.Models.DBIO
             }
             set
             {
-                Asserts.isSomething(value, $"Value for property {nameof(Table)} cannot be null.");
+                Asserts.isNotNull(value);
                 this.table = value.Trim();
             }
         }
@@ -64,7 +64,7 @@ namespace QTFK.Models.DBIO
             FilterCompilation filterCompilation;
             IParameterBuilder parameterBuilder;
 
-            Asserts.isFilled(this.Table, $"Property '{nameof(this.Table)}' cannot be empty.");
+            Asserts.stringIsNotEmpty(this.Table);
 
             parameterBuilder = this.parameterBuilderFactory.buildInstance();
             filterCompilation = this.filter.Compile(parameterBuilder);

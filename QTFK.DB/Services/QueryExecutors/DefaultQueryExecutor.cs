@@ -15,8 +15,8 @@ namespace QTFK.Services.QueryExecutors
 
         public DefaultQueryExecutor(IDBIO db, IQueryFactory queryFactory)
         {
-            Asserts.isSomething(db, "Parameter 'db' cannot be null.");
-            Asserts.isSomething(queryFactory, "Parameter 'queryFactory' cannot be null.");
+            Asserts.isNotNull(db);
+            Asserts.isNotNull(queryFactory);
 
             this.db = db;
             this.queryFactory = queryFactory;
@@ -51,7 +51,7 @@ namespace QTFK.Services.QueryExecutors
             IDBQuerySelect query;
             IEnumerable<T> items;
 
-            Asserts.isSomething(queryBuild, "Parameter 'queryBuild' cannot be null.");
+            Asserts.isNotNull(queryBuild);
 
             query = this.queryFactory.newSelect();
             queryBuild(query);
@@ -65,7 +65,7 @@ namespace QTFK.Services.QueryExecutors
             IDBQueryUpdate query;
             int result;
 
-            Asserts.isSomething(queryBuild, "Parameter 'queryBuild' cannot be null.");
+            Asserts.isNotNull(queryBuild);
 
             query = this.queryFactory.newUpdate();
             queryBuild(query);

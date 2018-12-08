@@ -31,7 +31,7 @@ namespace QTFK.Models.DBIO
             }
             set
             {
-                Asserts.isSomething(value, $"Value for property {nameof(Prefix)} cannot be null.");
+                Asserts.isNotNull(value);
                 this.prefix = value;
             }
         }
@@ -44,7 +44,7 @@ namespace QTFK.Models.DBIO
             }
             set
             {
-                Asserts.isSomething(value, $"Value for property {nameof(Table)} cannot be null.");
+                Asserts.isNotNull(value);
                 this.table = value.Trim();
             }
         }
@@ -81,7 +81,7 @@ namespace QTFK.Models.DBIO
             FilterCompilation filterCompilation;
             IParameterBuilder parameterBuilder;
 
-            Asserts.isFilled(this.table, $"Property '{nameof(this.Table)}' cannot be empty.");
+            Asserts.stringIsNotEmpty(this.table);
 
             parameterBuilder = this.parameterBuilderFactory.buildInstance();
             filterCompilation = this.filter.Compile(parameterBuilder);
@@ -93,7 +93,7 @@ namespace QTFK.Models.DBIO
             tableColumns = prv_prepareColumns(mainTable, this.columns);
             allColumns.Add(tableColumns);
 
-            Asserts.check(allColumns.Any(), $"Query has no columns.");
+            Asserts.isTrue(allColumns.Any());
 
             columnsSegment = allColumns
                 .SelectMany(c => c)

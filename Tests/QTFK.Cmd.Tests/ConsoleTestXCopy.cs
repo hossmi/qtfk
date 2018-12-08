@@ -52,7 +52,6 @@ namespace QTFK.Cmd.Tests
         }
 
         [TestMethod]
-        [TestCategory("Console")]
         public void when_instance_of_ConsoleArgsService_is_invoked_with_no_args_returns_null_result()
         {
             var result = this._appArgs.Parse(Enumerable.Empty<string>(), this._builder);

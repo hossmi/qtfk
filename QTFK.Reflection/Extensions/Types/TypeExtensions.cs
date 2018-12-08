@@ -31,10 +31,10 @@ namespace QTFK.Extensions.Types
 
         private static bool prv_implementsInterface(Type type, Type interfaceType)
         {
-            Asserts.isSomething(type, "Parameter 'type' cannot be null.");
-            Asserts.isSomething(interfaceType, "Parameter 'interfaceType' cannot be null.");
-            Asserts.check(type.IsInterface == false, "Parameter 'type' cannot be an interface.");
-            Asserts.check(interfaceType.IsInterface == true, "Parameter 'interfaceType' must be an interface.");
+            Asserts.isNotNull(type);
+            Asserts.isNotNull(interfaceType);
+            Asserts.isFalse(type.IsInterface);
+            Asserts.isTrue(interfaceType.IsInterface);
 
             return type
                 .GetInterfaces()
@@ -46,16 +46,16 @@ namespace QTFK.Extensions.Types
         {
             bool result, bothAreInterfaces, bothAreClasses;
 
-            Asserts.isSomething(type, $"Parameter '{nameof(type)}' cannot be null.");
-            Asserts.isSomething(predecesorType, $"Parameter '{nameof(predecesorType)}' cannot be null.");
+            Asserts.isNotNull(type);
+            Asserts.isNotNull(predecesorType);
             //Asserts.check(type.IsClass, $"Parameter '{nameof(type)}' must be class type.");
             //Asserts.check(predecesorType.IsClass, $"Parameter '{nameof(predecesorType)}' must be class type.");
-            Asserts.check(type.Equals(predecesorType) == false, $"Parameter '{nameof(type)}' and '{nameof(predecesorType)}' are the same.");
+            Asserts.isFalse(type.Equals(predecesorType));
 
             bothAreInterfaces = type.IsInterface && predecesorType.IsInterface;
             bothAreClasses = type.IsClass && predecesorType.IsClass;
 
-            Asserts.check(bothAreInterfaces || bothAreClasses, $"Both types must be interfaces or (concrete\abstract).");
+            Asserts.isTrue(bothAreInterfaces || bothAreClasses);
 
             if (bothAreInterfaces)
                 result = type
@@ -72,7 +72,7 @@ namespace QTFK.Extensions.Types
             bool result;
             Type baseType;
 
-            Asserts.check(recursion <= 1000, $"'Function {nameof(prv_extendsRecursive)}' has reached maximum recursion level");
+            Asserts.isTrue(recursion <= 1000);
 
             baseType = type.BaseType;
 

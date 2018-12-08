@@ -26,7 +26,7 @@ namespace QTFK.Services.Sandboxes
             ObjectHandle handle;
             ISandboxEnvironment<T> sandboxEnvironment;
 
-            Asserts.isSomething(configure, $"{nameof(configure)} cannot be null.");
+            Asserts.isNotNull(configure);
 
             config = new SandboxConfig
             {

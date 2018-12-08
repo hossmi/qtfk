@@ -20,11 +20,11 @@ namespace QTFK.Services.DBIO
 
             foreach (Type t in this.filterTypes)
             {
-                Asserts.isSomething(t, $"Type element at constructor parameter '{nameof(filterTypes)}' cannot be null.");
-                Asserts.check(t.IsInterface == false, $"Type '{t.FullName}' at parameter '{nameof(filterTypes)}' cannot be interface.");
-                Asserts.check(t.GetInterface(this.queryFilterInterfaceTypeFullName) != null, $"Type '{t.FullName}' at parameter '{nameof(filterTypes)}' does not implements '{this.queryFilterInterfaceTypeFullName}'.");
+                Asserts.isNotNull(t);
+                Asserts.isFalse(t.IsInterface);
+                Asserts.isNotNull(t.GetInterface(this.queryFilterInterfaceTypeFullName));
             }
-            Asserts.isSomething(parameterBuilderFactory, $"Constructor parameter '{nameof(parameterBuilderFactory)}' cannot be null.");
+            Asserts.isNotNull(parameterBuilderFactory);
         }
 
         public string Prefix { get; set; }
@@ -62,15 +62,15 @@ namespace QTFK.Services.DBIO
             //ConstructorInfo[] ctors;
             //ConstructorInfo paramBuilderCtor;
 
-            Asserts.check(interfaceType.IsInterface, $"Type '{interfaceType.FullName}' is not an interface.");
-            Asserts.check(interfaceType.GetInterface(this.queryFilterInterfaceTypeFullName) != null, $"Type '{interfaceType.FullName}' does not inherits from '{this.queryFilterInterfaceTypeFullName}'.");
+            Asserts.isTrue(interfaceType.IsInterface);
+            Asserts.isNotNull(interfaceType.GetInterface(this.queryFilterInterfaceTypeFullName));
 
             filterTypes = this.filterTypes
                 .Where(concreteFiltertype => concreteFiltertype.implementsInterface(interfaceType))
                 .ToArray()
                 ;
 
-            Asserts.check(filterTypes.Length == 1, $"There is zero or more than one type implementing {interfaceType.FullName}");
+            Asserts.isTrue(filterTypes.Length == 1);
 
             filterType = filterTypes[0];
             //ctors = filterType.GetConstructors();

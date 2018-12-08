@@ -6,8 +6,8 @@ namespace QTFK.Models
     {
         public FilterCompilation(string query, IEnumerable<KeyValuePair<string, object>> parameters)
         {
-            Asserts.isFilled(query, $"Contructor parameter '{nameof(query)}' cannot be empty.");
-            Asserts.isSomething(parameters, $"Contructor parameter '{nameof(parameters)}' cannot be null.");
+            Asserts.stringIsNotEmpty(query);
+            Asserts.isNotNull(parameters);
 
             this.FilterSegment = query;
             this.Parameters = parameters;

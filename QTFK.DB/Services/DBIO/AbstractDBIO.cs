@@ -48,8 +48,8 @@ Command: '{query}'";
             , ILogger<LogLevel> log
             )
         {
-            Asserts.isSomething(log, "Argument 'log' cannot be null.");
-            Asserts.isFilled(connectionString, "Argument 'connectionString' cannot be empty");
+            Asserts.isNotNull(log);
+            Asserts.stringIsNotEmpty(connectionString);
 
             this.connectionString = connectionString;
             this.log = log;
@@ -67,8 +67,8 @@ Command: '{query}'";
         {
             DataSet ds;
 
-            Asserts.isFilled(query, "Argument 'query' cannot be empty.");
-            Asserts.isSomething(parameters, "Argument 'parameters' cannot be null.");
+            Asserts.stringIsNotEmpty(query);
+            Asserts.isNotNull(parameters);
 
             ds = null;
 
@@ -91,7 +91,7 @@ Command: '{query}'";
                 }
             }
 
-            Asserts.isSomething(ds, "Result DataSet is null!");
+            Asserts.isNotNull(ds);
             return ds;
         }
 
@@ -101,9 +101,9 @@ Command: '{query}'";
             IDbTransaction trans;
             IDataReader reader;
 
-            Asserts.isFilled(query, "Argument 'query' cannot be empty.");
-            Asserts.isSomething(parameters, "Argument 'parameters' cannot be null.");
-            Asserts.isSomething(buildDelegate, "Argument 'buildDelegate' cannot be null.");
+            Asserts.stringIsNotEmpty(query);
+            Asserts.isNotNull(parameters);
+            Asserts.isNotNull(buildDelegate);
 
             result = null;
 
@@ -142,7 +142,7 @@ Command: '{query}'";
                 }
             }
 
-            Asserts.isSomething(result, $"Output '{nameof(IEnumerable<T>)}' is null!");
+            Asserts.isNotNull(result);
             return result;
         }
 
@@ -167,7 +167,7 @@ Command: '{query}'";
             int affectedRows;
             IDbTransaction trans;
 
-            Asserts.isSomething(instructions, "Argument 'instructions' cannot be null.");
+            Asserts.isNotNull(instructions);
 
             affectedRows = 0;
 
@@ -202,8 +202,8 @@ Command: '{query}'";
         {
             T value;
 
-            Asserts.isFilled(query, $"Parameter '{nameof(query)}' cannot be empty.");
-            Asserts.isSomething(parameters, $"Parameter '{nameof(parameters)}' cannot be null.");
+            Asserts.stringIsNotEmpty(query);
+            Asserts.isNotNull(parameters);
 
             value = default(T);
 
