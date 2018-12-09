@@ -7,8 +7,8 @@
     <ProjectGuid>{C73B69F8-BA2F-4DCE-83AE-14A6716D96F6}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>SampleLibrary</RootNamespace>
-    <AssemblyName>SampleLibrary</AssemblyName>
+    <RootNamespace>QTFK.Reflection.Tests.SampleLibrary</RootNamespace>
+    <AssemblyName>QTFK.Reflection.Tests.SampleLibrary</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
