@@ -1,6 +1,5 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using QTFK.Models;
 
 namespace QTFK.Core.Tests
 {

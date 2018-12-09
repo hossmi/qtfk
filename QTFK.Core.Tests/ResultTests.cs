@@ -1,7 +1,5 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using QTFK.Models;
-using System.Collections.Generic;
 
 namespace QTFK.Core.Tests
 {
@@ -78,41 +76,62 @@ namespace QTFK.Core.Tests
         }
 
         [TestMethod]
-        public void Result_wrap_Exception_test()
+        public void when_using_Result_T_with_exception_OK_returns_false_and_Exception_is_of_expected_type()
         {
             var res = new Result<int>(() =>
             {
                 int i = 2 + 3;
                 i = 3 * i;
                 throw new DivideByZeroException("boooom");
-                //return i;
             });
             Assert.IsInstanceOfType(res.Exception, typeof(DivideByZeroException));
-
-            res = res.Wrap(e => new EntryPointNotFoundException("wrapping exception with this message :)",e));
-            Assert.IsInstanceOfType(res.Exception, typeof(EntryPointNotFoundException));
-            Assert.AreEqual("wrapping exception with this message :)", res.Exception.Message);
-            Assert.IsInstanceOfType(res.Exception.InnerException, typeof(DivideByZeroException));
-            Assert.AreEqual("boooom", res.Exception.InnerException.Message);
+            Assert.AreEqual("boooom", res.Exception.Message);
+            Assert.AreEqual("boooom", res.Message);
+            Assert.IsFalse(res.Ok);
         }
 
         [TestMethod]
-        public void Result_wrap_Exception_test_2()
+        public void when_using_Result_with_exception_OK_returns_false_and_Exception_is_of_expected_type()
         {
             var res = new Result(() =>
             {
                 int i = 2 + 3;
                 i = 3 * i;
                 throw new DivideByZeroException("boooom");
-                //return i;
             });
             Assert.IsInstanceOfType(res.Exception, typeof(DivideByZeroException));
+            Assert.AreEqual("boooom", res.Exception.Message);
+            Assert.AreEqual("boooom", res.Message);
+            Assert.IsFalse(res.Ok);
+        }
 
-            res = res.Wrap(e => new EntryPointNotFoundException("wrapping exception with this message :)", e));
-            Assert.IsInstanceOfType(res.Exception, typeof(EntryPointNotFoundException));
-            Assert.AreEqual("wrapping exception with this message :)", res.Exception.Message);
-            Assert.IsInstanceOfType(res.Exception.InnerException, typeof(DivideByZeroException));
-            Assert.AreEqual("boooom", res.Exception.InnerException.Message);
+        [TestMethod]
+        public void when_using_Result_with_good_body_OK_returns_true_and_Exception_is_null()
+        {
+            var res = new Result(() =>
+            {
+                int i = 2 + 3;
+                i = 3 * i;
+            });
+            Assert.IsNull(res.Exception);
+            Assert.IsNull(res.Message);
+            Assert.IsTrue(res.Ok);
+        }
+
+        [TestMethod]
+        public void when_using_Result_T_with_good_body_OK_returns_true_Exception_is_null_and_value_has_its_expected_value()
+        {
+            var res = new Result<int>(() =>
+            {
+                int i = 2 + 3;
+                i = 3 * i;
+
+                return i;
+            });
+            Assert.IsNull(res.Exception);
+            Assert.IsNull(res.Message);
+            Assert.IsTrue(res.Ok);
+            Assert.AreEqual(15, res.Value);
         }
     }
 }
