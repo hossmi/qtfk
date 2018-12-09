@@ -8,7 +8,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("QTFK.Sandbox")]
 [assembly: AssemblyDescription("Quick Tools for securized code execution")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Hossmi")]
+[assembly: AssemblyCompany("Blacksmith Projects")]
 [assembly: AssemblyProduct("QTFK.Sandbox")]
 [assembly: AssemblyCopyright("Copyright ©  2017")]
 [assembly: AssemblyTrademark("")]
