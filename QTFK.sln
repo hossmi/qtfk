@@ -19,7 +19,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QTFK.Cmd", "QTFK.Cmd\QTFK.C
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QTFK.Cmd.Tests", "QTFK.Cmd.Tests\QTFK.Cmd.Tests.csproj", "{B78ED5CD-310E-4E03-A5F7-91EC3CC48150}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FTPDownloader", "FTPDownloader\FTPDownloader.csproj", "{B4B8505F-9A34-461E-B18F-7CD6985D6107}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QTFK.Cmd.Tests.FTPDownloader", "QTFK.Cmd.Tests.FTPDownloader\QTFK.Cmd.Tests.FTPDownloader.csproj", "{B4B8505F-9A34-461E-B18F-7CD6985D6107}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QTFK.Reflection", "QTFK.Reflection\QTFK.Reflection.csproj", "{FB47E6F1-2E3B-47FC-A5A6-C048F54B7FE5}"
 EndProject
