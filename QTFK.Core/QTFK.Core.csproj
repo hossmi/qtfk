@@ -74,7 +74,7 @@
     <Compile Include="Extensions\Objects\Manipulator\ManipulatorExtension.cs" />
     <Compile Include="Extensions\Objects\Properties\PropertyExtension.cs" />
     <Compile Include="Extensions\Randoms\RandomExtensions.cs" />
-    <Compile Include="Models\Result.cs" />
+    <Compile Include="Result.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\EntityMappers\DefaultEntityMapper.cs" />
     <Compile Include="Services\IEntityMapper.cs" />
