@@ -52,6 +52,12 @@
     <Prefer32Bit>true</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="QTFK.Cmd, Version=1.6.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\QTFK.Cmd.1.6.1\lib\net452\QTFK.Cmd.dll</HintPath>
+    </Reference>
+    <Reference Include="QTFK.Core, Version=2.2.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\QTFK.Core.2.2.0\lib\net452\QTFK.Core.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -67,12 +73,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\..\QTFK.Cmd\QTFK.Cmd.csproj">
-      <Project>{ED4ACB31-B46D-47FB-B2B1-16E2154D11CA}</Project>
-      <Name>QTFK.Cmd</Name>
-    </ProjectReference>
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

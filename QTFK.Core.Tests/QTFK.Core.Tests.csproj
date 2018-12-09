@@ -3,11 +3,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{B05C6D2E-0ECC-4C0D-BBBA-AD70EC59F788}</ProjectGuid>
+    <ProjectGuid>{1E9C4BC3-FED7-42CA-8727-A6E5062F18EF}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>QTFK.Services.DBIO.OleDB.Tests</RootNamespace>
-    <AssemblyName>QTFK.Services.DBIO.OleDB.Tests</AssemblyName>
+    <RootNamespace>QTFK.Core.Tests</RootNamespace>
+    <AssemblyName>QTFK.Core.Tests</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{3AC096D0-A1C2-E12C-1390-A8335801FDAB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
@@ -54,25 +54,9 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="QTFK.Core, Version=2.2.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\QTFK.Core.2.2.0\lib\net452\QTFK.Core.dll</HintPath>
-    </Reference>
-    <Reference Include="QTFK.DB, Version=1.6.1.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\QTFK.DB.1.6.1\lib\net452\QTFK.DB.dll</HintPath>
-    </Reference>
-    <Reference Include="QTFK.DBMigrations, Version=1.6.1.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\QTFK.DBMigrations.1.6.1\lib\net452\QTFK.DBMigrations.dll</HintPath>
-    </Reference>
-    <Reference Include="QTFK.Logs, Version=1.6.1.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\QTFK.Logs.1.6.1\lib\net452\QTFK.Logs.dll</HintPath>
-    </Reference>
-    <Reference Include="QTFK.Reflection, Version=1.6.1.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\QTFK.Reflection.1.6.1\lib\net452\QTFK.Reflection.dll</HintPath>
-    </Reference>
-    <Reference Include="QTFK.Services.DBIO.OleDB, Version=1.6.1.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\QTFK.Services.DBIO.OleDB.1.6.1\lib\net452\QTFK.Services.DBIO.OleDB.dll</HintPath>
+      <HintPath>..\packages\QTFK.Core.2.2.0\lib\net452\QTFK.Core.dll</HintPath>
     </Reference>
     <Reference Include="System" />
-    <Reference Include="System.Configuration" />
     <Reference Include="System.Data" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Xml" />
@@ -92,25 +76,21 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
-    <Compile Include="CreateDrop.cs" />
-    <Compile Include="Models\Person.cs" />
+    <Compile Include="AutoMapExtensionTests.cs" />
+    <Compile Include="CastExtensionTest.cs" />
+    <Compile Include="CollectionsExtensionTest.cs" />
+    <Compile Include="DictionariesExtensionTests.cs" />
+    <Compile Include="ManipulateTests.cs" />
+    <Compile Include="MappersTests.cs" />
+    <Compile Include="Models\InheritedTestClass.cs" />
+    <Compile Include="Models\SimpleTestClass.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="OleDBTests.cs" />
-    <Compile Include="OleDBMigrationTests.cs" />
+    <Compile Include="RandomExtensionsTests.cs" />
+    <Compile Include="ResultTests.cs" />
+    <Compile Include="AssertTests.cs" />
+    <Compile Include="StringExtensionTest.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="create.sql">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="drop.sql">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="tests.accdb">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="App.config" />
     <None Include="packages.config" />
   </ItemGroup>
   <Choose>
