@@ -23,11 +23,6 @@ namespace QTFK.Extensions.Collections.Strings
             return Stringify(items, item => item, separator);
         }
 
-        public static string F(this string format, params object[] args)
-        {
-            return string.Format(format, args);
-        }
-
         public static bool EqualsAccentInsensitive(this string s1, string s2)
         {
             return string.Compare(s1, s2, CultureInfo.CurrentCulture, CompareOptions.IgnoreNonSpace | CompareOptions.IgnoreCase) == 0;

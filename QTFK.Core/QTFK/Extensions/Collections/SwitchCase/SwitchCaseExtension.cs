@@ -24,7 +24,7 @@ namespace QTFK.Extensions.Collections.SwitchCase
             {
                 Items = items,
                 Cases = new List<KeyValuePair<Func<T, bool>, Func<T, TResult>>>()
-                    .Push(new KeyValuePair<Func<T, bool>, Func<T, TResult>>(condition, selector)),
+                    .push(new KeyValuePair<Func<T, bool>, Func<T, TResult>>(condition, selector)),
             };
         }
 
