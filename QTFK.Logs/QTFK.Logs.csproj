@@ -63,15 +63,15 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Extensions\Loggers\LoggerLevelExtension.cs" />
-    <Compile Include="Models\LogLevel.cs" />
+    <Compile Include="QTFK\Extensions\Loggers\LoggerLevelExtension.cs" />
+    <Compile Include="QTFK\Models\LogLevel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Services\ILogger.cs" />
-    <Compile Include="Services\Loggers\ConsoleLogger.cs" />
-    <Compile Include="Services\Loggers\DebugLogger.cs" />
-    <Compile Include="Services\Loggers\FileLogger.cs" />
-    <Compile Include="Services\Loggers\MultiLogger.cs" />
-    <Compile Include="Services\Loggers\NullLogger.cs" />
+    <Compile Include="QTFK\Services\ILogger.cs" />
+    <Compile Include="QTFK\Services\Loggers\ConsoleLogger.cs" />
+    <Compile Include="QTFK\Services\Loggers\DebugLogger.cs" />
+    <Compile Include="QTFK\Services\Loggers\FileLogger.cs" />
+    <Compile Include="QTFK\Services\Loggers\MultiLogger.cs" />
+    <Compile Include="QTFK\Services\Loggers\NullLogger.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

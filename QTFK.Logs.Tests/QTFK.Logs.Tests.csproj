@@ -66,7 +66,7 @@
       <HintPath>..\packages\QTFK.Core.3.0.0\lib\net452\QTFK.Core.dll</HintPath>
     </Reference>
     <Reference Include="QTFK.Logs, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\QTFK.Logs.1.6.2\lib\net452\QTFK.Logs.dll</HintPath>
+      <HintPath>..\packages\QTFK.Logs.1.6.3\lib\net452\QTFK.Logs.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
