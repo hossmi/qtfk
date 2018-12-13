@@ -51,16 +51,16 @@
       <HintPath>..\packages\QTFK.Core.3.0.0\lib\net452\QTFK.Core.dll</HintPath>
     </Reference>
     <Reference Include="QTFK.DB, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\QTFK.DB.1.6.2\lib\net452\QTFK.DB.dll</HintPath>
+      <HintPath>..\packages\QTFK.DB.1.6.3\lib\net452\QTFK.DB.dll</HintPath>
     </Reference>
     <Reference Include="QTFK.DBMigrations, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\QTFK.DBMigrations.1.6.2\lib\net452\QTFK.DBMigrations.dll</HintPath>
+      <HintPath>..\packages\QTFK.DBMigrations.1.6.3\lib\net452\QTFK.DBMigrations.dll</HintPath>
     </Reference>
     <Reference Include="QTFK.Logs, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\QTFK.Logs.1.6.2\lib\net452\QTFK.Logs.dll</HintPath>
+      <HintPath>..\packages\QTFK.Logs.1.6.3\lib\net452\QTFK.Logs.dll</HintPath>
     </Reference>
-    <Reference Include="QTFK.Reflection, Version=1.6.2.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\QTFK.Reflection.1.6.2\lib\net452\QTFK.Reflection.dll</HintPath>
+    <Reference Include="QTFK.Reflection, Version=1.6.3.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\QTFK.Reflection.1.6.3\lib\net452\QTFK.Reflection.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -72,18 +72,18 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Models\DBIO\SqlDeleteQuery.cs" />
-    <Compile Include="Models\DBIO\SqlInsertQuery.cs" />
-    <Compile Include="Models\DBIO\SqlSelectQuery.cs" />
-    <Compile Include="Models\DBIO\SqlUpdateQuery.cs" />
+    <Compile Include="QTFK\Models\DBIO\SqlDeleteQuery.cs" />
+    <Compile Include="QTFK\Models\DBIO\SqlInsertQuery.cs" />
+    <Compile Include="QTFK\Models\DBIO\SqlSelectQuery.cs" />
+    <Compile Include="QTFK\Models\DBIO\SqlUpdateQuery.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Services\DBIO\ISqlServerDBIO.cs" />
-    <Compile Include="Services\DBIO\SQLServerQueryFactory.cs" />
-    <Compile Include="Services\DBIO\SQLServerDBMigrator.cs" />
-    <Compile Include="Services\DBIO\SQLServerDBIO.cs" />
+    <Compile Include="QTFK\Services\DBIO\ISqlServerDBIO.cs" />
+    <Compile Include="QTFK\Services\DBIO\SQLServerQueryFactory.cs" />
+    <Compile Include="QTFK\Services\DBIO\SQLServerDBMigrator.cs" />
+    <Compile Include="QTFK\Services\DBIO\SQLServerDBIO.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Models\DBIO\Filters\" />
+    <Folder Include="QTFK\Models\DBIO\Filters\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
