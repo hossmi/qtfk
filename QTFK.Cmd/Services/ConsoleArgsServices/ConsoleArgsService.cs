@@ -5,7 +5,6 @@ using System.Linq;
 using QTFK.Services.ConsoleArgsBuilders;
 using QTFK.Extensions.Collections.Casting;
 using QTFK.Extensions;
-using QTFK.Extensions.Collections.SwitchCase;
 using QTFK.Extensions.Collections.Strings;
 
 namespace QTFK.Services.ConsoleArgsServices

@@ -62,16 +62,17 @@
     <Reference Include="Microsoft.VisualStudio.TestPlatform.TestFramework.Extensions, Version=14.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\MSTest.TestFramework.1.1.11\lib\net45\Microsoft.VisualStudio.TestPlatform.TestFramework.Extensions.dll</HintPath>
     </Reference>
-    <Reference Include="QTFK.Cmd, Version=1.6.1.42352, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\QTFK.Cmd.1.6.1.42352\lib\net452\QTFK.Cmd.dll</HintPath>
+    <Reference Include="QTFK.Cmd, Version=1.6.2.30223, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\QTFK.Cmd.1.6.2.30223\lib\net452\QTFK.Cmd.dll</HintPath>
     </Reference>
-    <Reference Include="QTFK.Core, Version=2.2.0.42306, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\QTFK.Core.2.2.0.42306\lib\net452\QTFK.Core.dll</HintPath>
+    <Reference Include="QTFK.Core, Version=3.0.0.29735, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\QTFK.Core.3.0.0.29735\lib\net452\QTFK.Core.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CollectionsExtensionTest.cs" />
     <Compile Include="ConsoleTestXCopy.cs" />
     <Compile Include="ConsoleTest1.cs" />
     <Compile Include="Models\XCopyArgsTest.cs" />
