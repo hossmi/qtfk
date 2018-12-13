@@ -54,10 +54,10 @@
       <HintPath>..\packages\QTFK.Core.3.0.0\lib\net452\QTFK.Core.dll</HintPath>
     </Reference>
     <Reference Include="QTFK.Logs, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\QTFK.Logs.1.6.2\lib\net452\QTFK.Logs.dll</HintPath>
+      <HintPath>..\packages\QTFK.Logs.1.6.3\lib\net452\QTFK.Logs.dll</HintPath>
     </Reference>
-    <Reference Include="QTFK.Reflection, Version=1.6.2.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\QTFK.Reflection.1.6.2\lib\net452\QTFK.Reflection.dll</HintPath>
+    <Reference Include="QTFK.Reflection, Version=1.6.3.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\QTFK.Reflection.1.6.3\lib\net452\QTFK.Reflection.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -69,36 +69,36 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Attributes\DBAttribute.cs" />
-    <Compile Include="Attributes\OleDBAttribute.cs" />
-    <Compile Include="Attributes\SqlServerAttribute.cs" />
-    <Compile Include="Extensions\DBCommand\DBCommandExtension.cs" />
-    <Compile Include="Extensions\DBIO\DBIOExtension.cs" />
-    <Compile Include="Extensions\DBIO\DBQueries\DBQueryExtension.cs" />
-    <Compile Include="Extensions\DBIO\EngineAttribute\DBAttributeExtension.cs" />
-    <Compile Include="Extensions\DBIO\QueryFactory\QueryFactoryExtension.cs" />
-    <Compile Include="Models\DBIOException.cs" />
-    <Compile Include="Models\DBIO\NullQueryFilter.cs" />
-    <Compile Include="Models\FilterCompilation.cs" />
-    <Compile Include="Models\IDBQuery.cs" />
-    <Compile Include="Models\IQueryFilter.cs" />
-    <Compile Include="Models\QueryCompilation.cs" />
-    <Compile Include="Extensions\DBIO\Parameters.cs" />
-    <Compile Include="Models\SelectColumn.cs" />
+    <Compile Include="QTFK\Attributes\DBAttribute.cs" />
+    <Compile Include="QTFK\Attributes\OleDBAttribute.cs" />
+    <Compile Include="QTFK\Attributes\SqlServerAttribute.cs" />
+    <Compile Include="QTFK\Extensions\DBCommand\DBCommandExtension.cs" />
+    <Compile Include="QTFK\Extensions\DBIO\DBIOExtension.cs" />
+    <Compile Include="QTFK\Extensions\DBIO\DBQueries\DBQueryExtension.cs" />
+    <Compile Include="QTFK\Extensions\DBIO\EngineAttribute\DBAttributeExtension.cs" />
+    <Compile Include="QTFK\Extensions\DBIO\QueryFactory\QueryFactoryExtension.cs" />
+    <Compile Include="QTFK\Models\DBIOException.cs" />
+    <Compile Include="QTFK\Models\DBIO\NullQueryFilter.cs" />
+    <Compile Include="QTFK\Models\FilterCompilation.cs" />
+    <Compile Include="QTFK\Models\IDBQuery.cs" />
+    <Compile Include="QTFK\Models\IQueryFilter.cs" />
+    <Compile Include="QTFK\Models\QueryCompilation.cs" />
+    <Compile Include="QTFK\Extensions\DBIO\Parameters.cs" />
+    <Compile Include="QTFK\Models\SelectColumn.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Services\DBIO\AbstractDBIO.cs" />
-    <Compile Include="Services\DBIO\AbstractQueryFactory.cs" />
-    <Compile Include="Models\DBIO\AbstractDeleteQuery.cs" />
-    <Compile Include="Models\DBIO\AbstractInsertQuery.cs" />
-    <Compile Include="Models\DBIO\AbstractSelectQuery.cs" />
-    <Compile Include="Models\DBIO\AbstractUpdateQuery.cs" />
-    <Compile Include="Services\DBIO\TSQLParameterBuilderFactory.cs" />
-    <Compile Include="Services\IDBIO.cs" />
-    <Compile Include="Services\IParameterBuilder.cs" />
-    <Compile Include="Services\IParameterBuilderFactory.cs" />
-    <Compile Include="Services\IQueryExecutor.cs" />
-    <Compile Include="Services\IQueryFactory.cs" />
-    <Compile Include="Services\QueryExecutors\DefaultQueryExecutor.cs" />
+    <Compile Include="QTFK\Services\DBIO\AbstractDBIO.cs" />
+    <Compile Include="QTFK\Services\DBIO\AbstractQueryFactory.cs" />
+    <Compile Include="QTFK\Models\DBIO\AbstractDeleteQuery.cs" />
+    <Compile Include="QTFK\Models\DBIO\AbstractInsertQuery.cs" />
+    <Compile Include="QTFK\Models\DBIO\AbstractSelectQuery.cs" />
+    <Compile Include="QTFK\Models\DBIO\AbstractUpdateQuery.cs" />
+    <Compile Include="QTFK\Services\DBIO\TSQLParameterBuilderFactory.cs" />
+    <Compile Include="QTFK\Services\IDBIO.cs" />
+    <Compile Include="QTFK\Services\IParameterBuilder.cs" />
+    <Compile Include="QTFK\Services\IParameterBuilderFactory.cs" />
+    <Compile Include="QTFK\Services\IQueryExecutor.cs" />
+    <Compile Include="QTFK\Services\IQueryFactory.cs" />
+    <Compile Include="QTFK\Services\QueryExecutors\DefaultQueryExecutor.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
