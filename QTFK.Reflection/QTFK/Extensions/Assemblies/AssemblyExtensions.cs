@@ -7,7 +7,7 @@ namespace QTFK.Extensions.Assemblies
 {
     public static class AssemblyExtensions
     {
-        private static object[] emptyConstructorParameters = new object[] { };
+        private static readonly object[] emptyConstructorParameters = new object[] { };
 
         public static T createInstance<T>(this Assembly assembly, string implementationType) where T : class
         {

@@ -62,16 +62,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Extensions\Assemblies\AssemblyExtensions.cs" />
-    <Compile Include="Extensions\Types\TypeExtensions.cs" />
+    <Compile Include="QTFK\Extensions\Assemblies\AssemblyExtensions.cs" />
+    <Compile Include="QTFK\Extensions\Types\TypeExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Services\Compilers\CompilerFail.cs" />
-    <Compile Include="Services\Compilers\CompilerException.cs" />
-    <Compile Include="Services\Compilers\CompilerWrapper.cs" />
+    <Compile Include="QTFK\Services\Compilers\CompilerFail.cs" />
+    <Compile Include="QTFK\Services\Compilers\CompilerException.cs" />
+    <Compile Include="QTFK\Services\Compilers\CompilerWrapper.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Extensions\Compilers\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <None Include="packages.config" />
     <None Include="QTFK.Reflection.nuspec" />
