@@ -1,7 +1,7 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using QTFK.Extensions.Collections;
 using QTFK.Extensions.DBIO;
-using QTFK.Extensions.Collections.Filters;
 using QTFK.FileSystem;
 
 namespace QTFK.Services.DBIO.SQLServer.Tests
@@ -27,14 +27,14 @@ namespace QTFK.Services.DBIO.SQLServer.Tests
         [TestCategory("Requires SQL Server database connection")]
         public void SQL_Create_tables()
         {
-            this._db.Set(FileExtension.readBlocks("create.sql", "go").NotEmpty(), true);
+            this._db.Set(FileExtension.readBlocks("create.sql", "go").notEmpty(), true);
         }
 
         [TestMethod]
         [TestCategory("Requires SQL Server database connection")]
         public void SQL_Drop_tables()
         {
-            this._db.Set(FileExtension.readBlocks("drop.sql", "go").NotEmpty(), false);
+            this._db.Set(FileExtension.readBlocks("drop.sql", "go").notEmpty(), false);
         }
     }
 }

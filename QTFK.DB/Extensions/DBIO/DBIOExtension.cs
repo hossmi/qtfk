@@ -1,4 +1,4 @@
-﻿using QTFK.Extensions.Collections.Filters;
+﻿using QTFK.Extensions.Collections;
 using QTFK.Extensions.DBCommand;
 using QTFK.Extensions.Mapping.AutoMapping;
 using QTFK.Models;
@@ -76,7 +76,7 @@ namespace QTFK.Extensions.DBIO
 
                 affectedRows = 0;
 
-                foreach (string query in queries.NotEmpty())
+                foreach (string query in queries.notEmpty())
                 {
                     cmd.CommandText = query;
                     queryExecutionResult = new Result<int>(cmd.ExecuteNonQuery);
