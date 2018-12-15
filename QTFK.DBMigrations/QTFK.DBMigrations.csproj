@@ -51,16 +51,13 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="QTFK.Core, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\QTFK.Core.3.0.0\lib\net452\QTFK.Core.dll</HintPath>
+      <HintPath>..\packages\QTFK.Core.3.3.0\lib\net452\QTFK.Core.dll</HintPath>
     </Reference>
     <Reference Include="QTFK.DB, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\QTFK.DB.1.6.3\lib\net452\QTFK.DB.dll</HintPath>
     </Reference>
     <Reference Include="QTFK.Logs, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\QTFK.Logs.1.6.3\lib\net452\QTFK.Logs.dll</HintPath>
-    </Reference>
-    <Reference Include="QTFK.Reflection, Version=1.6.3.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\QTFK.Reflection.1.6.3\lib\net452\QTFK.Reflection.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
