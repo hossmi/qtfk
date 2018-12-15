@@ -42,33 +42,8 @@ namespace QTFK.Services.Compilers
 
         public Assembly compile()
         {
-            return prv_buildInMemoryAssembly(this.sources, this.referencedAssemblies);
-        }
+            Asserts.isTrue(this.sources.Count > 0);
 
-        private static Exception prv_newCompilerException(CompilerErrorCollection errors)
-        {
-            CompilerException exception;
-            CompilerFail[] errorArray;
-
-            errorArray = new CompilerFail[errors.Count];
-
-            for (int i = 0, n = errors.Count; i < n; i++)
-            {
-                CompilerFail fail;
-                CompilerError error;
-
-                error = errors[i];
-                fail = new CompilerFail(error.FileName, error.Line, error.Column, error.ErrorNumber, error.ErrorText, error.IsWarning);
-                errorArray[i] = fail;
-            }
-
-            exception = new CompilerException(errorArray);
-
-            return exception;
-        }
-
-        private static Assembly prv_buildInMemoryAssembly(IEnumerable<string> sources, IEnumerable<string> referencedAssemblies)
-        {
             using (var provider = new CSharpCodeProvider())
             {
                 CompilerParameters parameters;
@@ -76,16 +51,16 @@ namespace QTFK.Services.Compilers
 
                 parameters = new CompilerParameters();
 
-                foreach (var referencedAssembly in referencedAssemblies)
+                foreach (var referencedAssembly in this.referencedAssemblies)
                     parameters.ReferencedAssemblies.Add(referencedAssembly);
 
                 parameters.GenerateInMemory = true;
                 parameters.GenerateExecutable = false;
 
-                compilerResults = provider.CompileAssemblyFromSource(parameters, sources.ToArray());
+                compilerResults = provider.CompileAssemblyFromSource(parameters, this.sources.ToArray());
 
                 if (compilerResults.Errors.HasErrors)
-                    throw prv_newCompilerException(compilerResults.Errors);
+                    throw new CompilerException(compilerResults.Errors);
 
                 return compilerResults.CompiledAssembly;
             }
