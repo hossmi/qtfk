@@ -36,7 +36,10 @@ namespace QTFK.Core.Tests
         }
     }
 ";
-            assembly = CompilerWrapper.buildInMemoryAssembly(code, new string[] { });
+            assembly = CompilerWrapper
+                .build()
+                .addSource(code)
+                .compile();
 
             pepeType = assembly.GetType("First.Pepe");
 
@@ -74,7 +77,11 @@ namespace QTFK.Core.Tests
 ";
             try
             {
-                assembly = CompilerWrapper.buildInMemoryAssembly(code, new string[] { });
+                assembly = CompilerWrapper
+                    .build()
+                    .addSource(code)
+                    .compile();
+
                 Assert.Fail("Expected compilation error");
             }
             catch (CompilerException)
@@ -104,7 +111,12 @@ namespace QTFK.Core.Tests
         }
     }
 ";
-            assembly = CompilerWrapper.buildInMemoryAssembly(code, new string[] { "QTFK.Reflection.Tests.SampleLibrary.dll" });
+            assembly = CompilerWrapper
+                .build()
+                .addSource(code)
+                .addReferencedAssembly("QTFK.Reflection.Tests.SampleLibrary.dll")
+                .compile();
+
             pepeService = assembly.createAssignableInstance<ISampleService>();
             samePepeService = (ISampleService)assembly.createAssignableInstance(typeof(ISampleService));
 
@@ -145,7 +157,12 @@ namespace QTFK.Core.Tests
         }
     }
 ";
-            assembly = CompilerWrapper.buildInMemoryAssembly(code, new string[] { "QTFK.Reflection.Tests.SampleLibrary.dll" });
+            assembly = CompilerWrapper
+                .build()
+                .addSource(code)
+                .addReferencedAssembly("QTFK.Reflection.Tests.SampleLibrary.dll")
+                .compile();
+
             constructorParams = new object[] { 2m };
             pepeService = assembly.createAssignableInstance<ISampleService>(constructorParams);
             samePepeService = (ISampleService)assembly.createAssignableInstance(typeof(ISampleService), constructorParams);
@@ -185,7 +202,11 @@ namespace QTFK.Core.Tests
         }
     }
 ";
-            assembly = CompilerWrapper.buildInMemoryAssembly(code, new string[] { "QTFK.Reflection.Tests.SampleLibrary.dll" });
+            assembly = CompilerWrapper
+                .build()
+                .addSource(code)
+                .addReferencedAssembly("QTFK.Reflection.Tests.SampleLibrary.dll")
+                .compile();
             
             pepeService = assembly.createInstance<ISampleService>("First.PepeSampleService");
             troncoService = assembly.createInstance<ISampleService>("First.TroncoSampleService");
