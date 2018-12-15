@@ -63,7 +63,7 @@
       <HintPath>..\packages\MSTest.TestFramework.1.1.11\lib\net45\Microsoft.VisualStudio.TestPlatform.TestFramework.Extensions.dll</HintPath>
     </Reference>
     <Reference Include="QTFK.Cmd, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\QTFK.Cmd.1.7.0\lib\net452\QTFK.Cmd.dll</HintPath>
+      <HintPath>..\packages\QTFK.Cmd.1.7.1\lib\net452\QTFK.Cmd.dll</HintPath>
     </Reference>
     <Reference Include="QTFK.Core, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\QTFK.Core.3.0.0\lib\net452\QTFK.Core.dll</HintPath>
@@ -72,7 +72,6 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CollectionsExtensionTest.cs" />
     <Compile Include="ConsoleTestXCopy.cs" />
     <Compile Include="ConsoleTest1.cs" />
     <Compile Include="Models\XCopyArgsTest.cs" />
