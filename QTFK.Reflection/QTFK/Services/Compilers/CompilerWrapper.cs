@@ -4,11 +4,47 @@ using System.CodeDom.Compiler;
 using System.Collections.Generic;
 using System.Reflection;
 using Microsoft.CSharp;
+using QTFK.QTFK.Services;
 
 namespace QTFK.Services.Compilers
 {
-    public class CompilerWrapper 
+    public class CompilerWrapper : ICompilerWarpper
     {
+        private readonly IList<string> sources;
+        private readonly ISet<string> referencedAssemblies;
+
+        private CompilerWrapper()
+        {
+            this.sources = new List<string>();
+            this.referencedAssemblies = new HashSet<string>();
+        }
+
+        public static ICompilerWarpper build()
+        {
+            return new CompilerWrapper();
+        }
+
+        public ICompilerWarpper addSource(string source)
+        {
+            Asserts.stringIsNotEmpty(source);
+            this.sources.Add(source);
+
+            return this;
+        }
+
+        public ICompilerWarpper addReferencedAssembly(string assembly)
+        {
+            Asserts.stringIsNotEmpty(assembly);
+            this.referencedAssemblies.Add(assembly);
+
+            return this;
+        }
+
+        public Assembly compile()
+        {
+            return prv_buildInMemoryAssembly(this.sources, this.referencedAssemblies);
+        }
+
         private static Exception prv_newCompilerException(CompilerErrorCollection errors)
         {
             CompilerException exception;
@@ -31,7 +67,7 @@ namespace QTFK.Services.Compilers
             return exception;
         }
 
-        private static Assembly prv_buildInMemoryAssembly(string[] sources, IEnumerable<string> referencedAssemblies)
+        private static Assembly prv_buildInMemoryAssembly(IEnumerable<string> sources, IEnumerable<string> referencedAssemblies)
         {
             using (var provider = new CSharpCodeProvider())
             {
@@ -46,7 +82,7 @@ namespace QTFK.Services.Compilers
                 parameters.GenerateInMemory = true;
                 parameters.GenerateExecutable = false;
 
-                compilerResults = provider.CompileAssemblyFromSource(parameters, sources);
+                compilerResults = provider.CompileAssemblyFromSource(parameters, sources.ToArray());
 
                 if (compilerResults.Errors.HasErrors)
                     throw prv_newCompilerException(compilerResults.Errors);
@@ -54,17 +90,5 @@ namespace QTFK.Services.Compilers
                 return compilerResults.CompiledAssembly;
             }
         }
-
-
-        public static Assembly buildInMemoryAssembly(IEnumerable<string> sources, IEnumerable<string> referencedAssemblies)
-        {
-            return prv_buildInMemoryAssembly(sources.ToArray(), referencedAssemblies);
-        }
-
-        public static Assembly buildInMemoryAssembly(string code, IEnumerable<string> referencedAssemblies)
-        {
-            return prv_buildInMemoryAssembly(new string[] { code }, referencedAssemblies);
-        }
-
     }
 }
