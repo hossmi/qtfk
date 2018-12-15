@@ -100,28 +100,41 @@ namespace QTFK.Services.ConsoleArgsServices
 
             service.OnUsage = (descrip, options) =>
             {
-                options = options
+                ArgumentInfo[] sortedOptions = options
                     .OrderByDescending(o => o.IsIndexed)
                     .ThenBy(o => o.IsOptional)
                     .ThenBy(o => o.IsFlag)
                     .ThenBy(o => o.Name)
-                    ;
+                    .ToArray();
 
-                var optionsCommand = options
-                    .Case(o => $"<{o.Name}>", o => o.IsIndexed)
-                    .Case(o => $"{service.Prefix + o.Name + $" <{o.Name}>"}", o => !o.IsFlag)
-                    .CaseElse(o => $"{service.Prefix + o.Name}")
-                    .Stringify(" ")
-                    ;
+                string optionsCommand = sortedOptions
+                    .Select(option => 
+                    {
+                        if (option.IsIndexed)
+                            return $"<{option.Name}>";
+                        else if (!option.IsFlag)
+                            return $"{service.Prefix + option.Name + $" <{option.Name}>"}";
+                        else
+                            return $"{service.Prefix + option.Name}";
+                    })
+                    .Stringify(" ");
 
-                var optionsList = options
-                    .Case(o => $"{"",5}{o.Name,-21}{o.Description}", o => o.IsIndexed && !o.IsOptional)
-                    .Case(o => $"{"",5}{o.Name,-21}{o.Description}{Environment.NewLine,-28}(default: {o.Default})", o => o.IsIndexed)
-                    .Case(o => $"{"",5}{service.Prefix + o.Name + $" <{o.Name}>",-21}{o.Description}", o => !o.IsOptional)
-                    .Case(o => $"{"",5}{service.Prefix + o.Name + $" <{o.Name}>",-21}{o.Description}{Environment.NewLine,-28}(default: {o.Default})", o => !o.IsFlag)
-                    .CaseElse(o => $"{"",5}{service.Prefix + o.Name,-21}{o.Description}")
-                    .Stringify(Environment.NewLine)
-                    ;
+                var optionsList = sortedOptions
+                    .Select(o =>
+                    {
+                        if (o.IsIndexed && !o.IsOptional)
+                            return $"{"",5}{o.Name,-21}{o.Description}";
+                        else if (o.IsIndexed)
+                            return $"{"",5}{o.Name,-21}{o.Description}{Environment.NewLine,-28}(default: {o.Default})";
+                        else if (!o.IsOptional)
+                            return $"{"",5}{service.Prefix + o.Name + $" <{o.Name}>",-21}{o.Description}";
+                        else if (!o.IsFlag)
+                            return $"{"",5}{service.Prefix + o.Name + $" <{o.Name}>",-21}{o.Description}{Environment.NewLine,-28}(default: {o.Default})";
+                        else
+                            return $"{"",5}{service.Prefix + o.Name,-21}{o.Description}";
+                    })
+                    .Stringify(Environment.NewLine);
+
                 Console.Error.WriteLine($@"
 
     {descrip}
@@ -137,6 +150,7 @@ namespace QTFK.Services.ConsoleArgsServices
 
             return service;
         }
+
 
         public T Parse<T>(IEnumerable<string> args, Func<IConsoleArgsBuilder, T> builder) where T : class
         {
@@ -207,6 +221,5 @@ namespace QTFK.Services.ConsoleArgsServices
             this.OnFatal?.Invoke();
             return null;
         }
-
     }
 }
