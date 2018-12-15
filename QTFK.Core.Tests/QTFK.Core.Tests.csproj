@@ -54,7 +54,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="QTFK.Core, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\QTFK.Core.3.0.0\lib\net452\QTFK.Core.dll</HintPath>
+      <HintPath>..\packages\QTFK.Core.3.3.0\lib\net452\QTFK.Core.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -78,6 +78,7 @@
   <ItemGroup>
     <Compile Include="AutoMapExtensionTests.cs" />
     <Compile Include="CastExtensionTest.cs" />
+    <Compile Include="CodeCompilingTests.cs" />
     <Compile Include="DictionariesExtensionTests.cs" />
     <Compile Include="ManipulateTests.cs" />
     <Compile Include="Models\InheritedTestClass.cs" />
@@ -88,6 +89,13 @@
     <Compile Include="AssertTests.cs" />
     <Compile Include="StringExtensionTest.cs" />
     <Compile Include="ExceptionExtensionsTests.cs" />
+    <Compile Include="TypeExtensionTests.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\QTFK.Core.Tests.SampleLibrary\QTFK.Core.Tests.SampleLibrary.csproj">
+      <Project>{c73b69f8-ba2f-4dce-83ae-14a6716d96f6}</Project>
+      <Name>QTFK.Core.Tests.SampleLibrary</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
