@@ -1,10 +1,10 @@
 ﻿using System;
 
-namespace QTFK.Sandbox.Tests.Models
+namespace QTFK.Core.Tests.Models
 {
-    public class MaliciousTestClass : MarshalByRefObject
+    public class SuspiciousTestClass
     {
-        public MaliciousTestClass()
+        public SuspiciousTestClass()
         {
         }
 

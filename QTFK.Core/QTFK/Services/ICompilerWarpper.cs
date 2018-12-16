@@ -1,6 +1,6 @@
 ﻿using System.Reflection;
 
-namespace QTFK.QTFK.Services
+namespace QTFK.Services
 {
     public interface ICompilerWarpper
     {

@@ -1,15 +1,17 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using QTFK.Extensions.Sandboxing;
-using QTFK.Sandbox.Tests.Models;
-using QTFK.Services;
-using QTFK.Services.Sandboxes;
 using System.Security;
 
-namespace QTFK.Sandbox.Tests
+namespace QTFK.Core.Tests
 {
     [TestClass]
     public class SandBoxTests
     {
+        [TestMethod]
+        public void when_run_suspicious_code_in_sanbox_throws_expected_SecurityExpection()
+        {
+
+        }
+
         [TestMethod]
         public void sandBox_core_test()
         {

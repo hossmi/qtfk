@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Reflection;
 
-namespace QTFK.Services.Sandboxes
+namespace QTFK.Services.Sandboxing
 {
-    public class Sandbox : MarshalByRefObject
+    public class MethodInvoker : MarshalByRefObject
     {
         public T run<T>(Func<T> method)
         {
