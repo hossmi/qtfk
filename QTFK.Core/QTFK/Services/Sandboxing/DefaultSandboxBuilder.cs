@@ -75,6 +75,7 @@ namespace QTFK.QTFK.Services.Sandboxing
 
             public void create(Action<AppDomain, ObjectHandle, T> instance)
             {
+                Asserts.isNotNull(instance);
 
                 PermissionSet permSet = new PermissionSet(PermissionState.None);
 
@@ -93,9 +94,9 @@ namespace QTFK.QTFK.Services.Sandboxing
 
                 AppDomain newDomain = AppDomain.CreateDomain(this.DomainName, null, adSetup, permSet, fullTrustAssemblies);
                 ObjectHandle handle = Activator.CreateInstanceFrom(newDomain, typeof(T).Assembly.ManifestModule.FullyQualifiedName, typeof(T).FullName);
-                sandboxEnvironment = new SandboxEnvironment<T>(newDomain, handle, (T)handle.Unwrap());
-
-                return sandboxEnvironment;
+                T newInstance = (T)handle.Unwrap();
+                instance(newDomain, handle, newInstance);
+                AppDomain.Unload(newDomain);
             }
         }
     }
