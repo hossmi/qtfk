@@ -3,7 +3,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SampleLibrary;
 using QTFK.Extensions.Types;
 
-namespace QTFK.Reflection.Tests
+namespace QTFK.Core.Tests
 {
     [TestClass]
     public class TypeExtensionTests
