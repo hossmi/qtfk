@@ -4,7 +4,6 @@ using System.CodeDom.Compiler;
 using System.Collections.Generic;
 using System.Reflection;
 using Microsoft.CSharp;
-using QTFK.QTFK.Services;
 
 namespace QTFK.Services.Compilers
 {

@@ -11,7 +11,7 @@ using System.Text;
 using System.Threading.Tasks;
 using QTFK.Services;
 
-namespace QTFK.QTFK.Services.Sandboxing
+namespace QTFK.Services.Sandboxing
 {
     public static class DefaultSandboxBuilder
     {
@@ -70,13 +70,40 @@ namespace QTFK.QTFK.Services.Sandboxing
 
             public void create(Action<T> instance)
             {
-                throw new NotImplementedException();
+                AppDomain newDomain;
+                ObjectHandle handle;
+
+                Asserts.isNotNull(instance);
+
+                createDomain(out newDomain, out handle);
+
+                T newInstance = (T)handle.Unwrap();
+                instance(newInstance);
+
+                handle = null;
+                instance = null;
+                AppDomain.Unload(newDomain);
             }
 
             public void create(Action<AppDomain, ObjectHandle, T> instance)
             {
+                AppDomain newDomain;
+                ObjectHandle handle;
+
                 Asserts.isNotNull(instance);
 
+                createDomain(out newDomain, out handle);
+
+                T newInstance = (T)handle.Unwrap();
+                instance(newDomain, handle, newInstance);
+
+                handle = null;
+                instance = null;
+                AppDomain.Unload(newDomain);
+            }
+
+            private void createDomain(out AppDomain newDomain, out ObjectHandle handle)
+            {
                 PermissionSet permSet = new PermissionSet(PermissionState.None);
 
                 foreach (var permission in this.permissions)
@@ -92,11 +119,8 @@ namespace QTFK.QTFK.Services.Sandboxing
                     ApplicationBase = Path.GetFullPath(this.PathToUntrusted)
                 };
 
-                AppDomain newDomain = AppDomain.CreateDomain(this.DomainName, null, adSetup, permSet, fullTrustAssemblies);
-                ObjectHandle handle = Activator.CreateInstanceFrom(newDomain, typeof(T).Assembly.ManifestModule.FullyQualifiedName, typeof(T).FullName);
-                T newInstance = (T)handle.Unwrap();
-                instance(newDomain, handle, newInstance);
-                AppDomain.Unload(newDomain);
+                newDomain = AppDomain.CreateDomain(this.DomainName, null, adSetup, permSet, fullTrustAssemblies);
+                handle = Activator.CreateInstanceFrom(newDomain, typeof(T).Assembly.ManifestModule.FullyQualifiedName, typeof(T).FullName);
             }
         }
     }

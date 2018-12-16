@@ -48,7 +48,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="QTFK.Core, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\QTFK.Core.3.3.0\lib\net452\QTFK.Core.dll</HintPath>
+      <HintPath>..\packages\QTFK.Core.3.4.0\lib\net452\QTFK.Core.dll</HintPath>
     </Reference>
     <Reference Include="QTFK.DB, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\QTFK.DB.1.6.3\lib\net452\QTFK.DB.dll</HintPath>
