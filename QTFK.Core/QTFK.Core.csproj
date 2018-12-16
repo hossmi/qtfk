@@ -79,6 +79,9 @@
     <Compile Include="QTFK\Services\Compilers\CompilerFail.cs" />
     <Compile Include="QTFK\Services\Compilers\CompilerWrapper.cs" />
     <Compile Include="QTFK\Services\ICompilerWarpper.cs" />
+    <Compile Include="QTFK\Services\ISandboxBuilder.cs" />
+    <Compile Include="QTFK\Services\Sandboxing\MethodInvoker.cs" />
+    <Compile Include="QTFK\Services\Sandboxing\DefaultSandboxBuilder.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="QTFK.Core.nuspec" />
