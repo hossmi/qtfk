@@ -2,11 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Data;
-using System.Data.SqlClient;
 using QTFK.Models;
 using QTFK.Extensions.DBCommand;
 using QTFK.Extensions.DataReader;
-using QTFK.Services.Loggers;
 
 namespace QTFK.Services.DBIO
 {
@@ -15,19 +13,21 @@ namespace QTFK.Services.DBIO
         where TCommand : IDbCommand
         where TDataAdapter : IDbDataAdapter, IDisposable
     {
-        protected static DBIOException prv_wrapException(IDbCommand cmd, Exception ex, ILogger<LogLevel> logger, string subject)
+        private static readonly NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
+
+        protected static DBIOException prv_wrapException(IDbCommand cmd, Exception ex, string subject)
         {
-            return prv_wrapException(cmd?.CommandText ?? "", ex, logger, subject);
+            return prv_wrapException(cmd?.CommandText ?? "", ex, subject);
         }
 
-        protected static DBIOException prv_wrapException(string query, Exception ex, ILogger<LogLevel> logger, string subject)
+        protected static DBIOException prv_wrapException(string query, Exception ex, string subject)
         {
             string message = $@"{subject}:
 Exception: {ex.GetType().Name}
 Message: {ex.Message}
 Command: '{query}'";
 
-            logger.log(LogLevel.Error, message);
+            logger.Error(message);
 
             return new DBIOException(message, ex);
         }
@@ -36,23 +36,12 @@ Command: '{query}'";
         protected const string ERROR_MESSAGE_GETTING_ID = "Error ocurred getting las ID";
 
         protected readonly string connectionString;
-        protected readonly ILogger<LogLevel> log;
 
         public AbstractDBIO(string connectionString)
-            : this(connectionString, NullLogger.Instance)
         {
-        }
-
-        public AbstractDBIO(
-            string connectionString
-            , ILogger<LogLevel> log
-            )
-        {
-            Asserts.isNotNull(log);
             Asserts.stringIsNotEmpty(connectionString);
 
             this.connectionString = connectionString;
-            this.log = log;
         }
 
         protected abstract TConnection prv_buildConnection(string connectionString);
@@ -83,7 +72,7 @@ Command: '{query}'";
                 }
                 catch (Exception ex)
                 {
-                    throw prv_wrapException(query, ex, this.log, ERROR_MESSAGE_DEFAULT);
+                    throw prv_wrapException(query, ex, ERROR_MESSAGE_DEFAULT);
                 }
                 finally
                 {
@@ -131,7 +120,7 @@ Command: '{query}'";
                 }
                 catch (Exception ex)
                 {
-                    throw prv_wrapException(command, ex, this.log, ERROR_MESSAGE_DEFAULT);
+                    throw prv_wrapException(command, ex, ERROR_MESSAGE_DEFAULT);
                 }
                 finally
                 {
@@ -158,7 +147,7 @@ Command: '{query}'";
             }
             catch (Exception ex)
             {
-                throw prv_wrapException(cmd, ex, this.log, ERROR_MESSAGE_GETTING_ID);
+                throw prv_wrapException(cmd, ex, ERROR_MESSAGE_GETTING_ID);
             }
         }
 
@@ -188,7 +177,7 @@ Command: '{query}'";
                 catch (Exception ex)
                 {
                     trans?.Rollback();
-                    throw prv_wrapException(command, ex, this.log, ERROR_MESSAGE_DEFAULT);
+                    throw prv_wrapException(command, ex, ERROR_MESSAGE_DEFAULT);
                 }
                 finally
                 {
@@ -220,7 +209,7 @@ Command: '{query}'";
                 }
                 catch (Exception ex)
                 {
-                    throw prv_wrapException(query, ex, this.log, ERROR_MESSAGE_DEFAULT);
+                    throw prv_wrapException(query, ex, ERROR_MESSAGE_DEFAULT);
                 }
                 finally
                 {
