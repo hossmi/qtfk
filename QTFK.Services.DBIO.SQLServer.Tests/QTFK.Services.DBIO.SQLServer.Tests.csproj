@@ -64,10 +64,10 @@
       <HintPath>..\packages\QTFK.DB.1.7.0\lib\net452\QTFK.DB.dll</HintPath>
     </Reference>
     <Reference Include="QTFK.DBMigrations, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\QTFK.DBMigrations.1.6.3\lib\net452\QTFK.DBMigrations.dll</HintPath>
+      <HintPath>..\packages\QTFK.DBMigrations.1.7.0\lib\net452\QTFK.DBMigrations.dll</HintPath>
     </Reference>
     <Reference Include="QTFK.Services.DBIO.SQLServer, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\QTFK.Services.DBIO.SQLServer.1.6.3\lib\net452\QTFK.Services.DBIO.SQLServer.dll</HintPath>
+      <HintPath>..\packages\QTFK.Services.DBIO.SQLServer.1.7.0\lib\net452\QTFK.Services.DBIO.SQLServer.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.configuration" />
