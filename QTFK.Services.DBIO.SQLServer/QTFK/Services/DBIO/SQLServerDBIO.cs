@@ -12,11 +12,6 @@ namespace QTFK.Services.DBIO
         {
         }
 
-        public SQLServerDBIO(string connectionString, ILogger<LogLevel> log) 
-            : base(connectionString, log)
-        {
-        }
-
         protected override SqlCommand prv_buildCommand(SqlConnection connection)
         {
             return new SqlCommand()

@@ -12,11 +12,6 @@ namespace QTFK.Services.DBIO
         {
         }
 
-        public OleDBIO(string connectionString, ILogger<LogLevel> log)
-            : base(connectionString, log)
-        {
-        }
-
         protected override OleDbCommand prv_buildCommand(OleDbConnection connection)
         {
             return new OleDbCommand()

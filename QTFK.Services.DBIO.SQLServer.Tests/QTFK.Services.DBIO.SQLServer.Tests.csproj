@@ -53,25 +53,30 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="NLog, Version=4.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL">
+      <HintPath>..\packages\NLog.4.5.11\lib\net45\NLog.dll</HintPath>
+    </Reference>
     <Reference Include="QTFK.Core, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\QTFK.Core.3.4.0\lib\net452\QTFK.Core.dll</HintPath>
     </Reference>
     <Reference Include="QTFK.DB, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\QTFK.DB.1.6.3\lib\net452\QTFK.DB.dll</HintPath>
+      <HintPath>..\packages\QTFK.DB.1.7.0\lib\net452\QTFK.DB.dll</HintPath>
     </Reference>
     <Reference Include="QTFK.DBMigrations, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\QTFK.DBMigrations.1.6.3\lib\net452\QTFK.DBMigrations.dll</HintPath>
-    </Reference>
-    <Reference Include="QTFK.Logs, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\QTFK.Logs.1.6.3\lib\net452\QTFK.Logs.dll</HintPath>
+      <HintPath>..\packages\QTFK.DBMigrations.1.7.0\lib\net452\QTFK.DBMigrations.dll</HintPath>
     </Reference>
     <Reference Include="QTFK.Services.DBIO.SQLServer, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\QTFK.Services.DBIO.SQLServer.1.6.3\lib\net452\QTFK.Services.DBIO.SQLServer.dll</HintPath>
+      <HintPath>..\packages\QTFK.Services.DBIO.SQLServer.1.7.0\lib\net452\QTFK.Services.DBIO.SQLServer.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.configuration" />
     <Reference Include="System.Data" />
     <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.IO.Compression" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.ServiceModel" />
+    <Reference Include="System.Transactions" />
     <Reference Include="System.XML" />
   </ItemGroup>
   <Choose>
