@@ -68,7 +68,7 @@
     <Compile Include="QTFK\Extensions\Exceptions\ExceptionExtension.cs" />
     <Compile Include="QTFK\Extensions\FileSystem\FileExtension.cs" />
     <Compile Include="QTFK\Extensions\Mapping\AutoMapping\AutoMapExtension.cs" />
-    <Compile Include="QTFK\Extensions\Objects\DictionaryConverter\DictionaryExtension.cs" />
+    <Compile Include="QTFK\Extensions\Objects\DictionaryConverter\DictionaryConverterExtension.cs" />
     <Compile Include="QTFK\Extensions\Objects\Manipulator\ManipulatorExtension.cs" />
     <Compile Include="QTFK\Extensions\Objects\Properties\PropertyExtension.cs" />
     <Compile Include="QTFK\Extensions\Randoms\RandomExtensions.cs" />
