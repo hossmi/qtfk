@@ -57,30 +57,36 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Asserts.cs" />
-    <Compile Include="Extensions\Collections\Casting\CastExtension.cs" />
-    <Compile Include="Extensions\Collections\CollectionExtension.cs" />
-    <Compile Include="Extensions\Collections\Dictionaries\DictionaryExtension.cs" />
-    <Compile Include="Extensions\Collections\Filters\EnumerableFilterExtension.cs" />
-    <Compile Include="Extensions\Collections\Strings\StringExtension.cs" />
-    <Compile Include="Extensions\Collections\SwitchCase\SwitchCaseExtension.cs" />
-    <Compile Include="Extensions\DataReader\DataReaderExtension.cs" />
-    <Compile Include="Extensions\DataSets\DataSetExtension.cs" />
-    <Compile Include="Extensions\Exceptions\ExceptionExtension.cs" />
-    <Compile Include="Extensions\FileSystem\FileExtension.cs" />
-    <Compile Include="Extensions\Mapping\AutoMapping\AutoMapExtension.cs" />
-    <Compile Include="Extensions\Mapping\EntityMapperExtension.cs" />
-    <Compile Include="Extensions\Objects\DictionaryConverter\DictionaryExtension.cs" />
-    <Compile Include="Extensions\Objects\Manipulator\ManipulatorExtension.cs" />
-    <Compile Include="Extensions\Objects\Properties\PropertyExtension.cs" />
-    <Compile Include="Models\Result.cs" />
+    <Compile Include="QTFK\Asserts.cs" />
+    <Compile Include="QTFK\Extensions\Assemblies\AssemblyExtensions.cs" />
+    <Compile Include="QTFK\Extensions\Collections\Casting\CastExtension.cs" />
+    <Compile Include="QTFK\Extensions\Collections\EnumerableExtension.cs" />
+    <Compile Include="QTFK\Extensions\Collections\Dictionaries\DictionaryExtension.cs" />
+    <Compile Include="QTFK\Extensions\Collections\Strings\StringExtension.cs" />
+    <Compile Include="QTFK\Extensions\DataReader\DataReaderExtension.cs" />
+    <Compile Include="QTFK\Extensions\DataSets\DataSetExtension.cs" />
+    <Compile Include="QTFK\Extensions\Exceptions\ExceptionExtension.cs" />
+    <Compile Include="QTFK\Extensions\FileSystem\FileExtension.cs" />
+    <Compile Include="QTFK\Extensions\Mapping\AutoMapping\AutoMapExtension.cs" />
+    <Compile Include="QTFK\Extensions\Objects\DictionaryConverter\DictionaryConverterExtension.cs" />
+    <Compile Include="QTFK\Extensions\Objects\Manipulator\ManipulatorExtension.cs" />
+    <Compile Include="QTFK\Extensions\Objects\Properties\PropertyExtension.cs" />
+    <Compile Include="QTFK\Extensions\Randoms\RandomExtensions.cs" />
+    <Compile Include="QTFK\Extensions\Types\TypeExtensions.cs" />
+    <Compile Include="QTFK\Result.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Services\EntityMappers\DefaultEntityMapper.cs" />
-    <Compile Include="Services\IEntityMapper.cs" />
+    <Compile Include="QTFK\Services\Compilers\CompilerException.cs" />
+    <Compile Include="QTFK\Services\Compilers\CompilerFail.cs" />
+    <Compile Include="QTFK\Services\Compilers\CompilerWrapper.cs" />
+    <Compile Include="QTFK\Services\ICompilerWarpper.cs" />
+    <Compile Include="QTFK\Services\ISandboxBuilder.cs" />
+    <Compile Include="QTFK\Services\Sandboxing\MethodInvoker.cs" />
+    <Compile Include="QTFK\Services\Sandboxing\DefaultSandboxBuilder.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="QTFK.Core.nuspec" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>

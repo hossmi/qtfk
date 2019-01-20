@@ -50,20 +50,22 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="QTFK.Core, Version=1.6.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\QTFK.Core.1.6.0\lib\net452\QTFK.Core.dll</HintPath>
+    <Reference Include="NLog, Version=4.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL">
+      <HintPath>..\packages\NLog.4.5.11\lib\net45\NLog.dll</HintPath>
     </Reference>
-    <Reference Include="QTFK.DB, Version=1.6.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\QTFK.DB.1.6.0\lib\net452\QTFK.DB.dll</HintPath>
+    <Reference Include="QTFK.Core, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\QTFK.Core.3.4.0\lib\net452\QTFK.Core.dll</HintPath>
     </Reference>
-    <Reference Include="QTFK.Logs, Version=1.6.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\QTFK.Logs.1.6.0\lib\net452\QTFK.Logs.dll</HintPath>
-    </Reference>
-    <Reference Include="QTFK.Reflection, Version=1.6.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\QTFK.Reflection.1.6.0\lib\net452\QTFK.Reflection.dll</HintPath>
+    <Reference Include="QTFK.DB, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\QTFK.DB.1.7.0\lib\net452\QTFK.DB.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
+    <Reference Include="System.IO.Compression" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.ServiceModel" />
+    <Reference Include="System.Transactions" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -72,15 +74,15 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Extensions\DBIO\DBIOMigrationExtensions\DBMigrationExtension.cs" />
-    <Compile Include="Models\MigrationInfo.cs" />
+    <Compile Include="QTFK\Extensions\DBIO\DBIOMigrationExtensions\DBMigrationExtension.cs" />
+    <Compile Include="QTFK\Models\MigrationInfo.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Services\DBIO\DBMigrationStep.cs" />
-    <Compile Include="Services\DBIO\DBMigrationStepProviderBase.cs" />
-    <Compile Include="Services\DBIO\DefaultDBMigrationStepProvider.cs" />
-    <Compile Include="Services\IDBMigrationStep.cs" />
-    <Compile Include="Services\IDBMigrationStepProvider.cs" />
-    <Compile Include="Services\IDBMigrator.cs" />
+    <Compile Include="QTFK\Services\DBIO\DBMigrationStep.cs" />
+    <Compile Include="QTFK\Services\DBIO\DBMigrationStepProviderBase.cs" />
+    <Compile Include="QTFK\Services\DBIO\DefaultDBMigrationStepProvider.cs" />
+    <Compile Include="QTFK\Services\IDBMigrationStep.cs" />
+    <Compile Include="QTFK\Services\IDBMigrationStepProvider.cs" />
+    <Compile Include="QTFK\Services\IDBMigrator.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
