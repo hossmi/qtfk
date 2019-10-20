@@ -66,11 +66,8 @@
     <Compile Include="QTFK\Extensions\DataReader\DataReaderExtension.cs" />
     <Compile Include="QTFK\Extensions\DataSets\DataSetExtension.cs" />
     <Compile Include="QTFK\Extensions\Exceptions\ExceptionExtension.cs" />
-    <Compile Include="QTFK\Extensions\FileSystem\FileExtension.cs" />
     <Compile Include="QTFK\Extensions\Mapping\AutoMapping\AutoMapExtension.cs" />
-    <Compile Include="QTFK\Extensions\Objects\DictionaryConverter\DictionaryConverterExtension.cs" />
     <Compile Include="QTFK\Extensions\Objects\Manipulator\ManipulatorExtension.cs" />
-    <Compile Include="QTFK\Extensions\Objects\Properties\PropertyExtension.cs" />
     <Compile Include="QTFK\Extensions\Randoms\RandomExtensions.cs" />
     <Compile Include="QTFK\Extensions\Types\TypeExtensions.cs" />
     <Compile Include="QTFK\Result.cs" />
@@ -82,9 +79,6 @@
     <Compile Include="QTFK\Services\ISandboxBuilder.cs" />
     <Compile Include="QTFK\Services\Sandboxing\MethodInvoker.cs" />
     <Compile Include="QTFK\Services\Sandboxing\DefaultSandboxBuilder.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="QTFK.Core.nuspec" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -1,8 +1,6 @@
-﻿using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System.Collections.Generic;
-using System.Linq;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using QTFK.Extensions.Collections.Strings;
+using System.Linq;
 
 namespace QTFK.Core.Tests
 {

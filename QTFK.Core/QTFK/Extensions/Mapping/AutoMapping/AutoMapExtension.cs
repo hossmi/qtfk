@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Reflection;
-using QTFK.Extensions.Objects.Properties;
 
 namespace QTFK.Extensions.Mapping.AutoMapping
 {
@@ -37,12 +36,12 @@ namespace QTFK.Extensions.Mapping.AutoMapping
 
         public static T AutoMap<T>(this IDataRecord record) where T : new()
         {
-            return prv_autoMap<T>(record, typeof(T).getReadWriteProperties());
+            return prv_autoMap<T>(record, typeof(T).prv_getReadWriteProperties());
         }
 
         public static T AutoMap<T>(this IDataRecord record, Action<T> configureDelegate) where T : new()
         {
-            T item = prv_autoMap<T>(record, typeof(T).getReadWriteProperties());
+            T item = prv_autoMap<T>(record, typeof(T).prv_getReadWriteProperties());
             configureDelegate(item);
             return item;
         }
@@ -55,7 +54,7 @@ namespace QTFK.Extensions.Mapping.AutoMapping
         private static IEnumerable<T> prv_autoMap<T>(IEnumerable<IDataRecord> records, Action<IDataRecord, T> configureDelegate) where T : new()
         {
             var props = typeof(T)
-                .getReadWriteProperties()
+                .prv_getReadWriteProperties()
                 .ToList()
                 ;
 
@@ -101,7 +100,7 @@ namespace QTFK.Extensions.Mapping.AutoMapping
             T item = new T();
             var props = item
                 .GetType()
-                .getReadWriteProperties()
+                .prv_getReadWriteProperties()
                 .ToList()
                 ;
             
@@ -112,6 +111,14 @@ namespace QTFK.Extensions.Mapping.AutoMapping
             }
 
             return item;
+        }
+
+        private static IEnumerable<PropertyInfo> prv_getReadWriteProperties(this Type type)
+        {
+            return type
+                .GetProperties()
+                .Where(p => p.CanWrite && p.CanRead)
+                ;
         }
     }
 }

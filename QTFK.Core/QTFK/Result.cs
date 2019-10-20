@@ -24,7 +24,7 @@ namespace QTFK
 
             try
             {
-                Value = body();
+                this.Value = body();
             }
             catch (Exception ex)
             {

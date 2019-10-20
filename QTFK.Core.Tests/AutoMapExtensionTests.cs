@@ -1,10 +1,10 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Data;
-using QTFK.Extensions.DataSets;
 using System.Linq;
-using QTFK.Extensions.Mapping.AutoMapping;
 using QTFK.Core.Tests.Models;
+using QTFK.Extensions.DataSets;
+using QTFK.Extensions.Mapping.AutoMapping;
 
 namespace QTFK.Core.Tests
 {

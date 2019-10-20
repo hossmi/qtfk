@@ -2,10 +2,10 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Reflection;
 using SampleLibrary;
-using QTFK.Extensions.Assemblies;
 using System.Linq;
 using System.Collections.Generic;
 using QTFK.Services.Compilers;
+using QTFK.Extensions.Assemblies;
 
 namespace QTFK.Core.Tests
 {

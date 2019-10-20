@@ -1,7 +1,7 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using SampleLibrary;
 using QTFK.Extensions.Types;
+using SampleLibrary;
 
 namespace QTFK.Core.Tests
 {
