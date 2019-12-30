@@ -46,23 +46,17 @@ namespace QTFK.Extensions.Mapping.AutoMapping
             return item;
         }
 
-        public static T AutoMap<T>(this IDictionary<string, object> source) where T : new()
-        {
-            return prv_autoMap<T>(source);
-        }
-
-
-
         private static IEnumerable<T> prv_autoMap<T>(IEnumerable<IDataRecord> records, Action<IDataRecord, T> configureDelegate) where T : new()
         {
-            var props = typeof(T)
+            IList<PropertyInfo> properties;
+
+            properties = typeof(T)
                 .prv_getReadWriteProperties()
-                .ToList()
-                ;
+                .ToList();
 
             return records.Select(r =>
             {
-                T item = prv_autoMap<T>(r, props);
+                T item = prv_autoMap<T>(r, properties);
                 configureDelegate?.Invoke(r, item);
                 return item;
             });
@@ -80,36 +74,37 @@ namespace QTFK.Extensions.Mapping.AutoMapping
 
         private static T prv_autoMap<T>(DataRow row) where T : new()
         {
-            return prv_autoMap<T>(row.toDictionary());
+            T item;
+            IDictionary<string, DataColumn> columns;
+            
+            item = new T();
+            columns = row
+                .getColumns()
+                .ToDictionary(c => c.ColumnName);
+
+            foreach (PropertyInfo p in typeof(T).prv_getReadWriteProperties())
+            {
+                DataColumn column;
+
+                if (columns.TryGetValue(p.Name, out column))
+                    p.SetValue(item, row[column]);
+            }
+
+            return item;
         }
 
         private static T prv_autoMap<T>(IDataRecord record, IEnumerable<PropertyInfo> props) where T : new()
         {
             T item = new T();
 
-            foreach (var p in props)
+            foreach (PropertyInfo p in props)
             {
-                var result = new Result<int>(() => record.GetOrdinal(p.Name));
+                Result<int> result; 
+                
+                result = new Result<int>(() => record.GetOrdinal(p.Name));
+                
                 if (result.Ok && result.Value >= 0)
                     p.SetValue(item, record[result.Value]);
-            }
-
-            return item;
-        }
-
-        private static T prv_autoMap<T>(IDictionary<string, object> source) where T : new()
-        {
-            T item = new T();
-            var props = item
-                .GetType()
-                .prv_getReadWriteProperties()
-                .ToList()
-                ;
-            
-            foreach (var p in props)
-            {
-                if (source.ContainsKey(p.Name))
-                    p.SetValue(item, source[p.Name]);
             }
 
             return item;
@@ -119,8 +114,7 @@ namespace QTFK.Extensions.Mapping.AutoMapping
         {
             return type
                 .GetProperties()
-                .Where(p => p.CanWrite && p.CanRead)
-                ;
+                .Where(p => p.CanWrite && p.CanRead);
         }
     }
 }
