@@ -57,7 +57,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="QTFK\Asserts.cs" />
     <Compile Include="QTFK\Extensions\Collections\Dictionaries\DictionaryExtension.cs" />
     <Compile Include="QTFK\Extensions\DataReader\DataReaderExtension.cs" />
     <Compile Include="QTFK\Extensions\DataSets\DataSetExtension.cs" />

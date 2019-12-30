@@ -20,7 +20,8 @@ namespace QTFK
 
         public Result(Func<T> body)
         {
-            Asserts.isNotNull(body);
+            if (body == null)
+                throw new ArgumentNullException(nameof(body));
 
             try
             {
