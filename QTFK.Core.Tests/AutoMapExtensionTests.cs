@@ -50,7 +50,7 @@ namespace QTFK.Core.Tests
             table.Rows.Add(row);
 
             var items = ds
-                .AsTable()
+                .Tables[0]
                 .AsEnumerable()
                 .AutoMap<SimpleTestClass>()
                 .ToList()
@@ -73,12 +73,12 @@ namespace QTFK.Core.Tests
             Assert.AreEqual(0, itemTronco.Number);
 
             items = ds
-                .AsTable()
+                .Tables[0]
                 .AsEnumerable()
                 .AutoMap<SimpleTestClass>((r,i) =>
                 {
-                    i.DoubleNumber = r.Get<double>(kDouble);
-                    i.Number = r.Get<int>(kNumero);
+                    i.DoubleNumber = r.get<double>(kDouble);
+                    i.Number = r.get<int>(kNumero);
                 })
                 .ToList()
                 ;

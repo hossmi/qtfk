@@ -80,7 +80,7 @@ namespace QTFK.Extensions.Mapping.AutoMapping
 
         private static T prv_autoMap<T>(DataRow row) where T : new()
         {
-            return prv_autoMap<T>(row.ToDictionary());
+            return prv_autoMap<T>(row.toDictionary());
         }
 
         private static T prv_autoMap<T>(IDataRecord record, IEnumerable<PropertyInfo> props) where T : new()
