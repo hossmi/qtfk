@@ -23,9 +23,5 @@ namespace QTFK.Extensions.Collections.Strings
             return Stringify(items, item => item, separator);
         }
 
-        public static bool EqualsAccentInsensitive(this string s1, string s2)
-        {
-            return string.Compare(s1, s2, CultureInfo.CurrentCulture, CompareOptions.IgnoreNonSpace | CompareOptions.IgnoreCase) == 0;
-        }
     }
 }

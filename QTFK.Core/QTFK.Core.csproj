@@ -58,18 +58,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="QTFK\Asserts.cs" />
-    <Compile Include="QTFK\Extensions\Collections\Casting\CastExtension.cs" />
     <Compile Include="QTFK\Extensions\Collections\Dictionaries\DictionaryExtension.cs" />
     <Compile Include="QTFK\Extensions\Collections\Strings\StringExtension.cs" />
     <Compile Include="QTFK\Extensions\DataReader\DataReaderExtension.cs" />
     <Compile Include="QTFK\Extensions\DataSets\DataSetExtension.cs" />
-    <Compile Include="QTFK\Extensions\Exceptions\ExceptionExtension.cs" />
     <Compile Include="QTFK\Extensions\Mapping\AutoMapping\AutoMapExtension.cs" />
     <Compile Include="QTFK\Result.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="QTFK\Services\ISandboxBuilder.cs" />
-    <Compile Include="QTFK\Services\Sandboxing\MethodInvoker.cs" />
-    <Compile Include="QTFK\Services\Sandboxing\DefaultSandboxBuilder.cs" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

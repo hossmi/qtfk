@@ -51,6 +51,8 @@ namespace QTFK.Extensions.Mapping.AutoMapping
             return prv_autoMap<T>(source);
         }
 
+
+
         private static IEnumerable<T> prv_autoMap<T>(IEnumerable<IDataRecord> records, Action<IDataRecord, T> configureDelegate) where T : new()
         {
             var props = typeof(T)
