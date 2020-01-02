@@ -61,7 +61,6 @@
     <Compile Include="QTFK\Extensions\DataReader\DataReaderExtension.cs" />
     <Compile Include="QTFK\Extensions\DataSets\DataSetExtension.cs" />
     <Compile Include="QTFK\Extensions\Mapping\AutoMapping\AutoMapExtension.cs" />
-    <Compile Include="QTFK\Result.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup />

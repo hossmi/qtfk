@@ -99,12 +99,18 @@ namespace QTFK.Extensions.Mapping.AutoMapping
 
             foreach (PropertyInfo p in props)
             {
-                Result<int> result; 
-                
-                result = new Result<int>(() => record.GetOrdinal(p.Name));
-                
-                if (result.Ok && result.Value >= 0)
-                    p.SetValue(item, record[result.Value]);
+                try
+                {
+                    int columnIndex;
+
+                    columnIndex = record.GetOrdinal(p.Name);
+
+                    if(0 <= columnIndex)
+                        p.SetValue(item, record[columnIndex]);
+                }
+                catch (IndexOutOfRangeException)
+                {
+                }
             }
 
             return item;
