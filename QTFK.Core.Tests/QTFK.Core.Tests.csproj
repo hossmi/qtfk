@@ -75,10 +75,7 @@
   <ItemGroup>
     <Compile Include="AutoMapExtensionTests.cs" />
     <Compile Include="DictionariesExtensionTests.cs" />
-    <Compile Include="Models\InheritedTestClass.cs" />
-    <Compile Include="Models\MaliciousTestClass.cs" />
     <Compile Include="Models\SimpleTestClass.cs" />
-    <Compile Include="Models\SuspiciousTestClass.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
